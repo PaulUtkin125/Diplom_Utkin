@@ -6,10 +6,12 @@ namespace Finansu.Model
     {
         public int Id { get; set; }
 
+        [Required(ErrorMessage = "Поле должно быть заполнено")]
         [MinLength(8, ErrorMessage = "Минимальная длина 8 симвалов")]
         public string Loggin { get; set; }
 
-        
+        [Required(ErrorMessage = "Поле должно быть заполнено")]
+        [MinLength(8, ErrorMessage = "Минимальная длина 8 симвалов")]
         public string PaswordHash { get; set; }
 
 

@@ -7,7 +7,7 @@
 
 <div class="vhodBox">
     <div class="contentVhod">
-         <img src="/Image/SingIn.png"/>  @* !! ?? *@
+         <img src="/Image/SingIn.png"/>
         <div class="myContentBox">
             <form method="post">
                 <h1>Зарегистрироваться</h1>
@@ -19,7 +19,7 @@
 
                 <div class="form-group">
                     <label asp-for="User.PaswordHash" class="control-label">Пароль</label>
-                    <input asp-for="User.PaswordHash" class="form-control" />
+                    <input asp-for="User.PaswordHash" class="form-control" type="password" />
                     <span asp-validation-for="User.PaswordHash" class="text-danger"></span>
                 </div>
 
@@ -29,7 +29,7 @@
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <button class="myButton" name="action" type="submit" value="Create" class="btn btn-primary">Зарегистрироваться</button>
+                    <button class="myButton" name="action" type="submit" value="Create">Зарегистрироваться</button>
                 </div>
 
             </form>

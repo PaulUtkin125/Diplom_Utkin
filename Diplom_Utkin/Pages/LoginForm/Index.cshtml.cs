@@ -21,7 +21,6 @@ namespace Diplom_Utkin.Pages.LoginForm_
             switch (action)
             {
                 case "vhod_btn":
-                    if(!ModelState.IsValid) return Page();
 
                     return RedirectToPage("/userPage/Index");
 

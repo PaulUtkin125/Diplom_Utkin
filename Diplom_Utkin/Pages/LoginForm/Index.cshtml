@@ -6,7 +6,7 @@
 
 <div class="vhodBox">
 	<div class="contentVhod">
-		<img src="/Image/SingUp.png" /> @* !! ?? *@
+		<img src="/Image/SingUp.png" />
 		<div class="myContentBox">
 			<form method="post">
 				<h1>Авторизация</h1>
@@ -34,7 +34,5 @@
 </div>
 
 @section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

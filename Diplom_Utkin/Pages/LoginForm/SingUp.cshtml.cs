@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Finansu.Data;
 using Finansu.Model;
+using System.ComponentModel.DataAnnotations;
 
 namespace Diplom_Utkin.Pages.LoginForm
 {
@@ -29,6 +30,8 @@ namespace Diplom_Utkin.Pages.LoginForm
 
 
         [BindProperty]
+        [Required(ErrorMessage = "Поле должно быть заполнено")]
+        [MinLength(8, ErrorMessage = "Минимальная длина 8 симвалов")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
         public async Task<IActionResult> OnPostAsync(string action)
