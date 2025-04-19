@@ -31,19 +31,18 @@ namespace Diplom_Utkin.Pages.LoginForm
         [BindProperty]
         public string ConfirmPassword { get; set; } = string.Empty;
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string action)
         {
+            if (action == "Beck_btn") return RedirectToPage("/LoginForm/Index");
             if (_context.User == null || User == null)
             {
                 return Page();
+
             }
             string pasword = User.PaswordHash.Trim();
             string reppitPasword = ConfirmPassword.Trim();
 
-            if (pasword.Length < 8) 
-            {
-                return Page();
-            }
+            
             if(pasword != reppitPasword)
             {
                 ModelState.AddModelError("ConfirmPassword", "Пароли не совпадают");

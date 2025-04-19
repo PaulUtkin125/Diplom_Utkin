@@ -6,7 +6,7 @@ namespace Finansu.Model
     {
         public int Id { get; set; }
 
-        
+        [MinLength(8, ErrorMessage = "Минимальная длина 8 симвалов")]
         public string Loggin { get; set; }
 
         

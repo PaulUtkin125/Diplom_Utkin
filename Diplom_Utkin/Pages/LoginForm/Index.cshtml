@@ -5,12 +5,36 @@
 }
 
 <div class="vhodBox">
-	<img src="/Image/SingUp.png"/>
-	<form method="post">
-		<h1>Авторизация</h1>
-		
-		<button class="myButton" name="action" type="submit" value="vhod_btn">Войти</button>
-		<button class="myButton" name="action" type="submit" value="Registr_btn">У Вас нет аккаунта? Зарегистрируйтесь</button>
-	</form>
-	
+	<div class="contentVhod">
+		<img src="/Image/SingUp.png" /> @* !! ?? *@
+		<div class="myContentBox">
+			<form method="post">
+				<h1>Авторизация</h1>
+				<div class="form-group">
+					<label asp-for="User.Loggin" class="control-label">E-mail</label>
+					<input asp-for="User.Loggin" class="form-control" />
+					<span asp-validation-for="User.Loggin" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="User.PaswordHash" class="control-label">Пароль</label>
+					<input asp-for="User.PaswordHash" class="form-control" />
+					<span asp-validation-for="User.PaswordHash" class="text-danger"></span>
+				</div>
+
+				<button class="myButton" name="action" type="submit" value="vhod_btn">Войти</button>
+
+			</form>
+			<form method="post">
+				<button class="myButton" name="action" type="submit" value="Registr_btn">У Вас нет аккаунта? Зарегистрируйтесь</button>
+			</form>
+
+		</div>
+	</div>
 </div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
