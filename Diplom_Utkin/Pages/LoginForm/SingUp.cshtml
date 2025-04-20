@@ -7,40 +7,41 @@
 
 <div class="vhodBox">
     <div class="contentVhod">
-         <img src="/Image/SingIn.png"/>
-        <div class="myContentBox">
+        <div class="img-block">
+            <img src="/Image/SingIn.png" />
+        </div>
+        <div class="form-block">
             <form method="post">
                 <h1>Зарегистрироваться</h1>
-                <div class="form-group">
+                <div class="form-group form-row">
                     <label asp-for="User.Loggin" class="control-label">E-mail</label>
                     <input asp-for="User.Loggin" class="form-control" />
                     <span asp-validation-for="User.Loggin" class="text-danger"></span>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group form-row">
                     <label asp-for="User.PaswordHash" class="control-label">Пароль</label>
                     <input asp-for="User.PaswordHash" class="form-control" type="password" />
                     <span asp-validation-for="User.PaswordHash" class="text-danger"></span>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group form-row">
                     <label for="ConfirmPassword" class="control-label">Повторите пароль</label>
                     <input asp-for="ConfirmPassword" class="form-control" type="password" />
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group form-row">
                     <button class="myButton" name="action" type="submit" value="Create">Зарегистрироваться</button>
                 </div>
 
             </form>
             <form method="post">
-                <button class="myButton" name="action" type="submit" value="Beck_btn">У Вас нет аккаунта? Зарегистрируйтесь</button>
+                <div class="form-group form-row">
+                    <button class="myButton" name="action" type="submit" value="Beck_btn">У Вас нет аккаунта? Зарегистрируйтесь</button>
+                </div>
             </form>
-
         </div>
     </div>
-</div>
-<div>
 </div>
 
 @section Scripts {
