@@ -28,6 +28,8 @@ namespace Diplom_Utkin
 
             app.UseAuthorization();
 
+            app.MapGet("/", async context => context.Response.Redirect("/LoginForm/Index"));
+
             app.MapRazorPages();
 
             app.Run();
