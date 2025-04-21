@@ -11,8 +11,6 @@
     <Content Remove="wwwroot\Image\EyeClosed.png" />
     <Content Remove="wwwroot\Image\EyeOpened.png" />
     <Content Remove="wwwroot\Image\FonBotun.png" />
-    <Content Remove="wwwroot\Image\icon.png" />
-    <Content Remove="wwwroot\Image\InputBlock.png" />
     <Content Remove="wwwroot\Image\krest.png" />
     <Content Remove="wwwroot\Image\leftArrow.png" />
     <Content Remove="wwwroot\Image\mainIcon2.png" />
@@ -41,8 +39,6 @@
     <Resource Include="wwwroot\Image\EyeClosed.png" />
     <Resource Include="wwwroot\Image\EyeOpened.png" />
     <Resource Include="wwwroot\Image\FonBotun.png" />
-    <Resource Include="wwwroot\Image\icon.png" />
-    <Resource Include="wwwroot\Image\InputBlock.png" />
     <Resource Include="wwwroot\Image\krest.png" />
     <Resource Include="wwwroot\Image\leftArrow.png" />
     <Resource Include="wwwroot\Image\mainIcon2.png" />
