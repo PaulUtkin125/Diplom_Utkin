@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
@@ -17,6 +17,7 @@
     <Content Remove="wwwroot\Image\NoNPhoto.png" />
     <Content Remove="wwwroot\Image\NoNSelectedMode.png" />
     <Content Remove="wwwroot\Image\plus.png" />
+    <Content Remove="wwwroot\Image\Profil.png" />
     <Content Remove="wwwroot\Image\Rectangle 47.png" />
     <Content Remove="wwwroot\Image\RectangleBTN.png" />
     <Content Remove="wwwroot\Image\rightArrow.png" />
@@ -25,13 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.20" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.20">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.12" />
+    <PackageReference Include="LiveCharts" Version="0.9.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,11 +41,16 @@
     <Resource Include="wwwroot\Image\NoNPhoto.png" />
     <Resource Include="wwwroot\Image\NoNSelectedMode.png" />
     <Resource Include="wwwroot\Image\plus.png" />
+    <Resource Include="wwwroot\Image\Profil.png" />
     <Resource Include="wwwroot\Image\Rectangle 47.png" />
     <Resource Include="wwwroot\Image\RectangleBTN.png" />
     <Resource Include="wwwroot\Image\rightArrow.png" />
     <Resource Include="wwwroot\Image\SingIn.png" />
     <Resource Include="wwwroot\Image\SingUp.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Model\Data\" />
   </ItemGroup>
 
 </Project>

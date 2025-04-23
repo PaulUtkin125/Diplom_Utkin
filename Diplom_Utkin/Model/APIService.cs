@@ -1,0 +1,46 @@
+﻿using DiplomAPI.Models.Support;
+using Finansu.Model;
+
+namespace Diplom_Utkin.Model
+{
+    public class APIService
+    {
+        private HttpClient _httpClient;
+        public APIService() 
+        {
+            _httpClient = new HttpClient();
+            _httpClient.BaseAddress = new Uri("http://localhost:5189/api/");
+        }
+
+        public async Task<bool> RegistrationAsync(StartUserData user)
+        {
+            var processPositive = await _httpClient.PostAsJsonAsync("Logo/UserAdd", user);
+            bool registrationResalt = await processPositive.Content.ReadFromJsonAsync<bool>();
+            if (registrationResalt) return true;
+            return false;
+        }
+
+        public async Task<int?> AutorizationAsynk(StartUserData user)
+        {
+            var processPositive = await _httpClient.PostAsJsonAsync("Logo/Autorisation", user);
+            int? resalt = await processPositive.Content.ReadFromJsonAsync<int?>();
+            if (resalt == 0) return null;
+            return resalt;
+        }
+        public async Task<List<string[]>?> loadChartAsynk(int  id)
+        {
+            var processPositive = await _httpClient.PostAsJsonAsync("User/loadCart", id);
+            var resalt = await processPositive.Content.ReadFromJsonAsync<List<string[]>?>();
+            if (resalt == null) return null;
+            return resalt;
+        }
+
+        public async Task<List<Portfolio>?> LoadUsersToolsAsinc(int id)
+        {
+            var processPositive = await _httpClient.PostAsJsonAsync("User/UserSTools", id);
+            var resalt = await processPositive.Content.ReadFromJsonAsync<List<Portfolio>>();
+            if (resalt == null) return null;
+            else return resalt;
+        }
+    }
+}

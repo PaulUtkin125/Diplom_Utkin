@@ -5,19 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Finansu.Data;
 using Finansu.Model;
 using System.ComponentModel.DataAnnotations;
+using Diplom_Utkin.Model;
+using DiplomAPI.Models.Support;
 
 namespace Diplom_Utkin.Pages.LoginForm
 {
     public class SingUpModel : PageModel
     {
-        private readonly Finansu.Data.dbContact _context;
+        private readonly APIService _APIService;
 
-        public SingUpModel(Finansu.Data.dbContact context)
+        public SingUpModel()
         {
-            _context = context;
+            _APIService = new APIService();
         }
 
         public IActionResult OnGet()
@@ -26,7 +27,7 @@ namespace Diplom_Utkin.Pages.LoginForm
         }
 
         [BindProperty]
-        public User User { get; set; } = default!;
+        public StartUserData User { get; set; } = default!;
 
 
         [BindProperty]
@@ -37,25 +38,27 @@ namespace Diplom_Utkin.Pages.LoginForm
         public async Task<IActionResult> OnPostAsync(string action)
         {
             if (action == "Beck_btn") return RedirectToPage("/LoginForm/Index");
-            if (_context.User == null || User == null)
+            if (User == null)
             {
                 return Page();
 
             }
-            string pasword = User.PaswordHash.Trim();
+            string pasword = User.Password.Trim();
             string reppitPasword = ConfirmPassword.Trim();
 
             
             if(pasword != reppitPasword)
             {
                 ModelState.AddModelError("ConfirmPassword", "Пароли не совпадают");
+                ModelState.AddModelError("User.Password", "Пароли не совпадают");
                 return Page();
             }
-
-            _context.User.Add(User);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
+            if(!_APIService.RegistrationAsync(User).Result)
+            {
+                ModelState.AddModelError("User.Login", "Такой пользователь уже существует");
+                return Page();
+            }
+            else return RedirectToPage("./Index");
         }
     }
 }

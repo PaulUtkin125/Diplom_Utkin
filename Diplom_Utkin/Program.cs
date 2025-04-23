@@ -9,8 +9,6 @@ namespace Diplom_Utkin
             // Add services to the container.
             builder.Services.AddRazorPages();
 
-            builder.Services.AddScoped<Finansu.Data.dbContact>();
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

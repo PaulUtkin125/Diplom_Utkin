@@ -9,6 +9,5 @@
 
         public string NameInvestTool { get; set; }
         public bool isClosed { get; set; }
-
     }
 }

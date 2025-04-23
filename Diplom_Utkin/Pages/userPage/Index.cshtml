@@ -1,45 +1,73 @@
 ﻿@page
+@using LiveCharts
+@using LiveCharts.Defaults
+@using Diplom_Utkin.Model
 @model Diplom_Utkin.Pages.userPage.IndexModel
 @{
 	ViewData["Title"] = "Кабинет";
+	List<ChartModel> charts = new List<ChartModel>();
+	var salesData = Model.salesData;
 }
 
-<div class="vhodBox kabinet-box">
-	<div class="contentVhod">
-		<div class="toolList">
-			<div class="head-list">
-				<h3>,nm,n,</h3>
-				<h3>,nm,n,</h3>
-			</div>
-			<div class="body-list">
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-				<h3>xcxzczc</h3>
-			</div>
-		</div>
-		<div class="publicationList">
-			211212
-		</div>
+@await Html.PartialAsync("Headers/_UserHeader")
+
+<div class="window-box kabinet-box">
+	<div class="informations">
+
+		@* Диаграмма должна быть тут *@
+
+	</div>
+	
+	<table class="table">
+		<thead>
+			<tr>
+				@* <th> *@
+				@* 	Иконка *@
+				@* </th> *@
+				<th>
+					<a asp-route-sortOrder="@Model.sortName">
+						Название
+					</a>
+				</th>
+				<th>
+					<a asp-route-sortOrder="@Model.sortSum">
+						Стоимость
+					</a>
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.InvestToolsList)
+			{
+				<tr>
+					@* <td> *@
+					@* 	<div class="hd-imgBlock settings"> *@
+					@* 		<img src="@item.InvestTool.Source"/> *@
+					@* 	</div> *@
+					@* </td> *@
+					<td>
+						@Html.DisplayFor(modelItem => item.InvestTool.NameInvestTool)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.AllManey) ₽
+					</td>
+					<td>
+						@if (!item.InvestTool.isClosed)
+						{
+							<a asp-page="#" asp-route-id="@item.InvestTool.Id">Докупить</a> 
+							<span>|</span>
+							<a asp-page="#" asp-route-id = "@item.InvestTool.Id"> Продать </a>
+						}
+					</td>
+					
+					
+				</tr>
+			}
+		</tbody>
+	</table>
+	<div class="publicationList">
+		211212
 	</div>
 	
 </div>

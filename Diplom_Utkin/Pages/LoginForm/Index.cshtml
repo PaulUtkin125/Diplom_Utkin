@@ -4,7 +4,9 @@
 	ViewData["Title"] = "Авторизация";
 }
 
-<div class="vhodBox">
+@* @await Html.PartialAsync("Headers/_HomeHeader") *@
+
+<div class="window-box vhodBox">
 	<div class="contentVhod">
 		<div class="img-block">
 			<img src="/Image/SingUp.png" />
@@ -13,15 +15,15 @@
 			<form method="post">
 				<h1>Авторизация</h1>
 				<div class="form-group">
-					<label asp-for="User.Loggin" class="control-label">E-mail</label>
-					<input asp-for="User.Loggin" class="form-control" />
-					<span asp-validation-for="User.Loggin" class="text-danger"></span>
+					<label asp-for="User.Login" class="control-label">E-mail</label>
+					<input asp-for="User.Login" class="form-control" />
+					<span asp-validation-for="User.Login" class="text-danger"></span>
 				</div>
 
 				<div class="form-group">
-					<label asp-for="User.PaswordHash" class="control-label">Пароль</label>
-					<input asp-for="User.PaswordHash" class="form-control" />
-					<span asp-validation-for="User.PaswordHash" class="text-danger"></span>
+					<label asp-for="User.Password" class="control-label">Пароль</label>
+					<input asp-for="User.Password" class="form-control" />
+					<span asp-validation-for="User.Password" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<button class="myButton" name="action" type="submit" value="vhod_btn">Войти</button>
