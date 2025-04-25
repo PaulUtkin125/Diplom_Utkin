@@ -1,4 +1,6 @@
+using System.ComponentModel.DataAnnotations;
 using Diplom_Utkin.Model;
+using Diplom_Utkin.Model.Support;
 using Finansu.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,29 +16,49 @@ namespace Diplom_Utkin.Pages.userPage
         {
             _APIService = new APIService();
 
-            var data = _APIService.loadChartAsynk(uId).Result;
-            if (data[1] != null)
-            {
-                salesData = data;
-            }
+            
+
+            
         }
         public IList<Portfolio> InvestToolsList { get; set; } = default!;
-
+        //public User _user { get; set; }
+        public double Money { get; set; }
 
         public string sortName { get; set; }
         public string sortSum { get; set; }
         public string CurrnerSort { get; set; }
-        public async Task OnGetAsync(int id, string? sortOrder)
+
+
+        [BindProperty]
+        [Required]
+        [Range(1, double.MaxValue, ErrorMessage ="Сумма должна быть больше нуля!")]
+        public double targetSumm { get; set; }
+        
+        public int isVuvod { get; set; }
+        public async Task OnGetAsync(int id, string? sortOrder, string? actionBalens, double? targetSumm, int? isVuvod, int? vector)
         {
             if (id != 0)
             {
                 uId = id;
                 TempData["uId"] = id;
+                Money = _APIService.moneyLoadAsync(uId).Result;
+
+                var data = _APIService.loadChartAsynk(uId).Result;
+                if (data[1] != null)
+                {
+                    salesData = data;
+                }
             }
             else if (TempData["uId"] != null) 
             {
                 uId = (int)TempData["uId"];
                 TempData["uId"] = uId;
+                Money = _APIService.moneyLoadAsync(uId).Result;
+                var data = _APIService.loadChartAsynk(uId).Result;
+                if (data[1] != null)
+                {
+                    salesData = data;
+                }
             }
 
             CurrnerSort = sortOrder;
@@ -67,7 +89,34 @@ namespace Diplom_Utkin.Pages.userPage
 
             InvestToolsList = investToolsIQ;
 
+            if (actionBalens == "btnBalans")
+            {
+                if (targetSumm > 0)
+                {
+                    if (isVuvod == 1)
+                    {
+                        MoneuUpdate moneuUpdate = new MoneuUpdate()
+                        {
+                            id = uId,
+                            sum = (double)targetSumm,
+                            vector = (int)isVuvod
+                        };
+                        Money = await _APIService.UserUpdateMoneu(moneuUpdate);
+                    }
+                    else
+                    {
+                        MoneuUpdate moneuUpdate = new MoneuUpdate()
+                        {
+                            id = uId,
+                            sum = (double)targetSumm,
+                            vector = (int)isVuvod
+                        };
+                        Money = await _APIService.UserUpdateMoneu(moneuUpdate);
+                    }
+                }
+            }
             
+
         }
     }
 }

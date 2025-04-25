@@ -18,6 +18,13 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="koshelBox_btn" role="button" aria-expanded="false">@Model.Money </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" onclick="openVvod()">Пополнить</a></li>
+                            <li><a class="dropdown-item" onclick="openVuvod()">Вывести</a></li>
+                        </ul>
+                    </li>
 					<li class="nav-item myItem">
 						<a class="nav-link" asp-area="" asp-page="#">
                             <div class="hd-imgBlock settings">

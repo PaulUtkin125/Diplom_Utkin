@@ -12,6 +12,33 @@
 @await Html.PartialAsync("Headers/_UserHeader")
 
 <div class="window-box kabinet-box">
+	<section>
+		<div id="overlay" class="overlay"></div>
+		<div class="popup">
+			<div class="poputContent">
+				<div class="top_">
+					<div>
+						<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
+					</div>
+
+				</div>
+				<form id="myForm" method="get" onsubmit="return moneuBtn()">
+					<h1 id="popTitle">Пополнение счета</h1>
+					<div class="form-group">
+						<label asp-for="targetSumm" class="control-label">Сумма</label>
+						<input asp-for="targetSumm" id="summText" class="form-control" type="number" required/>
+						<span asp-validation-for="targetSumm" id="summTextError" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType"/>
+					</div>
+					<button name="actionBalens" type="submit" value="btnBalans"></button>
+					
+				</form>
+			</div>
+		</div>
+	</section>
+	
 	<div class="informations">
 
 		@* Диаграмма должна быть тут *@
@@ -69,5 +96,67 @@
 	<div class="publicationList">
 		211212
 	</div>
-	
+	<script>
+		function openPopup() {
+
+			document.querySelector('.popup').style.display = 'block';
+			document.getElementById('overlay').style.display = 'block';
+		}
+		function closePopup() {
+			document.getElementById('summTextError').textContent = '';
+			document.getElementById('summText').value = 0;
+
+			document.querySelector('.popup').style.display = 'none';
+			document.getElementById('overlay').style.display = 'none';
+		}
+
+		function openVuvod(){
+			document.getElementById('popTitle').textContent = 'Вывод';
+			document.getElementById('popOperationType').value = '1';
+			document.getElementById('popOperationType').textContent = '1';
+			openPopup();
+		}
+		function openVvod(){
+			document.getElementById('popTitle').textContent = 'Пополнить';
+			document.getElementById('popOperationType').value = '0';
+			document.getElementById('popOperationType').textContent = '0';
+			openPopup();
+		}
+
+
+		function moneuBtn() {
+			var mySym = Number(document.getElementById('koshelBox_btn').textContent.replace(" ₽", ""));
+			var sum = Number(document.getElementById('summText').value);
+			var vector = Number(document.getElementById('popOperationType').textContent);
+			var isValid = true;
+
+			console.log("mySym:", mySym);
+			console.log("sum:", sum);
+			console.log("vector:", vector);
+			
+
+			if (sum < 1) {
+				document.getElementById('summTextError').textContent = 'Сумма должна быть больше нуля!'; // <-- выводится
+				return false;
+			} else {
+				if (vector == 1) {
+					// вывод средств
+					if (sum > mySym) {
+						console.log("sum > mySym  :", sum > mySym);  // <-- выводится
+						document.getElementById('summTextError').textContent = 'Недостаточно средств!'; // <-- НЕ выводится
+						return false;
+					}
+				}
+				
+			}
+
+		 	return isValid;
+		}
+	</script>
 </div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

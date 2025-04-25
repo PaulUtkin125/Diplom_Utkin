@@ -1,4 +1,5 @@
-﻿using DiplomAPI.Models.Support;
+﻿using Diplom_Utkin.Model.Support;
+using DiplomAPI.Models.Support;
 using Finansu.Model;
 
 namespace Diplom_Utkin.Model
@@ -11,6 +12,31 @@ namespace Diplom_Utkin.Model
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri("http://localhost:5189/api/");
         }
+
+        public async Task<double> moneyLoadAsync(int id)
+        {
+            var processPositive = await _httpClient.PostAsJsonAsync("User", id);
+            var resalt = await processPositive.Content.ReadFromJsonAsync<double>();
+            return resalt;
+        }
+
+        public async Task<double> UserUpdateMoneu(MoneuUpdate moneuUpdate)
+        {
+            var processPositive = await _httpClient.PostAsJsonAsync("User/updateMoneu", moneuUpdate);
+            var resalt = await processPositive.Content.ReadFromJsonAsync<double>();
+            return resalt;
+        }
+
+
+
+
+
+
+
+
+
+
+
 
         public async Task<bool> RegistrationAsync(StartUserData user)
         {
@@ -42,5 +68,6 @@ namespace Diplom_Utkin.Model
             if (resalt == null) return null;
             else return resalt;
         }
+
     }
 }
