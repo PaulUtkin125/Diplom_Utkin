@@ -21,17 +21,12 @@ namespace Diplom_Utkin.Pages.userPage
             
         }
         public IList<Portfolio> InvestToolsList { get; set; } = default!;
-        //public User _user { get; set; }
         public double Money { get; set; }
 
         public string sortName { get; set; }
         public string sortSum { get; set; }
         public string CurrnerSort { get; set; }
 
-
-        [BindProperty]
-        [Required]
-        [Range(1, double.MaxValue, ErrorMessage ="Сумма должна быть больше нуля!")]
         public double targetSumm { get; set; }
         
         public int isVuvod { get; set; }

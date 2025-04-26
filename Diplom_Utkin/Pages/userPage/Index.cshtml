@@ -136,14 +136,14 @@
 			
 
 			if (sum < 1) {
-				document.getElementById('summTextError').textContent = 'Сумма должна быть больше нуля!'; // <-- выводится
+				document.getElementById('summTextError').textContent = 'Сумма должна быть больше нуля!';
 				return false;
 			} else {
 				if (vector == 1) {
 					// вывод средств
 					if (sum > mySym) {
-						console.log("sum > mySym  :", sum > mySym);  // <-- выводится
-						document.getElementById('summTextError').textContent = 'Недостаточно средств!'; // <-- НЕ выводится
+						console.log("sum > mySym  :", sum > mySym);
+						document.getElementById('summTextError').textContent = 'Недостаточно средств!';
 						return false;
 					}
 				}
@@ -155,8 +155,3 @@
 	</script>
 </div>
 
-@section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
-}
