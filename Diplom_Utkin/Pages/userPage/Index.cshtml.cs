@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using Diplom_Utkin.Model;
 using Diplom_Utkin.Model.Support;
 using Finansu.Model;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Diplom_Utkin.Pages.userPage
@@ -15,22 +14,28 @@ namespace Diplom_Utkin.Pages.userPage
         public IndexModel()
         {
             _APIService = new APIService();
-
-            
-
-            
         }
+
         public IList<Portfolio> InvestToolsList { get; set; } = default!;
         public double Money { get; set; }
+
+
+        public double? Pribl { get; set; } = 0;
 
         public string sortName { get; set; }
         public string sortSum { get; set; }
         public string CurrnerSort { get; set; }
 
+        [Required(ErrorMessage = "Поле должно быть заполнено!")]
+        public DateTime startDate { get; set; }
+
+        [Required(ErrorMessage = "Поле должно быть заполнено!")]
+        public DateTime endDate { get; set; }
+
         public double targetSumm { get; set; }
-        
         public int isVuvod { get; set; }
-        public async Task OnGetAsync(int id, string? sortOrder, string? actionBalens, double? targetSumm, int? isVuvod, int? vector)
+        public async Task OnGetAsync(int id, string? sortOrder, string? action, double? targetSumm, int? isVuvod, int? vector,
+            DateTime? startDate, DateTime? endDate)
         {
             if (id != 0)
             {
@@ -84,31 +89,44 @@ namespace Diplom_Utkin.Pages.userPage
 
             InvestToolsList = investToolsIQ;
 
-            if (actionBalens == "btnBalans")
+            switch (action)
             {
-                if (targetSumm > 0)
-                {
-                    if (isVuvod == 1)
+                case "btnBalans":
+                    if (targetSumm > 0)
                     {
-                        MoneuUpdate moneuUpdate = new MoneuUpdate()
+                        if (isVuvod == 1)
                         {
-                            id = uId,
-                            sum = (double)targetSumm,
-                            vector = (int)isVuvod
-                        };
-                        Money = await _APIService.UserUpdateMoneu(moneuUpdate);
+                            MoneuUpdate moneuUpdate = new MoneuUpdate()
+                            {
+                                id = uId,
+                                sum = (double)targetSumm,
+                                vector = (int)isVuvod
+                            };
+                            Money = await _APIService.UserUpdateMoneu(moneuUpdate);
+                        }
+                        else
+                        {
+                            MoneuUpdate moneuUpdate = new MoneuUpdate()
+                            {
+                                id = uId,
+                                sum = (double)targetSumm,
+                                vector = (int)isVuvod
+                            };
+                            Money = await _APIService.UserUpdateMoneu(moneuUpdate);
+                        }
                     }
-                    else
+                    break;
+
+                case "raschot_Btn":
+
+                    var resalt = await _APIService.CalkulateAsync(startDate, endDate, uId);
+                    if (resalt == null)
                     {
-                        MoneuUpdate moneuUpdate = new MoneuUpdate()
-                        {
-                            id = uId,
-                            sum = (double)targetSumm,
-                            vector = (int)isVuvod
-                        };
-                        Money = await _APIService.UserUpdateMoneu(moneuUpdate);
+                        ModelState.AddModelError("Pribl", "Даные отсутствуют!");
+                        break;
                     }
-                }
+                    Pribl = resalt;
+                    break;
             }
             
 

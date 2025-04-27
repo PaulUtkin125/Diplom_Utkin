@@ -32,7 +32,7 @@
 					<div class="form-group">
 						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType"/>
 					</div>
-					<button name="actionBalens" type="submit" value="btnBalans"></button>
+					<button name="action" type="submit" value="btnBalans"></button>
 					
 				</form>
 			</div>
@@ -44,7 +44,32 @@
 		@* Диаграмма должна быть тут *@
 
 	</div>
+	<div class="d-inline-flex salery-box">
+		<form action="#" method="get">
+			<div class="d-inline-flex">
+				<div class="form-group">
+					<label asp-for="startDate" class="control-label">От</label>
+					<input asp-for="startDate" id="startDate" class="form-control" type="date" value="@DateTime.Now" required />
+					<span asp-validation-for="startDate" id="StartDateError" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="endDate" class="control-label">От</label>
+					<input asp-for="endDate" id="endDate" class="form-control" type="date" value="@DateTime.Now" required />
+					<span asp-validation-for="endDate" id="endDateError" class="text-danger"></span>
+				</div>
+				<div>
+					<button class="myButton" name="action" type="submit" value="raschot_Btn">Рассчитать</button>
+				</div>
+			</div>
+		</form>
+		<div class="priblValue">
+			<label asp-for="Pribl" class="control-label">@Model.Pribl</label>
+			<span asp-validation-for="Pribl" class="text-danger"></span>
+		</div>
+	</div>
 	
+	
+
 	<table class="table">
 		<thead>
 			<tr>
@@ -98,13 +123,15 @@
 	</div>
 	<script>
 		function openPopup() {
+			document.getElementById('summTextError').textContent = '';
+			document.getElementById('summText').value = '0';
 
 			document.querySelector('.popup').style.display = 'block';
 			document.getElementById('overlay').style.display = 'block';
 		}
 		function closePopup() {
 			document.getElementById('summTextError').textContent = '';
-			document.getElementById('summText').value = 0;
+			document.getElementById('summText').value = '0';
 
 			document.querySelector('.popup').style.display = 'none';
 			document.getElementById('overlay').style.display = 'none';

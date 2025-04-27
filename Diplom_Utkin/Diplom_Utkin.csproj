@@ -21,8 +21,6 @@
     <Content Remove="wwwroot\Image\Rectangle 47.png" />
     <Content Remove="wwwroot\Image\RectangleBTN.png" />
     <Content Remove="wwwroot\Image\rightArrow.png" />
-    <Content Remove="wwwroot\Image\SingIn.png" />
-    <Content Remove="wwwroot\Image\SingUp.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,8 +47,6 @@
     <Resource Include="wwwroot\Image\Rectangle 47.png" />
     <Resource Include="wwwroot\Image\RectangleBTN.png" />
     <Resource Include="wwwroot\Image\rightArrow.png" />
-    <Resource Include="wwwroot\Image\SingIn.png" />
-    <Resource Include="wwwroot\Image\SingUp.png" />
   </ItemGroup>
 
   <ItemGroup>

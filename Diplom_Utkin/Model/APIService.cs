@@ -69,5 +69,20 @@ namespace Diplom_Utkin.Model
             else return resalt;
         }
 
+
+
+        public async Task<double?> CalkulateAsync(DateTime? startDate, DateTime? endDate, int id)
+        {
+            CalculateSupport calculateSupport = new()
+            {
+                Id = id,
+                dateFinish = endDate,
+                dateStart = startDate,
+            };
+            var processPositive = await _httpClient.PostAsJsonAsync($"User/Calculate", calculateSupport);
+            var resalt = await processPositive.Content.ReadFromJsonAsync<double>();
+            if (resalt == 0.0) return null;
+            else return resalt;
+        }
     }
 }

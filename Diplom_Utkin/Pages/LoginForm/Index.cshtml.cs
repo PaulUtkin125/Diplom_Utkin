@@ -27,10 +27,10 @@ namespace Diplom_Utkin.Pages.LoginForm_
 
         public IActionResult OnPost(string action)
         {
-            var data = _APIService.AutorizationAsynk(User).Result;
             switch (action)
             {
                 case "vhod_btn":
+                    var data = _APIService.AutorizationAsynk(User).Result;
                     if (data != null)
                     {
 
