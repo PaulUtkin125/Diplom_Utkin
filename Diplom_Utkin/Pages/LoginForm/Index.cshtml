@@ -28,7 +28,7 @@
 			</form>
 			<form method="post">
 				<div class="form-group">
-					<button class="myButton" name="action" type="submit" value="Registr_btn">У Вас нет аккаунта? Зарегистрируйтесь</button>
+					<button class="myButton" name="action" type="submit" onsubmit="tr()" value="Registr_btn">У Вас нет аккаунта? Зарегистрируйтесь</button>
 				</div>
 				
 			</form>
@@ -36,6 +36,35 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	
+
+	function tr(){
+		const token = @Model.jwtToken
+		localStorage.setItem('jwtToken', token);
+
+		fetch('/userPage/Index', {
+		method: 'GET',
+		headers: {
+			'Authorization': 'Bearer ' + localStorage.getItem('jwtToken') // Ваш токен
+		}
+	})
+	.then(response => {
+		if (response.ok) {
+			return response.json();
+		}
+		throw new Error('Network response was not ok.');
+	})
+	.then(data => {
+		console.log(data);
+	})
+	.catch(error => {
+		console.error('There was a problem with the fetch operation:', error);
+	});
+	}
+		
+</script>
 
 @section Scripts {
 	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

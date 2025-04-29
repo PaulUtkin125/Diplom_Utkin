@@ -2,15 +2,23 @@ using System.ComponentModel.DataAnnotations;
 using Diplom_Utkin.Model;
 using Diplom_Utkin.Model.Support;
 using Finansu.Model;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Diplom_Utkin.Pages.userPage
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private int uId;
         private readonly APIService _APIService;
-        public List<string[]>? salesData { get; set; }
+        private List<string[]>? salesData { get; set; }
+        public double[] chartData { get; set; }
+        public string[] chartName { get; set; }
+
+
         public IndexModel()
         {
             _APIService = new APIService();
@@ -34,9 +42,10 @@ namespace Diplom_Utkin.Pages.userPage
 
         public double targetSumm { get; set; }
         public int isVuvod { get; set; }
-        public async Task OnGetAsync(int id, string? sortOrder, string? action, double? targetSumm, int? isVuvod, int? vector,
+        public async Task<ActionResult> OnGetAsync(int id, string? sortOrder, string? action, double? targetSumm, int? isVuvod, int? vector,
             DateTime? startDate, DateTime? endDate)
         {
+
             if (id != 0)
             {
                 uId = id;
@@ -44,8 +53,15 @@ namespace Diplom_Utkin.Pages.userPage
                 Money = _APIService.moneyLoadAsync(uId).Result;
 
                 var data = _APIService.loadChartAsynk(uId).Result;
-                if (data[1] != null)
+                if (data[0][1] != null)
                 {
+                    chartData = new double[data.Count];
+                    chartName = new string[data.Count];
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        chartData[i] = double.Parse(data[i][1]);
+                        chartName[i] = data[i][0];
+                    }
                     salesData = data;
                 }
             }
@@ -55,8 +71,15 @@ namespace Diplom_Utkin.Pages.userPage
                 TempData["uId"] = uId;
                 Money = _APIService.moneyLoadAsync(uId).Result;
                 var data = _APIService.loadChartAsynk(uId).Result;
-                if (data[1] != null)
+                if (data[0][1] != null)
                 {
+                    chartData = new double[data.Count];
+                    chartName = new string[data.Count];
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        chartData[i] = double.Parse(data[i][1]);
+                        chartName[i] = data[i][0];
+                    }
                     salesData = data;
                 }
             }
@@ -128,8 +151,8 @@ namespace Diplom_Utkin.Pages.userPage
                     Pribl = resalt;
                     break;
             }
-            
 
+            return Page();
         }
     }
 }

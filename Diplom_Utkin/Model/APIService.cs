@@ -1,6 +1,7 @@
 ﻿using Diplom_Utkin.Model.Support;
 using DiplomAPI.Models.Support;
 using Finansu.Model;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Diplom_Utkin.Model
 {
@@ -46,12 +47,27 @@ namespace Diplom_Utkin.Model
             return false;
         }
 
+        public async Task<string?> SupportFromToken(StartUserData user)
+        {
+            var processPositive = await _httpClient.PostAsJsonAsync("Logo/Autorisation", user);
+            string? resalt;
+            if (processPositive.IsSuccessStatusCode)
+            {
+                resalt = await processPositive.Content.ReadAsStringAsync();
+                return resalt;
+            }
+            return null;
+        }
         public async Task<int?> AutorizationAsynk(StartUserData user)
         {
             var processPositive = await _httpClient.PostAsJsonAsync("Logo/Autorisation", user);
-            int? resalt = await processPositive.Content.ReadFromJsonAsync<int?>();
-            if (resalt == 0) return null;
-            return resalt;
+            int? resalt;
+            if (processPositive.IsSuccessStatusCode)
+            {
+                resalt = await processPositive.Content.ReadFromJsonAsync<int?>();
+                return resalt;
+            }
+            return null;
         }
         public async Task<List<string[]>?> loadChartAsynk(int  id)
         {

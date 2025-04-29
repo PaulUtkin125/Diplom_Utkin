@@ -1,13 +1,32 @@
 ﻿@page
-@using LiveCharts
-@using LiveCharts.Defaults
 @using Diplom_Utkin.Model
 @model Diplom_Utkin.Pages.userPage.IndexModel
 @{
 	ViewData["Title"] = "Кабинет";
-	List<ChartModel> charts = new List<ChartModel>();
-	var salesData = Model.salesData;
 }
+
+@* <script> 
+
+	fetch('http://localhost:5092/userPage', {
+		method: 'GET',
+		headers: {
+			'Authorization': 'Bearer ' + sessionStorage.getItem("jwtToken") // Ваш токен
+		}
+	})
+	.then(response => {
+		if (response.ok) {
+			return response.json();
+		}
+		throw new Error('Network response was not ok.');
+	})
+	.then(data => {
+		console.log(data);
+	})
+	.catch(error => {
+		console.error('There was a problem with the fetch operation:', error);
+	});
+
+ </script> *@
 
 @await Html.PartialAsync("Headers/_UserHeader")
 
@@ -40,6 +59,45 @@
 	</section>
 	
 	<div class="informations">
+		<h1>Круговая диаграмма</h1>
+		<canvas id="myPieChart" width="400" height="400"></canvas>
+
+		<script>
+			var ctx = document.getElementById('myPieChart').getContext('2d');
+			var myPieChart = new Chart(ctx, {
+				type: 'pie',
+				data: {
+					labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.chartName)), // Укажите свои метки
+					datasets: [{
+						// label: 'Примечание',
+						data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.chartData)), // Укажите данные для каждой категории
+						backgroundColor: [
+							'rgba(255, 99, 132, 0.2)',
+							'rgba(54, 162, 235, 0.2)',
+							'rgba(255, 206, 86, 0.2)'
+						],
+						borderColor: [
+							'rgba(255, 99, 132, 1)',
+							'rgba(54, 162, 235, 1)',
+							'rgba(255, 206, 86, 1)'
+						],
+						borderWidth: 1
+					}]
+				},
+				options: {
+					responsive: true,
+					plugins: {
+						legend: {
+							position: 'right',
+						},
+						title: {
+							display: true,
+							text: 'Пример круговой диаграммы'
+						}
+					}
+				}
+			});
+		</script>
 
 		@* Диаграмма должна быть тут *@
 

@@ -36,6 +36,7 @@
                         </a>
                     </li>
                     <li class="nav-item myItem">
+                       
                         <a class="nav-link" href="#" onclick="vuhodOnStart(event)">Выйти</a>
                     </li>
                 </ul>
@@ -45,9 +46,18 @@
 </header>
 
 <script>
+
     function vuhodOnStart(event)
     {
         event.preventDefault();
         window.location.replace('/LoginForm/Index');
+
+    }
+
+    window.history.pushState(null, null, window.location.href);
+
+    window.onpopstate = function(event)
+    {
+        vuhodOnStart(event);    
     }
 </script>
