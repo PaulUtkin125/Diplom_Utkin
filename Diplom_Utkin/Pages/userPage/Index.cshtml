@@ -5,9 +5,9 @@
 	ViewData["Title"] = "Кабинет";
 }
 
-@* <script> 
+@* <script>  
 
-	fetch('http://localhost:5092/userPage', {
+	fetch('http://localhost:5092/userPage/Index', {
 		method: 'GET',
 		headers: {
 			'Authorization': 'Bearer ' + sessionStorage.getItem("jwtToken") // Ваш токен
@@ -26,7 +26,7 @@
 		console.error('There was a problem with the fetch operation:', error);
 	});
 
- </script> *@
+ </script>*@
 
 @await Html.PartialAsync("Headers/_UserHeader")
 

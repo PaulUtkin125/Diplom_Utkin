@@ -14,11 +14,21 @@ namespace Diplom_Utkin
 
             builder.Services.AddSession(options =>
             {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
-                options.IdleTimeout = TimeSpan.FromMinutes(5);
             });
 
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession();
+
+            // Обязательные сервисы
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddDistributedMemoryCache(); // Для хранения сессий в памяти
+
+            //builder.Services.AddAuthentication();
+
+            // Настройка аутентификации с использованием JWT
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -26,26 +36,18 @@ namespace Diplom_Utkin
             })
             .AddJwtBearer(options =>
             {
-                var jwtKey = builder.Configuration["JWT:Key"] ??
-                    throw new InvalidOperationException("JWT Key is not Configured");
-                var jwtIssuer = builder.Configuration["JWT:Issuer"] ??
-                    throw new InvalidOperationException("JWT Issuer is not Configured");
-                var jwtAudience = builder.Configuration["JWT:Audience"] ??
-                    throw new InvalidOperationException("JWT Audience is not Configured");
-
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtIssuer,
-                    ValidAudience = jwtAudience,
-                    IssuerSigningKey = 
-                        new SymmetricSecurityKey
-                        (Encoding.UTF8.GetBytes(jwtKey))
+                    ValidIssuer = builder.Configuration["JWT:Issuer"],
+                    ValidAudience = builder.Configuration["JWT:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
                 };
             });
+
             // Add services to the container.
             builder.Services.AddRazorPages();
 
@@ -65,7 +67,6 @@ namespace Diplom_Utkin
             app.UseRouting();
 
             app.UseSession();
-
             app.UseAuthentication();
             app.UseAuthorization();
 

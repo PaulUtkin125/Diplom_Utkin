@@ -1,4 +1,5 @@
 ﻿@page
+@inject IHttpContextAccessor HttpContextAccessor
 @model Diplom_Utkin.Pages.LoginForm_.LoginFormModel
 @{
 	ViewData["Title"] = "Авторизация";
@@ -28,7 +29,7 @@
 			</form>
 			<form method="post">
 				<div class="form-group">
-					<button class="myButton" name="action" type="submit" onsubmit="tr()" value="Registr_btn">У Вас нет аккаунта? Зарегистрируйтесь</button>
+					<button class="myButton" name="action" type="submit" onclick="tr()" value="Registr_btn">У Вас нет аккаунта? Зарегистрируйтесь</button>
 				</div>
 				
 			</form>
@@ -42,12 +43,13 @@
 
 	function tr(){
 		const token = @Model.jwtToken
-		localStorage.setItem('jwtToken', token);
 
-		fetch('/userPage/Index', {
+		fetch('http://localhost:5092/userPage/Index', {
 		method: 'GET',
 		headers: {
-			'Authorization': 'Bearer ' + localStorage.getItem('jwtToken') // Ваш токен
+
+			'Authorization': 'Bearer' + token, //Ваш токен
+			'Content-Type': 'application/json'
 		}
 	})
 	.then(response => {

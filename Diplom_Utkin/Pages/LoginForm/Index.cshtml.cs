@@ -53,7 +53,8 @@ namespace Diplom_Utkin.Pages.LoginForm_
                         // Генерация токена
                         var claims = new[]
                         {
-                            new Claim(ClaimTypes.Name, data.ToString())
+                            new Claim(JwtRegisteredClaimNames.Sub, data.ToString()),
+                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                         };
 
                         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
@@ -64,11 +65,10 @@ namespace Diplom_Utkin.Pages.LoginForm_
                                                           signingCredentials: creds);
 
                         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+                        jwtToken = tokenString;
 
-                        HttpContext.Session.SetString("jwtToken", tokenString);
-                        //var tr = HttpContext.Session.GetString("jwt");
+                        HttpContext.Response.Cookies.Append("jwtToken", tokenString);
 
-                        Console.WriteLine($"Token added to cookie: {tokenString}");
                         return RedirectToPage("/userPage/Index", new { id = data });
                     }
                     else
