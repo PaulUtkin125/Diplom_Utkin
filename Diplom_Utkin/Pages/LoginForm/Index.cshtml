@@ -5,8 +5,7 @@
 	ViewData["Title"] = "Авторизация";
 }
 
-@* @await Html.PartialAsync("Headers/_HomeHeader") *@
-
+@await Html.PartialAsync("Headers/_LoginHeader")
 <div class="window-box vhodBox">
 	<div class="contentVhod">
 		<div class="form-block">
@@ -37,36 +36,6 @@
 		</div>
 	</div>
 </div>
-
-<script>
-	
-
-	function tr(){
-		const token = @Model.jwtToken
-
-		fetch('http://localhost:5092/userPage/Index', {
-		method: 'GET',
-		headers: {
-
-			'Authorization': 'Bearer' + token, //Ваш токен
-			'Content-Type': 'application/json'
-		}
-	})
-	.then(response => {
-		if (response.ok) {
-			return response.json();
-		}
-		throw new Error('Network response was not ok.');
-	})
-	.then(data => {
-		console.log(data);
-	})
-	.catch(error => {
-		console.error('There was a problem with the fetch operation:', error);
-	});
-	}
-		
-</script>
 
 @section Scripts {
 	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

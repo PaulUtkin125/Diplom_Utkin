@@ -1,0 +1,136 @@
+﻿@page
+@model Diplom_Utkin.Pages.HomePage.IndexModel
+@{
+	ViewData["Title"] = "Finance manager";
+}
+
+<div class="window-box kabinet-box">
+	@await Html.PartialAsync("Headers/_HomeHeader")
+	<div class="container logoForm">
+		<section class="Liefhac_box">
+			<div>
+				<div class="Liefhac_img">
+					<img src="/Image/1721209876568.png" />
+				</div>
+				<div class="textLifhac helowBox">
+					<h3 class="bold_">Откройте брокерский счёт</h3>
+					<p>Более <strong class="bold_">6 млн</strong> клиентов выбрали Finance manager своим брокером. Акции, облигации, валюта и многое другое на нашем сайте.</p>
+					
+					
+					<a asp-page="/LoginForm/SingUp" asp-area="" class="myButton">
+						Открыть счёт
+					</a>
+				</div>
+			</div>
+		</section>
+
+		<section class="vozmozhnosti_Box">
+			<div class="item_Vozmozhnost">
+				<h4>
+					Один счет - много бирж
+				</h4>
+				<p>
+					Доступ к акциям, облигациям, валюте, фьючерсам, опционам и драгметаллам на Московской бирже, СПБ Бирже, HKEX, NYSE и NASDAQ.
+				</p>
+				<div>
+					<img src="/Image/vozmozhnosti/Icon1.png" />
+				</div>
+			</div>
+			<div class="item_Vozmozhnost">
+				<h4>
+					Надежно
+				</h4>
+				<p>
+					«Finance manager» — самый надежный брокер 2023 года по версии премии «Финансовая Элита России», с рейтингом «АА-|ru.iv|» от НРА.
+				</p>
+				<div>
+					<img src="/Image/vozmozhnosti/Icon4.png" />
+				</div>
+			</div>
+			<div class="item_Vozmozhnost">
+				<h4>
+					Один счет - много бирж
+				</h4>
+				<p>
+					Удобное приложение Finance manager для всех основных платформ, техподдержка 24/7 в чате или на бесплатной горячей линии.
+				</p>
+				<div>
+					<img src="/Image/vozmozhnosti/Icon3.png" />
+				</div>
+			</div>
+		</section>
+
+		<section class="Liefhac_box">
+			<h4>Лайфхаки для умного старта в инвестициях</h4>
+			<div>
+				<div class="textLifhac">
+					<div class="myRow">
+						<div class="numberBox">1</div>
+						<p><strong class="bold_">Станьте совладельцем успешных компаний —</strong> инвестируйте в акции российских и мировых гигантов, и зарабатывайте на изменении котировок.</p>
+					</div>
+					<div class="myRow">
+						<div class="numberBox">2</div>
+						<p><strong class="bold_">Получайте дивиденды —</strong> сформируйте стабильный денежный поток. Во времена высокой инфляции ряд эмитентов может выплачивать дивиденды с двузначной дивидендной доходностью — аналитики «Финама» внимательно следят за такими компаниями.</p>
+					</div>
+					<div class="myRow">
+						<div class="numberBox">3</div>
+						<p><strong class="bold_">Назначьте себе «купонную зарплату» —</strong> соберите облигационный портфель с фиксированными купонными выплатами из корпоративных, муниципальных и гособлигаций.</p>
+					</div>
+					<div class="myRow">
+						<p>Узнайте больше лайфхаков для умного старта на бирже, а также получите бесплатно подписку на инвестидеи, аналитику и прогнозы по эмитентам и секторам экономики, чтобы принимать взвешенные торговые решения.</p>
+					</div>
+				</div>
+				<div class="Liefhac_img">
+					<img src="/Image/telNew.png"/>
+				</div>
+			</div>
+		</section>
+		<section class="primiiList">
+			<h3>Наши награды</h3>
+			<div class="carousel-wrapper">
+				<div>
+					<img src="/Image/Premii/Group_1393_4f519875d5.png" alt="Alternate Text" />
+				</div>
+				<div>
+					<img src="/Image/Premii/Group_1394_2675a552bf.png" alt="Alternate Text" />
+				</div>
+				<div>
+					<img src="/Image/Premii/Group_1396_1_115330bda2.png" alt="Alternate Text" />
+				</div>
+
+			</div>
+
+			<script> 
+				const carouselWrapper = document.querySelector('.carousel-wrapper');
+				const items = document.querySelectorAll('.carousel-wrapper div');
+
+				let itemCount = items.length;
+
+				// Дублируем первые элементы для создания эффекта закольцованности
+				for (let i = 0; i < itemCount; i++) {
+					let clone = items[i].cloneNode(true);
+					carouselWrapper.appendChild(clone);
+				}
+
+				// Обновляем количество элементов
+				itemCount = items.length * 2;
+
+				// Устанавливаем ширину контейнера в зависимости от количества элементов
+				carouselWrapper.style.width = `${itemCount * 33.33}vw`;
+
+			</script>
+		</section>
+	</div>
+</div>
+
+<footer class="border-top footer text-muted">
+	<div class="container">
+		<hr>
+		&copy; 2025 - ООО «Finance manager»
+		<div>
+			<p>Не является индивидуальной инвестиционной рекомендацией.</p>
+			<p>Приобретение иностранных ценных бумаг связано с дополнительными рисками.</p>
+		</div>
+
+	</div>
+</footer>

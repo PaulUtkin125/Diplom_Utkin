@@ -1,0 +1,132 @@
+﻿@page
+@model Diplom_Utkin.Pages.userPage.VitrinaModel
+@{
+	ViewData["Title"] = "Витрина";
+}
+<div class="window-box kabinet-box">
+	@await Html.PartialAsync("Headers/_UserHeader")
+	<section>
+		<div id="overlay" class="overlay"></div>
+		<div id="sideMenu" class="side-menu">
+			<button class="myButton" onclick="profilClose()">Закрыть</button>
+			<form method="post">
+				<div class="myRow">
+					<div class="form-group">
+						<label asp-for="_user.Loggin" class="control-label">E-mail</label>
+						<input asp-for="_user.Loggin" class="form-control" type="email" required disabled />
+
+					</div>
+					<div>
+						<button type="submit" onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></button>
+
+					</div>
+				</div>
+				<span asp-validation-for="_user.Loggin" class="text-danger"></span>
+			</form>
+
+			<form method="post">
+				<div class="myRow">
+					<div class="form-group">
+						<label asp-for="_user.PaswordHash" class="control-label">Телефон</label>
+						<input asp-for="_user.PaswordHash" class="form-control" type="tel" required disabled />
+
+					</div>
+					<div>
+						<button type="submit" onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></button>
+
+					</div>
+				</div>
+				<span asp-validation-for="_user.PaswordHash" class="text-danger"></span>
+			</form>
+
+
+
+		</div>
+		<div class="popup">
+			<div class="poputContent">
+				<div class="top_">
+					<div>
+						<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
+					</div>
+
+				</div>
+				<form id="myForm" method="get" onsubmit="return moneuBtn()">
+					<h1 id="popTitle">Пополнение счета</h1>
+					<div class="form-group">
+						<label asp-for="targetSumm" class="control-label">Сумма</label>
+						<input asp-for="targetSumm" id="summText" class="form-control" type="number" required />
+						<span asp-validation-for="targetSumm" id="summTextError" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType" />
+					</div>
+					<button class="myButton" name="action" type="submit" value="btnBalans">Выполнить</button>
+
+				</form>
+			</div>
+		</div>
+
+	</section>
+	<div id="vitrina">
+		<div class="scriner">
+			dfd
+		</div>
+		<div class="tb_Box">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>
+							Иконка
+						</th>
+						<th>
+							<a asp-route-sortOrderAll="@Model.sortName" onclick="openVitrina()">
+								Название
+							</a>
+						</th>
+						<th>
+							<a asp-route-sortOrderAll="@Model.sortBroker" onclick="openVitrina()">
+								Брокер
+							</a>
+						</th>
+						<th>
+							Действие
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model.AllInvestToolsList)
+					{
+						<tr>
+							<td>
+								<div class="hd-imgBlock settings">
+									@* 		<img src="@item.InvestTool.Source"/> *@
+								</div>
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.NameInvestTool)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.Brokers.NameBroker)
+							</td>
+							<td class="tbColCenter">
+								@if (!item.isClosed)
+								{
+									<a asp-page="#" asp-route-id="@item.Id">Купить</a>
+								}
+								else
+								{
+									<text>
+										Заморожен
+									</text>
+								}
+
+							</td>
+
+
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

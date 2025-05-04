@@ -5,34 +5,45 @@
 	ViewData["Title"] = "Кабинет";
 }
 
-@* <script>  
-
-	fetch('http://localhost:5092/userPage/Index', {
-		method: 'GET',
-		headers: {
-			'Authorization': 'Bearer ' + sessionStorage.getItem("jwtToken") // Ваш токен
-		}
-	})
-	.then(response => {
-		if (response.ok) {
-			return response.json();
-		}
-		throw new Error('Network response was not ok.');
-	})
-	.then(data => {
-		console.log(data);
-	})
-	.catch(error => {
-		console.error('There was a problem with the fetch operation:', error);
-	});
-
- </script>*@
-
-@await Html.PartialAsync("Headers/_UserHeader")
-
 <div class="window-box kabinet-box">
+	@await Html.PartialAsync("Headers/_UserHeader")
 	<section>
 		<div id="overlay" class="overlay"></div>
+		<div id="sideMenu" class="side-menu">
+			<button class="myButton" onclick="profilClose()">Закрыть</button>
+			<form method="post">
+				<div class="myRow">
+					<div class="form-group">
+						<label asp-for="_user.Loggin" class="control-label">E-mail</label>
+						<input asp-for="_user.Loggin" class="form-control" type="email" required disabled />
+
+					</div>
+					<div>
+						<button type="submit" onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></button>
+
+					</div>
+				</div>
+				<span asp-validation-for="_user.Loggin" class="text-danger"></span>
+			</form>
+
+			<form method="post">
+				<div class="myRow">
+					<div class="form-group">
+						<label asp-for="_user.PaswordHash" class="control-label">Телефон</label>
+						<input asp-for="_user.PaswordHash" class="form-control" type="tel" required disabled />
+
+					</div>
+					<div>
+						<button type="submit" onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></button>
+
+					</div>
+				</div>
+				<span asp-validation-for="_user.PaswordHash" class="text-danger"></span>
+			</form>
+
+
+
+		</div>
 		<div class="popup">
 			<div class="poputContent">
 				<div class="top_">
@@ -45,198 +56,152 @@
 					<h1 id="popTitle">Пополнение счета</h1>
 					<div class="form-group">
 						<label asp-for="targetSumm" class="control-label">Сумма</label>
-						<input asp-for="targetSumm" id="summText" class="form-control" type="number" required/>
+						<input asp-for="targetSumm" id="summText" class="form-control" type="number" required />
 						<span asp-validation-for="targetSumm" id="summTextError" class="text-danger"></span>
 					</div>
 					<div class="form-group">
-						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType"/>
+						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType" />
 					</div>
-					<button name="action" type="submit" value="btnBalans"></button>
-					
+					<button class="myButton" name="action" type="submit" value="btnBalans">Выполнить</button>
+
 				</form>
 			</div>
 		</div>
+
 	</section>
-	
-	<div class="informations">
-		<h1>Круговая диаграмма</h1>
-		<canvas id="myPieChart" width="400" height="400"></canvas>
+	<div id="portfel-block">
+		<div class="informations d-inline-flex">
+			<div>
+				<h1>Структура портфеля</h1>
+				<canvas id="myPieChart" width="700" height="500"></canvas>
 
-		<script>
-			var ctx = document.getElementById('myPieChart').getContext('2d');
-			var myPieChart = new Chart(ctx, {
-				type: 'pie',
-				data: {
-					labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.chartName)), // Укажите свои метки
-					datasets: [{
-						// label: 'Примечание',
-						data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.chartData)), // Укажите данные для каждой категории
-						backgroundColor: [
-							'rgba(255, 99, 132, 0.2)',
-							'rgba(54, 162, 235, 0.2)',
-							'rgba(255, 206, 86, 0.2)'
-						],
-						borderColor: [
-							'rgba(255, 99, 132, 1)',
-							'rgba(54, 162, 235, 1)',
-							'rgba(255, 206, 86, 1)'
-						],
-						borderWidth: 1
-					}]
-				},
-				options: {
-					responsive: true,
-					plugins: {
-						legend: {
-							position: 'right',
+				<script>
+					var ctx = document.getElementById('myPieChart').getContext('2d');
+
+					var myPieChart = new Chart(ctx, {
+						type: 'pie',
+						data: {
+							labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.chartName)), // Укажите свои метки
+							datasets: [{
+								// label: 'Примечание',
+								data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.chartData)), // Укажите данные для каждой категории
+
+							}]
 						},
-						title: {
-							display: true,
-							text: 'Пример круговой диаграммы'
+						options: {
+							animation: {
+								duration: 0 // Отключаем анимацию
+							},
+							responsive: true,
+							plugins: {
+								legend: {
+									position: 'right',
+									labels: {
+										font:{
+											size:18
+										}
+									}
+								}
+							}
 						}
-					}
-				}
-			});
-		</script>
+					});
+				</script>
+			</div>
 
-		@* Диаграмма должна быть тут *@
+			<div class="d-inline-flex salery-box">
+				<div class="raschotBox">
+					<form action="#" method="get">
+						<div class="d-inline-flex">
+							<h1>Рассчитать доходность</h1>
+							<div class="form-group">
+								<label asp-for="startDate" class="control-label">От</label>
+								<input asp-for="startDate" id="startDate" class="form-control" type="date" value="@DateTime.Now" required />
+								<span asp-validation-for="startDate" id="StartDateError" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="endDate" class="control-label">До</label>
+								<input asp-for="endDate" id="endDate" class="form-control" type="date" value="@DateTime.Now" required />
+								<span asp-validation-for="endDate" id="endDateError" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<button class="myButton" name="action" type="submit" value="raschot_Btn">Рассчитать</button>
+							</div>
+						</div>
+					</form>
+					<div>
+						<h1>Прибыль:</h1>
+						<div class="priblValue">
+							<label asp-for="Pribl" class="control-label">@Model.Pribl</label>
+							<span asp-validation-for="Pribl" class="text-danger"></span>
+						</div>
+					</div>
 
-	</div>
-	<div class="d-inline-flex salery-box">
-		<form action="#" method="get">
-			<div class="d-inline-flex">
-				<div class="form-group">
-					<label asp-for="startDate" class="control-label">От</label>
-					<input asp-for="startDate" id="startDate" class="form-control" type="date" value="@DateTime.Now" required />
-					<span asp-validation-for="startDate" id="StartDateError" class="text-danger"></span>
-				</div>
-				<div class="form-group">
-					<label asp-for="endDate" class="control-label">От</label>
-					<input asp-for="endDate" id="endDate" class="form-control" type="date" value="@DateTime.Now" required />
-					<span asp-validation-for="endDate" id="endDateError" class="text-danger"></span>
-				</div>
-				<div>
-					<button class="myButton" name="action" type="submit" value="raschot_Btn">Рассчитать</button>
 				</div>
 			</div>
-		</form>
-		<div class="priblValue">
-			<label asp-for="Pribl" class="control-label">@Model.Pribl</label>
-			<span asp-validation-for="Pribl" class="text-danger"></span>
+		</div>
+
+
+		<div class="tb_Box">
+			<h1>Инструменты</h1>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>
+							Иконка
+						</th>
+						<th>
+							<a asp-route-sortOrder="@Model.sortName">
+								Название
+							</a>
+						</th>
+						<th>
+							<a asp-route-sortOrder="@Model.sortSum">
+								Стоимость
+							</a>
+						</th>
+						<th>
+							Действие
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model.InvestToolsList)
+					{
+						<tr>
+							<td>
+								<div class="hd-imgBlock settings">
+									@* 		<img src="@item.InvestTool.Source"/> *@
+								</div>
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.InvestTool.NameInvestTool)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.AllManey) ₽
+							</td>
+							<td class="tbColCenter">
+								@if (!item.InvestTool.isClosed)
+								{
+									<a asp-page="#" asp-route-id="@item.InvestTool.Id">Докупить</a>
+									<span> | </span>
+									<a asp-page="#" asp-route-id="@item.InvestTool.Id"> Продать </a>
+								}
+								else
+								{
+									<text>
+										Заморожен
+									</text>
+								}
+
+							</td>
+
+
+						</tr>
+					}
+				</tbody>
+			</table>
 		</div>
 	</div>
 	
-	
-
-	<table class="table">
-		<thead>
-			<tr>
-				@* <th> *@
-				@* 	Иконка *@
-				@* </th> *@
-				<th>
-					<a asp-route-sortOrder="@Model.sortName">
-						Название
-					</a>
-				</th>
-				<th>
-					<a asp-route-sortOrder="@Model.sortSum">
-						Стоимость
-					</a>
-				</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model.InvestToolsList)
-			{
-				<tr>
-					@* <td> *@
-					@* 	<div class="hd-imgBlock settings"> *@
-					@* 		<img src="@item.InvestTool.Source"/> *@
-					@* 	</div> *@
-					@* </td> *@
-					<td>
-						@Html.DisplayFor(modelItem => item.InvestTool.NameInvestTool)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.AllManey) ₽
-					</td>
-					<td>
-						@if (!item.InvestTool.isClosed)
-						{
-							<a asp-page="#" asp-route-id="@item.InvestTool.Id">Докупить</a> 
-							<span>|</span>
-							<a asp-page="#" asp-route-id = "@item.InvestTool.Id"> Продать </a>
-						}
-					</td>
-					
-					
-				</tr>
-			}
-		</tbody>
-	</table>
-	<div class="publicationList">
-		211212
-	</div>
-	<script>
-		function openPopup() {
-			document.getElementById('summTextError').textContent = '';
-			document.getElementById('summText').value = '0';
-
-			document.querySelector('.popup').style.display = 'block';
-			document.getElementById('overlay').style.display = 'block';
-		}
-		function closePopup() {
-			document.getElementById('summTextError').textContent = '';
-			document.getElementById('summText').value = '0';
-
-			document.querySelector('.popup').style.display = 'none';
-			document.getElementById('overlay').style.display = 'none';
-		}
-
-		function openVuvod(){
-			document.getElementById('popTitle').textContent = 'Вывод';
-			document.getElementById('popOperationType').value = '1';
-			document.getElementById('popOperationType').textContent = '1';
-			openPopup();
-		}
-		function openVvod(){
-			document.getElementById('popTitle').textContent = 'Пополнить';
-			document.getElementById('popOperationType').value = '0';
-			document.getElementById('popOperationType').textContent = '0';
-			openPopup();
-		}
-
-
-		function moneuBtn() {
-			var mySym = Number(document.getElementById('koshelBox_btn').textContent.replace(" ₽", ""));
-			var sum = Number(document.getElementById('summText').value);
-			var vector = Number(document.getElementById('popOperationType').textContent);
-			var isValid = true;
-
-			console.log("mySym:", mySym);
-			console.log("sum:", sum);
-			console.log("vector:", vector);
-			
-
-			if (sum < 1) {
-				document.getElementById('summTextError').textContent = 'Сумма должна быть больше нуля!';
-				return false;
-			} else {
-				if (vector == 1) {
-					// вывод средств
-					if (sum > mySym) {
-						console.log("sum > mySym  :", sum > mySym);
-						document.getElementById('summTextError').textContent = 'Недостаточно средств!';
-						return false;
-					}
-				}
-				
-			}
-
-		 	return isValid;
-		}
-	</script>
 </div>
 

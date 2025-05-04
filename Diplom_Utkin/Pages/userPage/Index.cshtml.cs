@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Diplom_Utkin.Pages.userPage
 {
-    [Authorize]
+    //[Authorize]
     public class IndexModel : PageModel
     {
         private int uId;
@@ -18,13 +18,14 @@ namespace Diplom_Utkin.Pages.userPage
         public double[] chartData { get; set; }
         public string[] chartName { get; set; }
 
-
+        public User _user { get; set; }
         public IndexModel()
         {
             _APIService = new APIService();
         }
 
         public IList<Portfolio> InvestToolsList { get; set; } = default!;
+        public List<InvestTools> AllInvestToolsList { get; set; }
         public double Money { get; set; }
 
 
@@ -34,6 +35,7 @@ namespace Diplom_Utkin.Pages.userPage
         public string sortSum { get; set; }
         public string CurrnerSort { get; set; }
 
+
         [Required(ErrorMessage = "Поле должно быть заполнено!")]
         public DateTime startDate { get; set; }
 
@@ -42,34 +44,18 @@ namespace Diplom_Utkin.Pages.userPage
 
         public double targetSumm { get; set; }
         public int isVuvod { get; set; }
-        public async Task<ActionResult> OnGetAsync(int id, string? sortOrder, string? action, double? targetSumm, int? isVuvod, int? vector,
+
+        public bool? isClearTempData { get; set; }
+        public async Task<ActionResult> OnGetAsync(string? sortOrder, string? action, double? targetSumm, int? isVuvod, int? vector,
             DateTime? startDate, DateTime? endDate)
         {
 
-            if (id != 0)
-            {
-                uId = id;
-                TempData["uId"] = id;
-                Money = _APIService.moneyLoadAsync(uId).Result;
-
-                var data = _APIService.loadChartAsynk(uId).Result;
-                if (data[0][1] != null)
-                {
-                    chartData = new double[data.Count];
-                    chartName = new string[data.Count];
-                    for (int i = 0; i < data.Count; i++)
-                    {
-                        chartData[i] = double.Parse(data[i][1]);
-                        chartName[i] = data[i][0];
-                    }
-                    salesData = data;
-                }
-            }
-            else if (TempData["uId"] != null) 
+            if (TempData["uId"] != null) 
             {
                 uId = (int)TempData["uId"];
                 TempData["uId"] = uId;
-                Money = _APIService.moneyLoadAsync(uId).Result;
+                _user = _APIService.moneyLoadAsync(uId).Result;
+                Money = _user.Maney;
                 var data = _APIService.loadChartAsynk(uId).Result;
                 if (data[0][1] != null)
                 {
@@ -83,11 +69,12 @@ namespace Diplom_Utkin.Pages.userPage
                     salesData = data;
                 }
             }
+            else return Unauthorized();
 
             CurrnerSort = sortOrder;
+            TempData["sortOrder"] = sortOrder;
             sortName = string.IsNullOrEmpty(sortOrder)? "name_desc" : "";
             sortSum = sortOrder == "sum" ? "sum_desc" : "sum";
-
             var investToolsIQ = await _APIService.LoadUsersToolsAsinc(uId);
 
 
@@ -154,5 +141,63 @@ namespace Diplom_Utkin.Pages.userPage
 
             return Page();
         }
+
+        public async Task<ActionResult> OnPost()
+        {
+            await WorkOfData();
+            return Page();
+        }
+
+        private async Task WorkOfData()
+        {
+            if (TempData["uId"] != null)
+            {
+                uId = (int)TempData["uId"];
+                TempData["uId"] = uId;
+                _user = _APIService.moneyLoadAsync(uId).Result;
+                Money = _user.Maney;
+                var data = _APIService.loadChartAsynk(uId).Result;
+                if (data[0][1] != null)
+                {
+                    chartData = new double[data.Count];
+                    chartName = new string[data.Count];
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        chartData[i] = double.Parse(data[i][1]);
+                        chartName[i] = data[i][0];
+                    }
+                    salesData = data;
+                }
+                string? sortOrder = (string?)TempData["sortOrder"];
+                TempData["sortOrder"] = sortOrder;
+                sortName = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+                sortSum = sortOrder == "sum" ? "sum_desc" : "sum";
+
+                var investToolsIQ = await _APIService.LoadUsersToolsAsinc(uId);
+                if (investToolsIQ == null) return;
+
+                switch (sortOrder)
+                {
+                    case "name_desc":
+                        investToolsIQ = investToolsIQ.OrderByDescending(x => x.InvestTool.NameInvestTool).ToList();
+                        break;
+
+                    case "sum_desc":
+                        investToolsIQ = investToolsIQ.OrderByDescending(x => x.AllManey).ToList();
+                        break;
+
+                    case "sum":
+                        investToolsIQ = investToolsIQ.OrderBy(x => x.AllManey).ToList();
+                        break;
+
+                    default:
+                        investToolsIQ = investToolsIQ.OrderBy(x => x.InvestTool.NameInvestTool).ToList();
+                        break;
+                }
+
+                InvestToolsList = investToolsIQ;
+            }
+        }
+
     }
 }

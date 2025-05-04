@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
         <div class="container">
             <div class="hd-imgBlock">
-                <a asp-page="/userPage/Index" asp-area="">
+                <a asp-page="/userPage/Index">
 					<img src="/Image/mainIcon2.png" alt="Alternate Text" />
                 </a>
                 
@@ -14,10 +14,10 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1 hd-nav">
                     <li class="nav-item myItem">
-                        <a class="nav-link" asp-area="" asp-page="/userPage/Index">Портфель</a>
+                        <a class="nav-link" asp-page="/userPage/Index">Портфель</a>
                     </li>
                     <li class="nav-item myItem">
-                        <a class="nav-link" asp-area="" asp-page="#">Витрина</a>
+                        <a class="nav-link" asp-page="/userPage/Vitrina">Витрина</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -29,7 +29,7 @@
                         </ul>
                     </li>
 					<li class="nav-item myItem">
-						<a class="nav-link" asp-area="" asp-page="#">
+                        <a class="nav-link" onclick="profilOpen()">
                             <div class="hd-imgBlock settings">
                                 <img src="/Image/Profil.png" alt="Alternate Text" />
                             </div>
@@ -46,18 +46,87 @@
 </header>
 
 <script>
+	function openPopup() {
+		document.body.style.overflow = 'hidden';
+		document.getElementById('summTextError').textContent = '';
+		document.getElementById('summText').value = '0';
 
-    function vuhodOnStart(event)
-    {
-        event.preventDefault();
-        window.location.replace('/LoginForm/Index');
+		document.querySelector('.popup').style.display = 'block';
+		document.getElementById('overlay').style.display = 'block';
+	}
+	function closePopup() {
+		document.getElementById('summTextError').textContent = '';
+		document.getElementById('summText').value = '0';
 
-    }
+		document.body.style.overflow = 'auto';
+		document.querySelector('.popup').style.display = 'none';
+		document.getElementById('overlay').style.display = 'none';
+	}
 
-    window.history.pushState(null, null, window.location.href);
+	function openVuvod(){
+		document.getElementById('popTitle').textContent = 'Вывод';
+		document.getElementById('popOperationType').value = '1';
+		document.getElementById('popOperationType').textContent = '1';
+		openPopup();
+	}
+	function openVvod(){
+		document.getElementById('popTitle').textContent = 'Пополнить';
+		document.getElementById('popOperationType').value = '0';
+		document.getElementById('popOperationType').textContent = '0';
+		openPopup();
+	}
 
-    window.onpopstate = function(event)
-    {
-        vuhodOnStart(event);    
-    }
+	function profilOpen (){
+		document.body.style.overflow = 'hidden';
+		document.getElementById('overlay').style.display = 'block';
+		document.getElementById('sideMenu').style.visibility = 'visible';
+	}
+	function profilClose (){
+		document.body.style.overflow = 'auto';
+		document.getElementById('overlay').style.display = 'none';
+		document.getElementById('sideMenu').style.visibility = 'collapse';
+	}
+
+	function moneuBtn() {
+		var mySym = Number(document.getElementById('koshelBox_btn').textContent.replace(" ₽", ""));
+		var sum = Number(document.getElementById('summText').value);
+		var vector = Number(document.getElementById('popOperationType').textContent);
+		var isValid = true;
+
+		console.log("mySym:", mySym);
+		console.log("sum:", sum);
+		console.log("vector:", vector);
+
+
+		if (sum < 1) {
+			document.getElementById('summTextError').textContent = 'Сумма должна быть больше нуля!';
+			return false;
+		} else {
+			if (vector == 1) {
+				// вывод средств
+				if (sum > mySym) {
+					console.log("sum > mySym  :", sum > mySym);
+					document.getElementById('summTextError').textContent = 'Недостаточно средств!';
+					return false;
+				}
+			}
+
+		}
+
+		return isValid;
+	}
+
+
+	function vuhodOnStart(event)
+	{
+		event.preventDefault();
+		window.location.replace('/HomePage/Index');
+		window.history.pushState(null, null, window.location.href);
+	}
+	
+
+	window.onpopstate = function(event)
+	{
+		vuhodOnStart(event);
+	}
 </script>

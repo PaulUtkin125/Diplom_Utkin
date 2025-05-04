@@ -14,10 +14,10 @@ namespace Diplom_Utkin.Model
             _httpClient.BaseAddress = new Uri("http://localhost:5189/api/");
         }
 
-        public async Task<double> moneyLoadAsync(int id)
+        public async Task<User> moneyLoadAsync(int id)
         {
             var processPositive = await _httpClient.PostAsJsonAsync("User", id);
-            var resalt = await processPositive.Content.ReadFromJsonAsync<double>();
+            var resalt = await processPositive.Content.ReadFromJsonAsync<User>();
             return resalt;
         }
 
@@ -80,11 +80,17 @@ namespace Diplom_Utkin.Model
         public async Task<List<Portfolio>?> LoadUsersToolsAsinc(int id)
         {
             var processPositive = await _httpClient.PostAsJsonAsync("User/UserSTools", id);
-            var resalt = await processPositive.Content.ReadFromJsonAsync<List<Portfolio>>();
+            var resalt = await processPositive.Content.ReadFromJsonAsync<List<Portfolio>?>();
             if (resalt == null) return null;
             else return resalt;
         }
-
+        public async Task<List<InvestTools>?> LoadAllToolsAsinc()
+        {
+            var processPositive = await _httpClient.GetAsync("User/allInvestTool");
+            var resalt = await processPositive.Content.ReadFromJsonAsync<List<InvestTools>>();
+            if (resalt == null) return null;
+            else return resalt;
+        }
 
 
         public async Task<double?> CalkulateAsync(DateTime? startDate, DateTime? endDate, int id)
