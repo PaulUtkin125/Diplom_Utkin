@@ -1,17 +1,31 @@
-﻿using Diplom_Utkin.Model.Support;
-using DiplomAPI.Models.Support;
+﻿using Diplom_Utkin.Model.dopValidation;
+using Diplom_Utkin.Model.Support;
 using Finansu.Model;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Diplom_Utkin.Model
+namespace Diplom_Utkin.Model.Data
 {
     public class APIService
     {
         private HttpClient _httpClient;
-        public APIService() 
+        public APIService()
         {
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri("http://localhost:5189/api/");
+        }
+
+        public async Task<int?> ConfirmCode(string mail)
+        {
+            try
+            {
+                var processPositive = await _httpClient.PostAsJsonAsync("Universal/SendCode", mail);
+                var resalt = await processPositive.Content.ReadFromJsonAsync<int>();
+                return resalt;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public async Task<User> moneyLoadAsync(int id)
@@ -69,7 +83,7 @@ namespace Diplom_Utkin.Model
             }
             return null;
         }
-        public async Task<List<string[]>?> loadChartAsynk(int  id)
+        public async Task<List<string[]>?> loadChartAsynk(int id)
         {
             var processPositive = await _httpClient.PostAsJsonAsync("User/loadCart", id);
             var resalt = await processPositive.Content.ReadFromJsonAsync<List<string[]>?>();

@@ -4,11 +4,95 @@
 	ViewData["Title"] = "Finance manager";
 }
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <div class="window-box kabinet-box">
 	@await Html.PartialAsync("Headers/_HomeHeader")
+	<section>
+		<div id="overlay" class="overlay"></div>
+		<div class="popup">
+			<div class="top_">
+				<div>
+					<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
+				</div>
+
+			</div>
+			<div class="contentVhod" id="vhodBox">
+				<div class="form-block">
+					<form method="post">
+						<h1>Авторизация</h1>
+						<div class="form-group">
+							<label asp-for="User.Login" class="control-label">E-mail</label>
+							<input asp-for="User.Login" class="form-control" type="email" id="login" />
+							<span asp-validation-for="User.Login" class="text-danger"></span>
+						</div>
+
+						<div class="form-group">
+							<label asp-for="User.Password" class="control-label">Пароль</label>
+							<input asp-for="User.Password" class="form-control" type="password" id="password" />
+							<span asp-validation-for="User.Password" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<button class="myButton" name="action" type="submit" value="vhod_btn">Войти</button>
+						</div>
+					</form>
+					<div class="form-group">
+						<button class="myButton" onclick="regOpen()">У Вас нет аккаунта? Зарегистрируйтесь</button>
+					</div>
+				</div>
+			</div>
+			<div class="contentVhod" id="regBox">
+				<div class="form-block">
+					<form method="post" onsubmit="return validMail(event)">
+						<h1>Регистрация</h1>
+						<div class="form-group">
+							<label asp-for="logoValidationReg.Email" class="control-label">E-mail</label>
+							<input asp-for="logoValidationReg.Email" class="form-control" type="email" required id="regLogin" />
+							<span asp-validation-for="logoValidationReg.Email" class="text-danger"></span>
+						</div>
+
+						<div class="form-group">
+							<label asp-for="logoValidationReg.Password" class="control-label">Пароль</label>
+							<input asp-for="logoValidationReg.Password" class="form-control" type="password" required id="regPassword" />
+							<span asp-validation-for="logoValidationReg.Password" class="text-danger"></span>
+						</div>
+
+						<div class="form-group form-row">
+							<label asp-for="logoValidationReg.ConfirmPassword" class="control-label">Повторите пароль</label>
+							<input asp-for="logoValidationReg.ConfirmPassword" class="form-control" type="password" required id="confirmPassword" />
+							<span asp-validation-for="logoValidationReg.ConfirmPassword" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<button class="myButton" type="submit" value="NoN">Зарегистрироваться</button>
+						</div>
+
+					</form>
+					<div class="form-group">
+						<button class="myButton" onclick="vhodOpen()">У Вас есть аккаунта? Авторизуйтесь</button>
+					</div>
+				</div>
+			</div>
+			<div class="contentVhod" id="confirmCodeBox">
+				<div class="form-block">
+					<form method="post" onsubmit="return validationCode(event)">
+						<div class="form-group">
+							<label asp-for="codeValidation.securityCode" class="control-label">Введите код родтверждения</label>
+							<input asp-for="codeValidation.securityCode" class="form-control" type="number" id="confirmCode" required/>
+							<span asp-validation-for="codeValidation.securityCode" class="text-danger" id="confirmError"></span>
+						</div>
+						<input type="hidden" asp-for="logoValidationReg.Email" id="supportLogin"/>
+						<input type="hidden" asp-for="logoValidationReg.Password" id="supportPassword" />
+						<div class="form-group">
+							<button class="myButton" type="submit" name="action" value="Registr_btn">Подтвердить</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
 	<div class="container logoForm">
 		<section class="Liefhac_box">
-			<div>
+			<div class="container-lifehack">
 				<div class="Liefhac_img">
 					<img src="/Image/1721209876568.png" />
 				</div>
@@ -17,7 +101,7 @@
 					<p>Более <strong class="bold_">6 млн</strong> клиентов выбрали Finance manager своим брокером. Акции, облигации, валюта и многое другое на нашем сайте.</p>
 					
 					
-					<a asp-page="/LoginForm/SingUp" asp-area="" class="myButton">
+					<a onclick="regOpen()" class="myButton">
 						Открыть счёт
 					</a>
 				</div>
@@ -134,3 +218,127 @@
 
 	</div>
 </footer>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
+
+
+<script>
+	async function validMail(event) {
+		event.preventDefault();
+		try {
+			const mail = document.getElementById('regLogin').value;
+			const response = await fetch('http://localhost:5189/api/Logo/validationMail', {
+				method:'POST',
+				headers:{
+					'Content-Type':'application/json'
+				},
+				body: JSON.stringify({ toMail: mail }) // Преобразуем данные в JSON
+			}); // URL вашего API
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+			if (!data)
+			{
+				alert('Данный E-mail уже используется! укажите другой');
+				return false;
+			}
+			
+			fetchData(event);
+		}
+		catch (error) {
+			console.error('There was a problem with the fetch operation:', error);
+		}
+	}
+
+	async function fetchData(event) {
+		event.preventDefault();
+
+		try {
+			const mail = document.getElementById('regLogin').value;
+			const response = await fetch('http://localhost:5189/api/Universal/SendCode', {
+				method:'POST',
+				headers:{
+					'Content-Type':'application/json'
+				},
+				body: JSON.stringify({ toMail: mail }) // Преобразуем данные в JSON
+			}); // URL вашего API
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+
+			localStorage.setItem(mail, String(data));
+
+			document.getElementById('supportPassword').value = document.getElementById('regPassword').value;
+			document.getElementById('supportLogin').value = mail;
+
+			// console.log('password:', document.getElementById('supportPassword').value);
+			// console.log('mail:', document.getElementById('supportLogin').value);
+			comfirmOpen();
+		} 
+		catch (error) {
+			console.error('There was a problem with the fetch operation:', error);
+		}
+	}
+
+	function validationCode(event) {
+		const enteredCode = document.getElementById('confirmCode').value;
+		const targetMail = document.getElementById('targetMail').value;
+		const storedCode = localStorage.getItem(targetMail);
+
+		console.log('confirmCode: ', enteredCode);
+		console.log('targetMail: ', targetMail);
+		console.log('storedCode: ', storedCode);
+
+		if (enteredCode != storedCode) {
+			alert('Ошибка: Код подтверждения не совпадает. Пожалуйста, проверьте введённый код.');
+			event.preventDefault();
+			return false;
+		}
+		else{
+			console.log('Код подтверждения верный.');
+			return true;
+		}
+		
+	}
+
+	function openPopup() {
+		document.body.style.overflow = 'hidden';
+
+		document.querySelector('.popup').style.display = 'block';
+		document.getElementById('overlay').style.display = 'block';
+	}
+	function closePopup() {
+		document.body.style.overflow = 'auto';
+
+		document.querySelector('.popup').style.display = 'none';
+		document.getElementById('overlay').style.display = 'none';
+	}
+
+	function vhodOpen() {
+		openPopup();
+
+		document.getElementById('confirmCodeBox').style.display = 'none';
+		document.getElementById('regBox').style.display = 'none';
+		document.querySelector('.contentVhod').style.display = 'block';
+	}
+	function regOpen() {
+		openPopup();
+
+		document.getElementById('confirmCodeBox').style.display = 'none';
+		document.getElementById('vhodBox').style.display = 'none';
+		document.getElementById('regBox').style.display = 'block';
+	}
+
+	function comfirmOpen() {
+			
+		document.getElementById('regBox').style.display = 'none';
+		document.getElementById('vhodBox').style.display = 'none';
+		document.getElementById('confirmCodeBox').style.display = 'block';
+	}
+</script>

@@ -54,8 +54,4 @@
     <Resource Include="wwwroot\Image\vozmozhnosti\Icon4.png" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Model\Data\" />
-  </ItemGroup>
-
 </Project>

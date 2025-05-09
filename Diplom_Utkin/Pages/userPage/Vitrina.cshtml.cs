@@ -1,5 +1,5 @@
 using System;
-using Diplom_Utkin.Model;
+using Diplom_Utkin.Model.Data;
 using Diplom_Utkin.Model.Support;
 using Finansu.Model;
 using Microsoft.AspNetCore.Mvc;
