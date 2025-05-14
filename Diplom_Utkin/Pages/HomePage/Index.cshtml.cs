@@ -31,6 +31,7 @@ namespace Diplom_Utkin.Pages.HomePage
             switch (action)
             {
                 case "vhod_btn":
+                    User.RoleId = 2;
                     var data = await _APIService.AutorizationAsynk(User);
                     if (data != null)
                     {
@@ -48,10 +49,24 @@ namespace Diplom_Utkin.Pages.HomePage
 
                     User.Login = logoValidationReg.Email;
                     User.Password = logoValidationReg.Password;
+                    User.RoleId = 2;
 
                     await _APIService.RegistrationAsync(User);
                     return Page();
 
+                case "vhodAdmin_btn":
+                    User.RoleId = 1;
+                    var data1 = await _APIService.AutorizationAsynk(User);
+                    if (data1 != null)
+                    {
+                        TempData["adminId"] = data1;
+                        return RedirectToPage("/AdminePage/Index");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("User.Login", "Неправильный логин или пароль");
+                        return Page();
+                    }
 
                 default:
                     return Page();

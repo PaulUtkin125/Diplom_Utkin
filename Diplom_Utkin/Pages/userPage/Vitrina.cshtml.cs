@@ -20,7 +20,8 @@ namespace Diplom_Utkin.Pages.userPage
         {
             _APIService = new APIService();
         }
-
+        [BindProperty]
+        public CardModel _cardModel { get; set; } = default!;
         public double targetSumm { get; set; }
         public int isVuvod { get; set; }
 

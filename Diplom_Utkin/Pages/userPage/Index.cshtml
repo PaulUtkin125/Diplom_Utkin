@@ -40,31 +40,88 @@
 				</div>
 				<span asp-validation-for="_user.PaswordHash" class="text-danger"></span>
 			</form>
-
-
-
 		</div>
-		<div class="popup">
+		<div class="popup kabinetSupportBox">
 			<div class="poputContent">
 				<div class="top_">
 					<div>
 						<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
 					</div>
-
 				</div>
-				<form id="myForm" method="get" onsubmit="return moneuBtn()">
+				<form id="myForm" method="post" onsubmit="return moneuBtn()">
 					<h1 id="popTitle">Пополнение счета</h1>
-					<div class="form-group">
-						<label asp-for="targetSumm" class="control-label">Сумма</label>
-						<input asp-for="targetSumm" id="summText" class="form-control" type="number" required />
-						<span asp-validation-for="targetSumm" id="summTextError" class="text-danger"></span>
+					<div class="card">
+						<div class="card-front">
+							<div class="card-number">
+								<div class="form-group">
+									<label asp-for="_cardModel.Number" class="control-label">Номер карты</label>
+									<input asp-for="_cardModel.Number" id="cardNumber" onchange="formatCart(input)" oninput="formatCart(input)" placeholder="0000 0000 0000 0000" class="form-control" type="text" required />
+									<span asp-validation-for="_cardModel.Number" id="cardNumberError" class="text-danger"></span>
+								</div>
+							</div>
+							<div class="card-details">
+								<div class="card-name">
+									<img src="/Image/payment_systemMIR.png"/>
+								</div>
+								<div class="expiration-date">
+									<label>Срок</label>
+									<input asp-for="_cardModel.ActivityDate" id="cardActivityDate" onchange="formatDate(inputDate)" oninput="formatDate(inputDate)" placeholder="MM/YY" class="form-control" type="text" required />
+									<span asp-validation-for="_cardModel.ActivityDate" id="cardActivityDateError" class="text-danger"></span>
+								</div>
+							</div>
+						</div>
+						<div class="card-back">
+							<div class="black-stripe"></div>
+							<div class="cvc">
+								<label asp-for="_cardModel.SVS_Code" class="control-label">CVC</label>
+								<input asp-for="_cardModel.SVS_Code" id="cardCode" onchange="formatCode(inputCode)" oninput="formatCode(inputCode)" placeholder="000" class="form-control" type="text" required />
+								<span asp-validation-for="_cardModel.SVS_Code" id="cardSVS_CodeError" class="text-danger"></span>
+							</div>
+						</div>
+					</div>
+					<div class="myRow">
+						<div class="form-group">
+							<label asp-for="targetSumm" class="control-label">Сумма</label>
+							<input asp-for="targetSumm" id="summText" class="form-control" type="number" required />
+							<span asp-validation-for="targetSumm" id="summTextError" class="text-danger"></span>
+						</div>
+						<button class="myButton" name="action" onclick="isValidMony()" type="submit" value="btnBalans">Выполнить</button>
 					</div>
 					<div class="form-group">
 						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType" />
 					</div>
-					<button class="myButton" name="action" type="submit" value="btnBalans">Выполнить</button>
-
 				</form>
+
+				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
+
+				<form id="buyForm" method="post">
+					<h1 id="popTitle">Докупить</h1>
+					<div class="form-group myRow">
+						<div class="hd-imgBlock">
+							<img />
+						</div>
+						<label id="toolName"></label>
+					</div>
+
+					<div class="form-group myRow">
+						<input />
+					</div>
+
+					<div class="myRow">
+						<div class="form-group">
+							<label asp-for="targetSumm" class="control-label">Сумма</label>
+							<input asp-for="targetSumm" id="summBuyText" class="form-control" type="number" required />
+							<span asp-validation-for="targetSumm" class="text-danger"></span>
+						</div>
+					</div>
+					<button class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
+					<div class="form-group">
+						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType" />
+					</div>
+				</form>
+
+				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
+
 			</div>
 		</div>
 
@@ -205,6 +262,110 @@
 	
 </div>
 
+<script>
+	let input = document.getElementById("cardNumber");
+	input.addEventListener("keyup", (e) => { formatCart(e.target); });
+	input.addEventListener("keypress", (e) => { formatCart(e.target); });
+
+	let inputDate = document.getElementById("cardActivityDate");
+	inputDate.addEventListener("keyup", (e) => { formatDate(e.target); });
+	inputDate.addEventListener("keypress", (e) => { formatDate(e.target); });
+
+	let inputCode = document.getElementById("cardCode");
+	inputCode.addEventListener("keyup", (e) => { formatCode(e.target); });
+	inputCode.addEventListener("keypress", (e) => { formatCode(e.target); });
+
+
+	function formatCart(input) {
+		var input_val = input.value;
+		console.log('input.value: ', input.value);
+		if (input_val === "") { return; }
+		var original_len = input_val.length;
+		var caret_pos = input.selectionStart;
+		input_val = input_val.replace(/\D/g, "").replace(/\B(?=(\d{4})+(?!\d))/g, " ");
+		input.value = input_val;
+		var updated_len = input_val.length;
+		caret_pos = updated_len - original_len + caret_pos;
+		input.setSelectionRange(caret_pos, caret_pos);
+
+		if(updated_len < 19) input.style.border = '2px solid red';
+		else input.style.border = '0px';
+	}
+	function formatDate(inputDate) {
+		var input_val = inputDate.value;
+		if (input_val === "") { return; }
+		var original_len = input_val.length;
+		var caret_pos = inputDate.selectionStart;
+		input_val = input_val.replace(/\D/g, "");
+		if (input_val.length > 2) {
+			input_val = input_val.substring(0, 2) + "/" + input_val.substring(2);
+		}
+		inputDate.value = input_val;
+		var updated_len = input_val.length;
+		caret_pos = updated_len - original_len + caret_pos;
+		inputDate.setSelectionRange(caret_pos, caret_pos);
+
+		if(inputDate.value.length < 5 || Number(inputDate.value.substring(0, 2)) > 12) inputDate.style.border = '2px solid red';
+		else {
+			var curentDate = new Date();
+			var month = Number(inputDate.value.substring(0, 2)) - 1;
+			var year = 2000 + Number(inputDate.value.substring(3, 5));
+
+			var userDate = new Date(year, month);
+
+			if(userDate < curentDate) inputDate.style.border = '2px solid red';
+			else inputDate.style.border = '0px';
+		}
+	}
+
+	function formatCode(inputCode) {
+		var input_val = inputCode.value;
+		if (input_val === "") { return; }
+		var original_len = input_val.length;
+		var caret_pos = inputCode.selectionStart;
+		input_val = input_val.replace(/\D/g, "");
+
+		inputCode.value = input_val;
+		var updated_len = input_val.length;
+		caret_pos = updated_len - original_len + caret_pos;
+		inputDate.setSelectionRange(caret_pos, caret_pos);
+
+		if(updated_len < 3) inputCode.style.border = '2px solid red';
+		else inputCode.style.border = '0px';
+	}
+
+	function isValidMony()
+	{
+		let input = document.getElementById("cardNumber");
+		let inputDate = document.getElementById("cardActivityDate");
+		let inputCode = document.getElementById("cardCode");
+		let inputMony = document.getElementById("summText");
+
+		if(input.value.length < 19) input.style.border = '2px solid red';
+		else input.style.border = '0px';
+
+		if(inputDate.value.length < 5 || Number(inputDate.value.substring(0, 2)) > 12) inputDate.style.border = '2px solid red';
+		else {
+			var curentDate = new Date();
+			var month = Number(inputDate.value.substring(0, 2)) - 1;
+			var year = 2000 + Number(inputDate.value.substring(3, 5));
+
+			console.log('month', month+1);
+			console.log('year', year);
+
+			var userDate = new Date(year, month);
+
+			if(userDate < curentDate) inputDate.style.border = '2px solid red';
+			else inputDate.style.border = '0px';
+		}
+
+		if(inputCode.value.length < 3) inputCode.style.border = '2px solid red';
+		else inputCode.style.border = '0px';
+
+		if(inputMony.value.replace('0', '').length < 1 || Number(inputMony.value) < 1) inputMony.style.borderBottom = '2px solid red';
+		else inputMony.style.borderBottom = '2px Solid #000000';
+	}
+</script>
 
 @section Scripts {
 	@{

@@ -29,6 +29,9 @@ namespace Diplom_Utkin.Pages.userPage
         public double Money { get; set; }
 
 
+        [BindProperty]
+        public CardModel _cardModel { get; set; } = default!;
+
         public double? Pribl { get; set; } = 0;
 
         public string sortName { get; set; }
@@ -46,8 +49,7 @@ namespace Diplom_Utkin.Pages.userPage
         public int isVuvod { get; set; }
 
         public bool? isClearTempData { get; set; }
-        public async Task<ActionResult> OnGetAsync(string? sortOrder, string? action, double? targetSumm, int? isVuvod, int? vector,
-            DateTime? startDate, DateTime? endDate)
+        public async Task<ActionResult> OnGetAsync(string? sortOrder, string? action, DateTime? startDate, DateTime? endDate)
         {
 
             if (TempData["uId"] != null) 
@@ -101,6 +103,27 @@ namespace Diplom_Utkin.Pages.userPage
 
             switch (action)
             {
+                case "raschot_Btn":
+
+                    var resalt = await _APIService.CalkulateAsync(startDate, endDate, uId);
+                    if (resalt == null)
+                    {
+                        ModelState.AddModelError("Pribl", "Даные отсутствуют!");
+                        break;
+                    }
+                    Pribl = resalt;
+                    break;
+            }
+
+            return Page();
+        }
+
+        public async Task<ActionResult> OnPost(string? action, double? targetSumm, int? isVuvod)
+        {
+            await WorkOfData();
+
+            switch (action)
+            {
                 case "btnBalans":
                     if (targetSumm > 0)
                     {
@@ -126,26 +149,9 @@ namespace Diplom_Utkin.Pages.userPage
                         }
                     }
                     break;
-
-                case "raschot_Btn":
-
-                    var resalt = await _APIService.CalkulateAsync(startDate, endDate, uId);
-                    if (resalt == null)
-                    {
-                        ModelState.AddModelError("Pribl", "Даные отсутствуют!");
-                        break;
-                    }
-                    Pribl = resalt;
-                    break;
             }
 
-            return Page();
-        }
-
-        public async Task<ActionResult> OnPost()
-        {
-            await WorkOfData();
-            return Page();
+                    return Page();
         }
 
         private async Task WorkOfData()

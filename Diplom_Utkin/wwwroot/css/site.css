@@ -18,10 +18,19 @@ html {
   min-height: 100%;
 }
 
+.myA { 
+    color: #0d6efd; 
+    text-decoration: underline;
+}
+
+.myA:hover{
+    cursor: pointer;
+}
+
 .home-hd {
-    width:100%;
-    display:flex;
-    justify-content:space-between;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .home-hd h5{
@@ -123,6 +132,10 @@ body {
     justify-content:center;
 }
 
+.form-group label {
+    margin-bottom:5px;
+}
+
 .myButton {
     padding: 7px;
     margin: 10px 0%;
@@ -212,8 +225,6 @@ body {
 
 .Liefhac_box {
     width: 100%;
-    display:flex;
-    justify-content:center;
 }
 
 .container-lifehack div{
@@ -441,8 +452,139 @@ canvas {
     align-items:center;
 }
 
+
+/* ////////////////////////////////////////////////////////////// */
+
+.card {
+    width: 300px;
+    height: 180px;
+    perspective: 1000px;
+    margin-bottom: 20px;
+    border:none;
+}
+
+.card span {
+     font-size:10px;
+     visibility:hidden;
+     margin-top:-10px;
+     height:1px;
+}
+
+#myForm span {
+    font-size: 10px;
+    visibility: hidden;
+    margin-top: -10px;
+    height: 1px;
+}
+
+.card-front, .card-back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.card-front {
+    background: linear-gradient(135deg, #4CAF50, #3e8e41);
+    color: white;
+    z-index: 2;
+}
+
+.card-back {
+    background-color: #333;
+    color: white;
+    z-index: 1;
+    margin-left: 100px;
+    justify-content: normal;
+    align-items: end;
+}
+
+.bank-logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.card-number {
+    font-size: 1.2em;
+    letter-spacing: 2px;
+    text-align: center;
+    display:flex;
+    justify-content:center;
+    margin-bottom:5px;
+}
+.card-number span{
+    display:flex;
+    width:200px;
+}
+
+.card-number input{
+    width:200px;
+    text-align:center;
+}
+
+.card-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top:15px;
+    height:50px;
+}
+
+.card-name {
+    width:50%;
+    height:40px;
+    align-self:center;
+}
+
+.card-name img{
+    width: 100%;
+    height:100%;
+}
+
+.expiration-date {
+    font-size:15px;
+}
+
+.expiration-date input {
+    height: 25px;
+    width: 80px;
+    text-align: center;
+}
+
+.cvc span,
+.expiration-date span {
+    width: 70px;
+    display: flex;
+}
+
+.black-stripe {
+    height: 30px;
+    background: black;
+    width: 100%;
+}
+
+.cvc {
+    font-size: 1.2em;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 70px;
+    text-align:center;
+}
+.cvc input {
+    text-align: center;
+}
+
+/* ////////////////////////////////////////////////////////////// */
+
 .popup {
-    display:none;
+    display: none;
     position: absolute;
     top: 20%;
     left: 50%;
@@ -453,17 +595,34 @@ canvas {
     border: 1px solid #000;
     opacity: 1;
     z-index: 9000;
-
-    border-radius:15px;
+    border-radius: 15px;
 }
 .poputContent {
     padding: 15px;
     height:max-content;
 }
 
+.kabinetSupportBox{
+    width:430px;
+}
+
+.kabinetSupportBox .myRow input{
+    width:255px;
+    border-bottom:1px solid #000000;
+}
+
+.kabinetSupportBox button {
+    width:30%;
+    margin-bottom:0;
+    align-self:end;
+}
+
+.main-panel {
+    z-index:9002;
+}
 /* Убираем стрелки в Chrome, Safari и Edge */
 input[type=number]::-webkit-inner-spin-button {
-    -webkit-appearance:none;
+    -webkit-appearance: none;
 }
 /* Убираем стрелки в Firefox */
 .poputContent input {
@@ -553,10 +712,4 @@ input[type=number]::-webkit-inner-spin-button {
 }
 .scriner div button{
    margin-top:10%;
-}
-
-@media (max-width: 768px) {
-    .container-md, .container-sm, .container {
-        max-width: 90%;
-    }
 }

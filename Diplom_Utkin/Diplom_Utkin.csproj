@@ -14,6 +14,7 @@
     <Content Remove="wwwroot\Image\mainIcon2.png" />
     <Content Remove="wwwroot\Image\NoNPhoto.png" />
     <Content Remove="wwwroot\Image\NoNSelectedMode.png" />
+    <Content Remove="wwwroot\Image\payment_systemMIR.png" />
     <Content Remove="wwwroot\Image\plus.png" />
     <Content Remove="wwwroot\Image\Premii\Group_1393_4f519875d5.png" />
     <Content Remove="wwwroot\Image\Premii\Group_1394_2675a552bf.png" />
@@ -42,6 +43,7 @@
     <Resource Include="wwwroot\Image\mainIcon2.png" />
     <Resource Include="wwwroot\Image\NoNPhoto.png" />
     <Resource Include="wwwroot\Image\NoNSelectedMode.png" />
+    <Resource Include="wwwroot\Image\payment_systemMIR.png" />
     <Resource Include="wwwroot\Image\plus.png" />
     <Resource Include="wwwroot\Image\Premii\Group_1393_4f519875d5.png" />
     <Resource Include="wwwroot\Image\Premii\Group_1394_2675a552bf.png" />

@@ -12,5 +12,6 @@ namespace Diplom_Utkin.Model.dopValidation
         [MinLength(8, ErrorMessage = "Минимальная длина 8 симвалов")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':""\\|,.<>\/?])(?=.*[0-9]).+$", ErrorMessage = "Поле должно содержать: спецсимвол, строчную и заглавную латинскую букву, цифру")]
         public string Password { get; set; }
+        public int RoleId { get; set; }
     }
 }
