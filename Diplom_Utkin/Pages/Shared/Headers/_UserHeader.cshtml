@@ -65,12 +65,18 @@
 	}
 
 	function openVuvod(){
+		document.getElementById("buyForm").style.display = 'none';
+
+		document.getElementById('myForm').style.display = 'block';
 		document.getElementById('popTitle').textContent = 'Вывод';
 		document.getElementById('popOperationType').value = '1';
 		document.getElementById('popOperationType').textContent = '1';
 		openPopup();
 	}
 	function openVvod(){
+		document.getElementById("buyForm").style.display = 'none';
+
+		document.getElementById('myForm').style.display = 'block';
 		document.getElementById('popTitle').textContent = 'Пополнить';
 		document.getElementById('popOperationType').value = '0';
 		document.getElementById('popOperationType').textContent = '0';
@@ -115,6 +121,163 @@
 		}
 
 		return isValid;
+	}
+
+
+	function buyOpenMain(id){
+		openPopup();
+		document.getElementById('myForm').style.display = 'none';
+
+
+		document.getElementById('targetId').textContent = id;
+		document.getElementById("buyForm").style.display = 'block';
+	}
+
+	async function buyOpen(id){
+		var userMoney = Number(document.getElementById('koshelBox_btn').textContent.replace( ',', '.'));
+
+		console.log(userMoney);
+
+		document.getElementById("sellBtn").style.display = 'none';
+		document.getElementById('buyBtn').style.display = 'block';
+
+		document.getElementById('popTitleBuy').textContent = 'Купить';
+		document.getElementById('edIzm').textContent = 'Сумма';
+
+		const data = await BuyData(id);
+		document.getElementById('toolName').textContent = data.nameInvestTool;
+		document.getElementById('targetToolImg').setAttribute('src', 'data:image/png;base64,' + data.imageSource);
+		document.getElementById('peiceTool').value = data.price;
+
+		document.getElementById('dostupSredstv').textContent = 'Доступно ' + String(userMoney) + 'руб.';
+		buyOpenMain(id);
+	}
+
+	async function sellOpen(id, quentity){
+		document.getElementById("buyBtn").style.display = 'none';
+		document.getElementById('sellBtn').style.display = 'block';
+
+		document.getElementById('popTitleBuy').textContent = 'Продать';
+		document.getElementById('edIzm').textContent = 'Количество';
+
+		document.getElementById('dostupSredstv').textContent = 'Доступно ' + quentity + ' шт.';
+
+		const data = await BuyData(id);
+		document.getElementById('toolName').textContent = data.nameInvestTool;
+		document.getElementById('targetToolImg').setAttribute('src', 'data:image/png;base64,' + data.imageSource);
+		document.getElementById('peiceTool').value = data.price;
+
+		buyOpenMain(id)
+	}
+
+	async function BuyData(id_){
+		const response = await fetch('http://localhost:5189/api/Universal/targetToolInformation', {
+			method: 'POST',
+			headers:{
+				'Content-Type':'application/json'
+			},
+			body: JSON.stringify({ id: id_ })
+		});
+		if(!response.ok){
+			throw new Error('Network response was not ok');
+		}
+		const data = await response.json();
+
+		return data;
+
+	}
+
+	function BuyFormValidation(){
+		const toolPrice = document.getElementById('peiceTool');
+		var toolPrice_value = toolPrice.value;
+
+		var toolId = document.getElementById('targetId').textContent;
+
+		const summOperationBox = document.getElementById('summOperation');
+		var summOperation_value = summOperationBox.value;
+		
+		var uId = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.uId));
+
+		if(document.getElementById('sellBtn').style.display == 'none'){
+
+			toolId = Number(toolId);
+			toolPrice_value = Number(toolPrice_value.replace(',', '.'));
+			factQuentity = Number(String(factQuentity).replace(',', '.'));
+
+			console.log('summOperation_value: ', summOperation_value);
+			if(summOperation_value < 1)
+			{
+				summOperationBox.style.borderBottom = '2px solid red';
+				return false;
+			}
+			else summOperationBox.style.borderBottom = '0px';
+
+			console.log('toolPrice_value: ', toolPrice_value);
+			if(summOperation_value < toolPrice_value.replace )
+			{
+				summOperationBox.style.borderBottom = '2px solid red';
+				return false;
+			}
+			else summOperationBox.style.borderBottom = '0px';
+
+			var factQuentity = Math.floor(summOperation_value/toolPrice_value);
+			console.log('factQuentity1: ', factQuentity);
+
+			
+
+			console.log('uId: ', uId);
+			console.log('toolId: ', toolId);
+			console.log('factQuentity: ', factQuentity);
+			console.log('toolPrice_value: ', toolPrice_value);
+
+			const data = BuyMethodAPI(uId, toolId, factQuentity, toolPrice_value );
+
+
+		}
+		else
+		{
+			console.log(1);
+
+			if(summOperation_value < 1)
+			{
+				summOperationBox.style.borderBottom = '2px solid red';
+				return false;
+			}
+			else summOperationBox.style.borderBottom = '0px';
+
+			if(String(summOperation_value).includes('.')|| String(summOperation_value).includes(','))
+			{
+				summOperationBox.style.borderBottom = '2px solid red';
+				return false;
+			}
+			else summOperationBox.style.borderBottom = '0px';
+
+			var factQuentity = summOperation_value;
+
+			toolId = Number(toolId);
+			toolPrice_value = Number(toolPrice_value.replace(',', '.'));
+			factQuentity = Number(factQuentity);
+
+			const data = BuyMethodAPI(uId, toolId,  factQuentity, -toolPrice_value);
+		}
+
+		return true;
+	}
+
+	async function BuyMethodAPI(userId, ToolId, quentity, price){
+		const response = await fetch('http://localhost:5189/api/User/BueMethod', {
+			method: 'POST',
+			headers:{
+				'Content-Type':'application/json'
+			},
+			body: JSON.stringify({ uId: userId, toolId:ToolId, Quentity: quentity, Price: price})
+		});
+		if(!response.ok){
+			throw new Error('Network response was not ok');
+		}
+		const data = await response.json();
+
+		return data;
 	}
 
 	function vuhodOnStart(event)

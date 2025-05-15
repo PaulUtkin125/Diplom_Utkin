@@ -94,30 +94,32 @@
 
 				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
 
-				<form id="buyForm" method="post">
-					<h1 id="popTitle">Докупить</h1>
+				<form id="buyForm" method="post" onsubmit="return BuyFormValidation()">
+					<h1 id="popTitleBuy"></h1>
+					<input style="visibility:hidden" id="targetId" disabled/>
 					<div class="form-group myRow">
 						<div class="hd-imgBlock">
-							<img />
+							<img id="targetToolImg"/>
 						</div>
 						<label id="toolName"></label>
 					</div>
 
 					<div class="form-group myRow">
-						<input />
+						<input id="peiceTool" disabled/>
 					</div>
 
 					<div class="myRow">
 						<div class="form-group">
-							<label asp-for="targetSumm" class="control-label">Сумма</label>
-							<input asp-for="targetSumm" id="summBuyText" class="form-control" type="number" required />
-							<span asp-validation-for="targetSumm" class="text-danger"></span>
+							<label asp-for="targetSumm" id="edIzm" class="control-label"></label>
+							<input asp-for="targetSumm" id="summOperation" class="form-control" type="number" required />
+							<span asp-validation-for="targetSumm" id="summOperationError" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label id="dostupSredstv"></label>
 						</div>
 					</div>
-					<button class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
-					<div class="form-group">
-						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType" />
-					</div>
+					<button id="buyBtn" class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
+					<button id="sellBtn" style="display:none" class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
 				</form>
 
 				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
@@ -227,7 +229,7 @@
 						<tr>
 							<td>
 								<div class="hd-imgBlock settings">
-									@* 		<img src="@item.InvestTool.Source"/> *@
+									<img src="data:image/png;base64, @item.InvestTool.ImageSource" />
 								</div>
 							</td>
 							<td>
@@ -239,9 +241,9 @@
 							<td class="tbColCenter">
 								@if (!item.InvestTool.isClosed)
 								{
-									<a asp-page="#" asp-route-id="@item.InvestTool.Id">Докупить</a>
+									<a onclick="buyOpen(@item.InvestTool.Id)">Докупить</a>
 									<span> | </span>
-									<a asp-page="#" asp-route-id="@item.InvestTool.Id"> Продать </a>
+									<a onclick="sellOpen(@item.InvestTool.Id, @item.Quentity)"> Продать </a>
 								}
 								else
 								{

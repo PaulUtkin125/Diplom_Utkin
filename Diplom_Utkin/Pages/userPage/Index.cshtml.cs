@@ -12,7 +12,7 @@ namespace Diplom_Utkin.Pages.userPage
     //[Authorize]
     public class IndexModel : PageModel
     {
-        private int uId;
+        public int uId;
         private readonly APIService _APIService;
         private List<string[]>? salesData { get; set; }
         public double[] chartData { get; set; }
@@ -56,10 +56,10 @@ namespace Diplom_Utkin.Pages.userPage
             {
                 uId = (int)TempData["uId"];
                 TempData["uId"] = uId;
-                _user = _APIService.moneyLoadAsync(uId).Result;
+                _user = await _APIService.moneyLoadAsync(uId);
                 Money = _user.Maney;
-                var data = _APIService.loadChartAsynk(uId).Result;
-                if (data[0][1] != null)
+                var data = await _APIService.loadChartAsynk(uId);
+                if (data.Count != 0)
                 {
                     chartData = new double[data.Count];
                     chartName = new string[data.Count];
@@ -151,7 +151,7 @@ namespace Diplom_Utkin.Pages.userPage
                     break;
             }
 
-                    return Page();
+            return Page();
         }
 
         private async Task WorkOfData()
@@ -163,7 +163,7 @@ namespace Diplom_Utkin.Pages.userPage
                 _user = _APIService.moneyLoadAsync(uId).Result;
                 Money = _user.Maney;
                 var data = _APIService.loadChartAsynk(uId).Result;
-                if (data[0][1] != null)
+                if (data.Count != 0)
                 {
                     chartData = new double[data.Count];
                     chartName = new string[data.Count];

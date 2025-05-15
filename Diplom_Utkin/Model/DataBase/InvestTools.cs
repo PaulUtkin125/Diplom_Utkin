@@ -9,5 +9,11 @@
 
         public string NameInvestTool { get; set; }
         public bool isClosed { get; set; }
+
+        public bool isFrozen { get; set; }
+
+        public string Price { get; set; }
+        public string ImageSource { get; set; }
+
     }
 }
