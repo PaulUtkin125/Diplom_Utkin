@@ -160,9 +160,9 @@ namespace Diplom_Utkin.Pages.userPage
             {
                 uId = (int)TempData["uId"];
                 TempData["uId"] = uId;
-                _user = _APIService.moneyLoadAsync(uId).Result;
+                _user = await _APIService.moneyLoadAsync(uId);
                 Money = _user.Maney;
-                var data = _APIService.loadChartAsynk(uId).Result;
+                var data = await _APIService.loadChartAsynk(uId);
                 if (data.Count != 0)
                 {
                     chartData = new double[data.Count];

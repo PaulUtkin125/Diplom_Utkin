@@ -4,10 +4,9 @@ using Finansu.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Diplom_Utkin.Pages.AdinePage
+namespace Diplom_Utkin.Pages.AdminePage
 {
-
-    public class IndexModel : PageModel
+    public class RequestsModel : PageModel
     {
         public int adminId { get; set; }
         public User _user { get; set; }
@@ -16,7 +15,7 @@ namespace Diplom_Utkin.Pages.AdinePage
 
         private readonly APIService _APIService;
 
-        public IndexModel()
+        public RequestsModel()
         {
             _APIService = new APIService();
         }
@@ -29,13 +28,14 @@ namespace Diplom_Utkin.Pages.AdinePage
                 adminId = (int)TempData["adminId"];
                 TempData["adminId"] = adminId;
                 _user = await _APIService.moneyLoadAsync(adminId);
-                Brokers = await _APIService.newBrokersAsync();
+                Brokers = await _APIService.NotNewBrokersList();
             }
             else return Unauthorized();
 
 
             return Page();
         }
+
         public async Task<IActionResult> OnPostAsync(string? action, int? brokerId, int? TargetbrokerId)
         {
             if (brokerId == null && TargetbrokerId != null) brokerId = TargetbrokerId;
@@ -62,13 +62,13 @@ namespace Diplom_Utkin.Pages.AdinePage
             await WorkOfData();
             return Page();
         }
+
         private async Task WorkOfData()
         {
             if (TempData["adminId"] != null)
             {
                 adminId = (int)TempData["adminId"];
                 TempData["adminId"] = adminId;
-                Brokers = await _APIService.newBrokersAsync();
                 _user = await _APIService.moneyLoadAsync(adminId);
             }
         }

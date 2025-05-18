@@ -22,7 +22,7 @@
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="koshelBox_btn" role="button" aria-expanded="false">@Model.Money </a>
+						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><label id="koshelBox_btn">@Model.Money</label> ₽</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" onclick="openVvod()">Пополнить</a></li>
                             <li><a class="dropdown-item" onclick="openVuvod()">Вывести</a></li>
@@ -134,6 +134,11 @@
 	}
 
 	async function buyOpen(id){
+		window.scrollTo({
+			top:0,
+			behavior:'smooth'
+		});
+
 		var userMoney = Number(document.getElementById('koshelBox_btn').textContent.replace( ',', '.'));
 
 		console.log(userMoney);
@@ -149,11 +154,16 @@
 		document.getElementById('targetToolImg').setAttribute('src', 'data:image/png;base64,' + data.imageSource);
 		document.getElementById('peiceTool').value = data.price;
 
-		document.getElementById('dostupSredstv').textContent = 'Доступно ' + String(userMoney) + 'руб.';
+		document.getElementById('dostupSredstv').textContent = 'Доступно ' + String(userMoney) + ' ₽';
 		buyOpenMain(id);
 	}
 
 	async function sellOpen(id, quentity){
+		window.scrollTo({
+			top:0,
+			behavior:'smooth'
+		});
+
 		document.getElementById("buyBtn").style.display = 'none';
 		document.getElementById('sellBtn').style.display = 'block';
 
@@ -275,7 +285,7 @@
 		if(!response.ok){
 			throw new Error('Network response was not ok');
 		}
-		const data = await response.json();
+		const data = response.json();
 
 		return data;
 	}

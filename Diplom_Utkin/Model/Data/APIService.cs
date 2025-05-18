@@ -1,7 +1,7 @@
 ﻿using Diplom_Utkin.Model.dopValidation;
 using Diplom_Utkin.Model.Support;
 using Finansu.Model;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 
 namespace Diplom_Utkin.Model.Data
 {
@@ -83,6 +83,18 @@ namespace Diplom_Utkin.Model.Data
             }
             return null;
         }
+        public async Task<int?> AdminAutorizationAsynk(StartUserData user)
+        {
+            var processPositive = await _httpClient.PostAsJsonAsync("Logo/AutorisationAdmin", user);
+            int? resalt;
+            if (processPositive.IsSuccessStatusCode)
+            {
+                resalt = await processPositive.Content.ReadFromJsonAsync<int?>();
+                return resalt;
+            }
+            return null;
+        }
+
         public async Task<List<string[]>?> loadChartAsynk(int id)
         {
             var processPositive = await _httpClient.PostAsJsonAsync("User/loadCart", id);
@@ -115,10 +127,31 @@ namespace Diplom_Utkin.Model.Data
                 dateFinish = endDate,
                 dateStart = startDate,
             };
-            var processPositive = await _httpClient.PostAsJsonAsync($"User/Calculate", calculateSupport);
+            var processPositive = await _httpClient.PostAsJsonAsync("User/Calculate", calculateSupport);
             var resalt = await processPositive.Content.ReadFromJsonAsync<double>();
             if (resalt == 0.0) return null;
             else return resalt;
+        }
+
+
+        public async Task<List<Brokers>> newBrokersAsync()
+        {
+            var BrokerList = await _httpClient.GetAsync("Admin/NewBrokersList");
+            var resalt = await BrokerList.Content.ReadFromJsonAsync<List<Brokers>>();
+            return resalt;
+        }
+        public async Task<List<Brokers>> NotNewBrokersList()
+        {
+            var BrokerList = await _httpClient.GetAsync("Admin/NotNewBrokersList");
+            var resalt = await BrokerList.Content.ReadFromJsonAsync<List<Brokers>>();
+            return resalt;
+        }
+
+
+        public async Task ModefiteRequestAsync(ModefiteRequestSupport modefite)
+        {
+            var processPositive = await _httpClient.PostAsJsonAsync("Admin/ModefiteRequest", modefite);
+            
         }
     }
 }

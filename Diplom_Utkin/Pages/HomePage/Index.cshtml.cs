@@ -56,7 +56,7 @@ namespace Diplom_Utkin.Pages.HomePage
 
                 case "vhodAdmin_btn":
                     User.RoleId = 1;
-                    var data1 = await _APIService.AutorizationAsynk(User);
+                    var data1 = await _APIService.AdminAutorizationAsynk(User);
                     if (data1 != null)
                     {
                         TempData["adminId"] = data1;

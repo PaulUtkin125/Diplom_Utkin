@@ -1,8 +1,9 @@
 ﻿@page
-@model Diplom_Utkin.Pages.AdinePage.IndexModel
+@model Diplom_Utkin.Pages.AdminePage.RequestsModel
 @{
 	ViewData["Title"] = "Кабинет";
 }
+
 <div class="window-box kabinet-box">
 	@await Html.PartialAsync("Headers/_AdminHeader")
 
@@ -52,7 +53,7 @@
 
 				<form id="optionForm" method="post">
 					<h1>Детали</h1>
-					<input style="visibility:hidden" name="TargetbrokerId" id="targetId" type="number"/>
+					<input style="visibility:hidden" name="TargetbrokerId" id="targetId" type="number" />
 					<div class="form-group myRow">
 						<div class="hd-imgBlock">
 							<img id="targetBrokerImg" />
@@ -68,8 +69,8 @@
 						<label id="brokerEmail"></label>
 					</div>
 					<div class="myRow">
-						<button class="myButton" name="action" type="submit" value="positive_btn">Принять</button>
-						<button class="myButton" name="action" type="submit" value="negative_btn">Отклонить</button>
+						<button id="positive_btn" class="myButton" name="action" type="submit" value="positive_btn">Принять</button>
+						<button id="negative_btn" class="myButton" name="action" type="submit" value="negative_btn">Отклонить</button>
 					</div>
 				</form>
 
@@ -80,11 +81,13 @@
 	</section>
 
 	<div class="dataSlice">
-		<label>Новых заявок: @Model.Brokers.Count()</label>
+		<label>Всего заявок: @Model.Brokers.Count()</label>
+		<label>Принятых заявок: @Model.Brokers.Where(x => x.TypeOfRequestId == 2).Count()</label>
+		<label>Отклоненных заявок: @Model.Brokers.Where(x => x.TypeOfRequestId == 3).Count()</label>
 	</div>
 
 	<div class="tb_Box">
-		<h1>Новые заявки</h1>
+		<h1>заявки</h1>
 		<table class="table">
 			<thead>
 				<tr>
@@ -103,7 +106,7 @@
 					</th>
 					<th>
 						<a>
-							Телефон
+							Статус
 						</a>
 					</th>
 					<th>
@@ -127,17 +130,21 @@
 							@Html.DisplayFor(modelItem => item.FullNameOfTheDirector)
 						</td>
 						<td>
-							@Html.DisplayFor(modelItem => item.Phone)
+							@Html.DisplayFor(modelItem => item.TypeOfRequest.Name)
 						</td>
 						<td class="tbColCenter">
 							<form method="post">
 								<input type="number" name="brokerId" value="@item.Id" style="display:none"/>
-								<button type="submit" name="action" value="positive_btn">Принять</button>
-								<span>|</span>
+								@if (item.TypeOfRequestId == 3)
+								{
+									<button type="submit" name="action" value="positive_btn">Принять</button>
+									<span>|</span>
+								}
 								<button type="submit" name="action" value="negative_btn">Отклонить</button>
 							</form>
 							<span>|</span>
-							<a onclick="optionFormOpen(@item.Id)">Детали</a>
+							<a onclick="optionFormOpenDop(@item.Id)">Детали</a>
+
 						</td>
 
 

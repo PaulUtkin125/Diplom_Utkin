@@ -4,9 +4,8 @@
     {
         public int Id { get; set; }
         public string Loggin { get; set; }
+        public string? Phone { get; set; }
         public string PaswordHash { get; set; }
-
-
         public TypeOfUser TypeOfUser { get; set; }
         public int TypeOfUserId { get; set; } = 2;
 

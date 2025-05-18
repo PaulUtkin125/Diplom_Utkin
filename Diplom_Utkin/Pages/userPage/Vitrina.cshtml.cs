@@ -9,7 +9,7 @@ namespace Diplom_Utkin.Pages.userPage
 {
     public class VitrinaModel : PageModel
     {
-        private int? uId;
+        public int uId;
         public User _user { get; set; }
         public double Money { get; set; }
 
@@ -30,11 +30,11 @@ namespace Diplom_Utkin.Pages.userPage
         public string CurrnerSortAll { get; set; }
         public async Task<ActionResult> OnGetAsync(string? sortOrderAll, string? action, double? targetSumm, int? isVuvod, int? vector)
         {
-            uId = (int?)TempData["uId"];
-            if (uId is null) { 
+            if (TempData["uId"] is null) { 
                 return Unauthorized();
             }
 
+            uId = (int)TempData["uId"];
             TempData["uId"] = uId;
             _user = await _APIService.moneyLoadAsync((int)uId);
             Money = _user.Maney;

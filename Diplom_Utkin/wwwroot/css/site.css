@@ -8,6 +8,9 @@ html {
   }
 }
 
+body {
+    height:100%;
+}
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
@@ -43,6 +46,7 @@ html {
 
 .myItem {
     display:inline-flex;
+    align-self:center;
 }
 
 .myItem:hover {
@@ -327,7 +331,7 @@ body {
     flex-direction: column;
     padding: 20px;
     width: 100%;
-    height: auto;
+    height:100%;
     margin-top: -15px;
     background-color: transparent;
     box-shadow: 0px 0px 15px grey;
@@ -414,9 +418,13 @@ canvas {
 
 
 .table {
-    height:10px;
+    height:70vh;
     font-size:20px;
     color:black;
+}
+.tbColCenter button,
+.table a {
+    cursor: pointer;
 }
 
 .table thead tr th {
@@ -431,7 +439,7 @@ canvas {
 }
 
 .table tbody tr {
-    height: 70px;
+    max-height: 70px;
     vertical-align:middle;
 }
 
@@ -452,15 +460,18 @@ canvas {
     align-items:center;
 }
 
+.dataSlice {
+    display:flex;
+    flex-direction:column;
+}
 
 /* ////////////////////////////////////////////////////////////// */
-
 .card {
     width: 300px;
     height: 180px;
     perspective: 1000px;
     margin-bottom: 20px;
-    border:none;
+    border: none;
 }
 
 .card span {
@@ -596,6 +607,7 @@ canvas {
     opacity: 1;
     z-index: 9000;
     border-radius: 15px;
+    margin-top:5%;
 }
 .poputContent {
     padding: 15px;

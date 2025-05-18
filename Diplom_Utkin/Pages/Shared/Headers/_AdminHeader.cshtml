@@ -1,0 +1,135 @@
+﻿<head>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
+        <div class="container">
+            <div class="hd-imgBlock">
+                <a asp-page="/AdminePage/Index">
+                    <img src="/Image/mainIcon2.png" alt="Alternate Text" />
+                </a>
+
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1 hd-nav">
+                    <li class="nav-item myItem">
+                        <a class="nav-link" asp-page="/AdminePage/Index">Главная</a>
+                    </li>
+                    <li class="nav-item myItem">
+                        <a class="nav-link" asp-page="/AdminePage/Requests">Заявки</a>
+                    </li>
+                    <li class="nav-item myItem">
+                        <a class="nav-link" asp-page="#">Пользователи</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    
+                    <li class="nav-item myItem">
+                        <a class="nav-link" onclick="profilOpen()">
+                            <div class="hd-imgBlock settings">
+                                <img src="/Image/Profil.png" alt="Alternate Text" />
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item myItem">
+
+                        <a class="nav-link" href="#" onclick="vuhodOnStart(event)">Выйти</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</head>
+
+<script>
+    function openPopup() {
+        document.body.style.overflow = 'hidden';
+
+        document.querySelector('.popup').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+    function closePopup() {
+
+        document.body.style.overflow = 'auto';
+        document.querySelector('.popup').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+
+    function profilOpen (){
+          document.body.style.overflow = 'hidden';
+          document.getElementById('overlay').style.display = 'block';
+          document.getElementById('sideMenu').style.visibility = 'visible';
+    }
+    function profilClose (){
+        document.body.style.overflow = 'auto';
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('sideMenu').style.visibility = 'collapse';
+    }
+
+    async function optionFormOpen(id){
+        openPopup();
+        const data = await BrokerData(id);
+        document.getElementById('optionForm').style.visibility = 'visible';
+        document.getElementById('targetId').value = id;
+
+        document.getElementById('targetBrokerImg').setAttribute('src', 'data:image/png;base64,' + data.sourseFile);
+        document.getElementById('BrokerName').textContent = data.nameBroker;
+        
+        document.getElementById('brokerINN').textContent = 'ИНН: ' + data.inn;
+        document.getElementById('brokerKPP').textContent = 'КПП: ' + data.kpp;
+        document.getElementById('brokerOTKMO').textContent = 'ОТКМО: ' + data.oktmo;
+        document.getElementById('brokerPhone').textContent = 'Телефон: ' + data.phone;
+        document.getElementById('brokerAddress').textContent = 'Юридический адресс:' + data.businessAddress;
+        document.getElementById('brokerEmail').textContent = 'E-mail' + data.email;
+    }
+
+     async function optionFormOpenDop(id){
+         openPopup();
+         const data = await BrokerData(id);
+         document.getElementById('optionForm').style.visibility = 'visible';
+         document.getElementById('targetId').value = id;
+         
+         document.getElementById('targetBrokerImg').setAttribute('src', 'data:image/png;base64,' + data.sourseFile);
+         document.getElementById('BrokerName').textContent = data.nameBroker;
+
+         document.getElementById('brokerINN').textContent = 'ИНН: ' + data.inn;
+         document.getElementById('brokerKPP').textContent = 'КПП: ' + data.kpp;
+         document.getElementById('brokerOTKMO').textContent = 'ОТКМО: ' + data.oktmo;
+         document.getElementById('brokerPhone').textContent = 'Телефон: ' + data.phone;
+         document.getElementById('brokerAddress').textContent = 'Юридический адресс:' + data.businessAddress;
+         document.getElementById('brokerEmail').textContent = 'E-mail' + data.email;
+
+         if(data.typeOfRequestId == 3) document.getElementById('positive_btn').style.display = 'block';
+         else document.getElementById('positive_btn').style.display = 'none';
+     }
+
+    async function BrokerData(id_){
+        const response = await fetch('http://localhost:5189/api/Admin/targetBroker', {
+            method: 'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify({ id: id_ })
+        });
+        if(!response.ok){
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+
+        return data;
+
+    }
+
+    function vuhodOnStart(event)
+    {
+        event.preventDefault();
+        window.location.replace('/HomePage/Index');
+        window.history.pushState(null, null, window.location.href);
+    }
+    window.onpopstate = function(event)
+    {
+        vuhodOnStart(event);
+    }
+</script>
