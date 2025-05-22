@@ -6,19 +6,18 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Diplom_Utkin.Pages.AdminePage
 {
-    public class RequestsModel : PageModel
+    public class UsersListModel : PageModel
     {
         public int adminId { get; set; }
         public User _user { get; set; }
-        public List<Brokers> Brokers { get; set; }
+        public List<User> Users { get; set; }
 
         private readonly APIService _APIService;
 
-        public RequestsModel()
+        public UsersListModel()
         {
             _APIService = new APIService();
         }
-
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -27,7 +26,7 @@ namespace Diplom_Utkin.Pages.AdminePage
                 adminId = (int)TempData["adminId"];
                 TempData["adminId"] = adminId;
                 _user = await _APIService.moneyLoadAsync(adminId);
-                Brokers = await _APIService.NotNewBrokersList();
+                Users = await _APIService.AllUserList(adminId);
             }
             else return Unauthorized();
 
@@ -35,27 +34,15 @@ namespace Diplom_Utkin.Pages.AdminePage
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string? action, int? brokerId, int? TargetbrokerId)
+
+        public async Task<IActionResult> OnPostAsync(string? action, int? userId, int? TargetUserId)
         {
-            if (brokerId == null && TargetbrokerId != null) brokerId = TargetbrokerId;
+            if (userId == null && TargetUserId != null) userId = TargetUserId;
             switch (action)
             {
-                case "positive_btn":
-                    ModefiteRequestSupport modefite = new()
-                    {
-                        brokerId = (int)brokerId,
-                        mode = 0
-                    };
-                    await _APIService.ModefiteRequestAsync(modefite);
-                    break;
 
-                case "negative_btn":
-                    ModefiteRequestSupport modefite1 = new()
-                    {
-                        brokerId = (int)brokerId,
-                        mode = 1
-                    };
-                    await _APIService.ModefiteRequestAsync(modefite1);
+                case "delete_btn":
+                    await _APIService.deleteUser((int)userId);
                     break;
             }
             await WorkOfData();
@@ -69,6 +56,7 @@ namespace Diplom_Utkin.Pages.AdminePage
                 adminId = (int)TempData["adminId"];
                 TempData["adminId"] = adminId;
                 _user = await _APIService.moneyLoadAsync(adminId);
+                Users = await _APIService.AllUserList(adminId);
             }
         }
     }

@@ -134,6 +134,23 @@ namespace Diplom_Utkin.Model.Data
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public async Task<List<Brokers>> newBrokersAsync()
         {
             var BrokerList = await _httpClient.GetAsync("Admin/NewBrokersList");
@@ -152,6 +169,19 @@ namespace Diplom_Utkin.Model.Data
         {
             var processPositive = await _httpClient.PostAsJsonAsync("Admin/ModefiteRequest", modefite);
             
+        }
+
+
+        public async Task<List<User>> AllUserList(int id)
+        {
+            var BrokerList = await _httpClient.PostAsJsonAsync("Admin/AllUserlist", id);
+            var resalt = await BrokerList.Content.ReadFromJsonAsync<List<User>>();
+            return resalt;
+        }
+
+        public async Task deleteUser(int id)
+        {
+            var processPositive = await _httpClient.PatchAsJsonAsync("Admin/deleteUser", id);
         }
     }
 }

@@ -29,14 +29,6 @@
 </header>
 
 <script>
-
-    function vuhodOnStart(event)
-    {
-        event.preventDefault();
-        window.location.replace('/HomePage/Index');
-
-    }
-
     window.history.pushState(null, null, window.location.href);
 
     window.onpopstate = function(event)

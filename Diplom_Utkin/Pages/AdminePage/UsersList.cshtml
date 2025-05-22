@@ -1,0 +1,163 @@
+﻿@page
+@model Diplom_Utkin.Pages.AdminePage.UsersListModel
+@{
+	ViewData["Title"] = "Кабинет";
+}
+
+<div class="window-box kabinet-box">
+	@await Html.PartialAsync("Headers/_AdminHeader")
+
+	<section>
+		<div id="overlay" class="overlay"></div>
+		<div id="sideMenu" class="side-menu">
+			<button class="myButton" onclick="profilClose()">Закрыть</button>
+			<form method="post">
+				<div class="myRow">
+					<div class="form-group">
+						<label asp-for="_user.Loggin" class="control-label">E-mail</label>
+						<input asp-for="_user.Loggin" class="form-control" type="email" required disabled />
+
+					</div>
+					<div>
+						<button type="submit" onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></button>
+
+					</div>
+				</div>
+				<span asp-validation-for="_user.Loggin" class="text-danger"></span>
+			</form>
+
+			<form method="post">
+				<div class="myRow">
+					<div class="form-group">
+						<label asp-for="_user.Phone" class="control-label">Телефон</label>
+						<input asp-for="_user.Phone" class="form-control" type="tel" required disabled />
+
+					</div>
+					<div>
+						<button type="submit" onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></button>
+
+					</div>
+				</div>
+				<span asp-validation-for="_user.Phone" class="text-danger"></span>
+			</form>
+		</div>
+		<div id="popup" class="popup kabinetSupportBox">
+			<div class="poputContent">
+				<div class="top_">
+					<div>
+						<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
+					</div>
+				</div>
+
+				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
+
+				<form id="optionForm" method="post">
+					<h1>Детали</h1>
+					<input style="visibility:hidden" name="TargetUserId" id="targetId" type="number" />
+					<div class="dataSlice">
+						<label id="uLogin"></label>
+						<label id="uPhone"></label>
+						<label id="uType"></label>
+					</div>
+					<div class="myRow">
+						<a onclick="editFormOpen()">Редактировать</a>
+						<button class="myButton" name="action" type="submit" value="delete_btn">Удалить</button>
+					</div>
+				</form>
+
+				<form id="editForm" method="post">
+					<h1>Детали</h1>
+					<input style="visibility:hidden" name="TargetUserId" id="targetId_Edit" type="number" />
+					<div class="dataSlice">
+
+
+						<div class="form-group">
+							<label class="control-label">E-mail</label>
+							<input class="form-control" type="email" id="uLoginEdit" required />
+							<span  class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Телефон</label>
+							<input class="form-control" type="tel" pattern="[0-9]{10}" maxlength="10" id="uPhoneEdit" />
+							<span class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Тип:</label>
+							<select class="form-control" id="uTypeEdit" required>
+								<option value="">Выберите тип</option>
+							</select>
+							<span class="text-danger"></span>
+						</div>
+					</div>
+					<div class="myRow">
+						<button class="myButton" name="action" onclick="Update_Method()">Сохранить</button>
+						<button class="myButton" name="action" type="submit" value="back_btn">Отменить</button>
+					</div>
+				</form>
+				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
+
+			</div>
+		</div>
+	</section>
+
+	<div class="dataSlice">
+		<label>Новых заявок: @Model.Users.Count()</label>
+	</div>
+
+	<div class="tb_Box">
+		<h1>Новые заявки</h1>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						<a>
+							Логин
+						</a>
+					</th>
+					<th>
+						<a>
+							Тип
+						</a>
+					</th>
+					<th>
+						<a>
+							Телефон
+						</a>
+					</th>
+					<th>
+						Действие
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Users)
+				{
+					<tr>
+						
+						<td>
+							@Html.DisplayFor(modelItem => item.Loggin)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.TypeOfUser.Name)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Phone)
+						</td>
+						<td class="tbColCenter">
+							<form method="post">
+								<input type="number" id="userId" name="userId" value="@item.Id" style="display:none" />
+								<a onclick="fastEditFormOpen(@item.Id)">Редактировать</a>
+								<span>|</span>
+								<button class="myButton" name="action" type="submit" value="delete_btn">Удалить</button>
+							</form>
+							<span>|</span>
+							<a onclick="userFormOpen(@item.Id)">Детали</a>
+						</td>
+
+
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

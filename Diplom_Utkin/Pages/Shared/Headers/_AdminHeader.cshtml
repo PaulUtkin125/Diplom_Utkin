@@ -20,7 +20,7 @@
                         <a class="nav-link" asp-page="/AdminePage/Requests">Заявки</a>
                     </li>
                     <li class="nav-item myItem">
-                        <a class="nav-link" asp-page="#">Пользователи</a>
+                        <a class="nav-link" asp-page="/AdminePage/UsersList">Пользователи</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -43,30 +43,7 @@
 </head>
 
 <script>
-    function openPopup() {
-        document.body.style.overflow = 'hidden';
 
-        document.querySelector('.popup').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-    }
-    function closePopup() {
-
-        document.body.style.overflow = 'auto';
-        document.querySelector('.popup').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-    }
-
-
-    function profilOpen (){
-          document.body.style.overflow = 'hidden';
-          document.getElementById('overlay').style.display = 'block';
-          document.getElementById('sideMenu').style.visibility = 'visible';
-    }
-    function profilClose (){
-        document.body.style.overflow = 'auto';
-        document.getElementById('overlay').style.display = 'none';
-        document.getElementById('sideMenu').style.visibility = 'collapse';
-    }
 
     async function optionFormOpen(id){
         openPopup();
@@ -74,15 +51,26 @@
         document.getElementById('optionForm').style.visibility = 'visible';
         document.getElementById('targetId').value = id;
 
-        document.getElementById('targetBrokerImg').setAttribute('src', 'data:image/png;base64,' + data.sourseFile);
-        document.getElementById('BrokerName').textContent = data.nameBroker;
+
+        const targetBrokerImg = document.getElementById('targetBrokerImg');
+        const BrokerName = document.getElementById('BrokerName');
+        const brokerINN = document.getElementById('brokerINN');
+        const brokerKPP =  document.getElementById('brokerKPP');
+        const brokerOTKMO = document.getElementById('brokerOTKMO');
+        const brokerPhone =  document.getElementById('brokerPhone');
+        const brokerAddress = document.getElementById('brokerAddress');
+        const brokerEmail = document.getElementById('brokerEmail');
+
+
+        targetBrokerImg.setAttribute('src', 'data:image/png;base64,' + data.sourseFile);
+        BrokerName.textContent = data.nameBroker;
         
-        document.getElementById('brokerINN').textContent = 'ИНН: ' + data.inn;
-        document.getElementById('brokerKPP').textContent = 'КПП: ' + data.kpp;
-        document.getElementById('brokerOTKMO').textContent = 'ОТКМО: ' + data.oktmo;
-        document.getElementById('brokerPhone').textContent = 'Телефон: ' + data.phone;
-        document.getElementById('brokerAddress').textContent = 'Юридический адресс:' + data.businessAddress;
-        document.getElementById('brokerEmail').textContent = 'E-mail' + data.email;
+        brokerINN.textContent = 'ИНН: ' + data.inn;
+        brokerKPP.textContent = 'КПП: ' + data.kpp;
+        brokerOTKMO.textContent = 'ОТКМО: ' + data.oktmo;
+        brokerPhone.textContent = 'Телефон: ' + data.phone;
+        brokerAddress.textContent = 'Юридический адресс:' + data.businessAddress;
+        brokerEmail.textContent = 'E-mail' + data.email;
     }
 
      async function optionFormOpenDop(id){
@@ -122,12 +110,116 @@
 
     }
 
-    function vuhodOnStart(event)
-    {
-        event.preventDefault();
-        window.location.replace('/HomePage/Index');
-        window.history.pushState(null, null, window.location.href);
+
+
+    async function userFormOpen(id){
+        openPopup();
+
+        document.getElementById('editForm').style.display ='none';
+        document.getElementById('optionForm').style.display ='block';
+
+        var data = await UserData(id);
+
+        document.getElementById('targetId').value = Number(id);
+
+        console.log( document.getElementById('targetId').value);
+
+        document.getElementById('uLogin').textContent = 'E-mail: ' + data.loggin;
+        document.getElementById('uPhone').textContent = 'Телефон: ' + data.phone;
+        document.getElementById('uType').textContent = 'Тип: ' + data.typeOfUser.name;
+
     }
+
+    async function fastEditFormOpen(id){
+        document.getElementById('targetId_Edit').value = id;
+        var data = await UserData(id);
+        var UserTypeList = await loadAllUserType();
+
+
+        openPopup();
+        document.getElementById('editForm').style.display ='block';
+        document.getElementById('optionForm').style.display ='none';
+
+        document.getElementById('targetId').value = Number(id);
+
+        document.getElementById('uLoginEdit').value = data.loggin;
+        document.getElementById('uPhoneEdit').value = data.phone;
+        
+        document.getElementById('uTypeEdit').innerHTML = '';
+
+        const uTypeSelect = document.getElementById('uTypeEdit');
+        uTypeSelect.innerHTML = '';
+            UserTypeList.forEach(type => {
+            const option = document.createElement('option');
+            option.value = type.id;
+            option.textContent = type.name;
+            uTypeSelect.appendChild(option);
+        });
+
+        uTypeSelect.value = data.typeOfUser.id;
+        document.getElementById('uTypeEdit').value = data.typeOfUser.id;
+    }
+
+    async function editFormOpen(id){
+        document.getElementById('targetId_Edit').value = document.getElementById('targetId').value;
+        const id_ = document.getElementById('targetId_Edit').value;
+
+        var data = await UserData(id_);
+        var UserTypeList = await loadAllUserType();
+
+        document.getElementById('editForm').style.display ='block';
+        document.getElementById('optionForm').style.display ='none';
+
+        document.getElementById('targetId').value = Number(id);
+
+        document.getElementById('uLoginEdit').value = data.loggin;
+        document.getElementById('uPhoneEdit').value = data.phone;
+
+        document.getElementById('uTypeEdit').innerHTML = '';
+
+        const uTypeSelect = document.getElementById('uTypeEdit');
+        uTypeSelect.innerHTML = '';
+            UserTypeList.forEach(type => {
+            const option = document.createElement('option');
+            option.value = type.id;
+            option.textContent = type.name;
+            uTypeSelect.appendChild(option);
+        });
+   
+        uTypeSelect.value = data.typeOfUser.id;
+        document.getElementById('uTypeEdit').value = data.typeOfUser.id;
+    }
+
+    async function UserData(id_){
+        const response = await fetch('http://localhost:5189/api/Admin/targetUser', {
+            method: 'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify({ id: id_ })
+        });
+        if(!response.ok){
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+
+        return data;
+    }
+
+    async function Update_Method(){
+        const id_ = document.getElementById('targetId_Edit').value;
+        const mail_ = document.getElementById('uLoginEdit').value;
+        const idRole_ = document.getElementById('uTypeEdit').value;
+        const phone_ = document.getElementById('uPhoneEdit').value;
+
+        console.log('id_: ', id_);
+        console.log('mail_: ', mail_);
+        console.log('idRole_: ', idRole_);
+        console.log('phone_: ', phone_);
+
+        await updateUser(id_, mail_, idRole_, phone_);
+    }
+
     window.onpopstate = function(event)
     {
         vuhodOnStart(event);
