@@ -16,9 +16,15 @@ namespace Diplom_Utkin.Pages.AdinePage
 
         private readonly APIService _APIService;
 
-        public IndexModel()
+        private readonly IConfiguration _configuration;
+        public readonly ApiSettings apiSettings;
+
+        public IndexModel(IConfiguration configuration)
         {
-            _APIService = new APIService();
+            _configuration = configuration;
+            apiSettings = new ApiSettings();
+            apiSettings.BaseUrl = _configuration["API:BaseUrl"];
+            _APIService = new APIService(apiSettings.BaseUrl);
         }
 
 

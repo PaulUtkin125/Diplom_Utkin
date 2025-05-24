@@ -16,7 +16,8 @@ function openPopup() {
 	document.body.style.overflow = 'hidden';
 
 	document.querySelector('.popup').style.display = 'block';
-	document.getElementById('overlay').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+
 }
 function closePopup() {
 	document.body.style.overflow = 'auto';
@@ -25,44 +26,23 @@ function closePopup() {
 	document.getElementById('overlay').style.display = 'none';
 }
 
- function profilOpen (){
-       document.body.style.overflow = 'hidden';
-       document.getElementById('overlay').style.display = 'block';
-       document.getElementById('sideMenu').style.visibility = 'visible';
+function profilOpen() {
+    document.body.style.overflow = 'hidden';
+    document.getElementById('overlay').style.display = 'block';
+    document.getElementById('sideMenu').style.visibility = 'visible';
+
+     startLogin = document.getElementById('portfile_mail').value;
+     startPhone = document.getElementById('portfile_phone').value;
  }
  function profilClose (){
      document.body.style.overflow = 'auto';
      document.getElementById('overlay').style.display = 'none';
      document.getElementById('sideMenu').style.visibility = 'collapse';
-}
 
-async function loadAllUserType() {
+     document.getElementById('portfile_mail').disabled = true;
+     document.getElementById('portfile_phone').disabled = true;
+     document.getElementById('portfile_save_btn').style.display = 'none';
 
-    const response = await fetch('http://localhost:5189/api/Admin/AllUserType', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
-    }
-    var UserTypeList = response.json();
-    return UserTypeList;
-}
-
-async function updateUser(id_, mail_, idRole_, phone_) {
-   
-    const response = await fetch('http://localhost:5189/api/Admin/updateUser', {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id: id_, Loggin: mail_, Phone: phone_, TypeOfUserId: idRole_ })
-    });
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
-    }
-    const data = response.json();
-    console.log('User updated successfully:', data);
+     document.getElementById('portfile_mail').value = startLogin;
+     document.getElementById('portfile_phone').value = startPhone;
 }

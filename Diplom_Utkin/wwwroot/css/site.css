@@ -258,9 +258,17 @@ body {
     gap: 15px;
 }
 
-.helowBox {
+.myRow a{
     align-self:center;
-    margin-right:12%;
+}
+
+.space-between {
+    justify-content: space-between
+}
+
+.helowBox {
+    align-self: center;
+    margin-right: 12%;
 }
 
 
@@ -600,7 +608,7 @@ canvas {
     top: 20%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 300px;
+    width:300px;
     height: max-content;
     background-color: #fff;
     border: 1px solid #000;
@@ -615,7 +623,7 @@ canvas {
 }
 
 .kabinetSupportBox{
-    width:430px;
+    width:max-content;
 }
 
 .kabinetSupportBox .myRow input{

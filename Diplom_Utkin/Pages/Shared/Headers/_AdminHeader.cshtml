@@ -47,8 +47,11 @@
 
     async function optionFormOpen(id){
         openPopup();
+
+
         const data = await BrokerData(id);
-        document.getElementById('optionForm').style.visibility = 'visible';
+        document.getElementById('CreateForm').style.display = 'none';
+        document.getElementById('optionForm').style.display = 'block';
         document.getElementById('targetId').value = id;
 
 
@@ -70,13 +73,14 @@
         brokerOTKMO.textContent = 'ОТКМО: ' + data.oktmo;
         brokerPhone.textContent = 'Телефон: ' + data.phone;
         brokerAddress.textContent = 'Юридический адресс:' + data.businessAddress;
-        brokerEmail.textContent = 'E-mail' + data.email;
+        brokerEmail.textContent = 'E-mail: ' + data.email;
     }
 
      async function optionFormOpenDop(id){
          openPopup();
          const data = await BrokerData(id);
-         document.getElementById('optionForm').style.visibility = 'visible';
+         document.getElementById('CreateForm').style.display = 'none';
+         document.getElementById('optionForm').style.display = 'block';
          document.getElementById('targetId').value = id;
          
          document.getElementById('targetBrokerImg').setAttribute('src', 'data:image/png;base64,' + data.sourseFile);
@@ -87,14 +91,15 @@
          document.getElementById('brokerOTKMO').textContent = 'ОТКМО: ' + data.oktmo;
          document.getElementById('brokerPhone').textContent = 'Телефон: ' + data.phone;
          document.getElementById('brokerAddress').textContent = 'Юридический адресс:' + data.businessAddress;
-         document.getElementById('brokerEmail').textContent = 'E-mail' + data.email;
+         document.getElementById('brokerEmail').textContent = 'E-mail: ' + data.email;
 
          if(data.typeOfRequestId == 3) document.getElementById('positive_btn').style.display = 'block';
          else document.getElementById('positive_btn').style.display = 'none';
      }
 
     async function BrokerData(id_){
-        const response = await fetch('http://localhost:5189/api/Admin/targetBroker', {
+        const baseUrl = '@Model.apiSettings.BaseUrl';
+        const response = await fetch(baseUrl + 'Admin/targetBroker', {
             method: 'POST',
             headers:{
                 'Content-Type':'application/json'
@@ -109,7 +114,6 @@
         return data;
 
     }
-
 
 
     async function userFormOpen(id){
@@ -190,8 +194,15 @@
         document.getElementById('uTypeEdit').value = data.typeOfUser.id;
     }
 
+    function CreateForm_Open(){
+        openPopup();
+        document.getElementById('optionForm').style.display ='none';
+        document.getElementById('CreateForm').style.display = 'block';
+    }
+
     async function UserData(id_){
-        const response = await fetch('http://localhost:5189/api/Admin/targetUser', {
+        const baseUrl = '@Model.apiSettings.BaseUrl';
+        const response = await fetch(baseUrl + 'Admin/targetUser', {
             method: 'POST',
             headers:{
                 'Content-Type':'application/json'
@@ -212,12 +223,121 @@
         const idRole_ = document.getElementById('uTypeEdit').value;
         const phone_ = document.getElementById('uPhoneEdit').value;
 
-        console.log('id_: ', id_);
-        console.log('mail_: ', mail_);
-        console.log('idRole_: ', idRole_);
-        console.log('phone_: ', phone_);
+        await updateUser(id_, mail_, idRole_, phone_);
+    }
+
+
+    var startLogin = '';
+    var startPhone = '';
+
+    function updateLogin(){
+        document.getElementById('portfile_mail').disabled = false;
+        document.getElementById('portfile_save_btn').style.display = 'block';
+    }
+    function updatePhone(){
+        document.getElementById('portfile_phone').disabled = false;
+        document.getElementById('portfile_save_btn').style.display = 'block';
+    }
+
+    async function Update_Method_Profile(){
+        const id_ = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model._user.Id));
+        const mail_ = document.getElementById('portfile_mail').value;
+        const phone_ = document.getElementById('portfile_phone').value;
+
+        const idRole_ = 1;
 
         await updateUser(id_, mail_, idRole_, phone_);
+    }
+
+        async function loadAllUserType() {
+        const baseUrl = '@Model.apiSettings.BaseUrl';
+        const response = await fetch(baseUrl + 'Admin/AllUserType', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        var UserTypeList = response.json();
+        return UserTypeList;
+    }
+
+    async function updateUser(id_, mail_, idRole_, phone_) {
+        const baseUrl = '@Model.apiSettings.BaseUrl';
+        const response = await fetch(baseUrl + 'Admin/updateUser', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: id_, Loggin: mail_, Phone: phone_, TypeOfUserId: idRole_ })
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = response.json();
+        console.log('User updated successfully:', data);
+    }
+
+    async function validationCreateBroker(event){
+        event.preventDefault();
+        var file = document.getElementById('BrokerImgCreate').files[0];
+        var NameBroker = document.getElementById('BrokerNameCreate').value;
+        // var UrisidikciiyId = document.getElementById('Urisdiction').value;
+        
+        var INNBlock = document.getElementById('brokerINNCreate');
+        
+        var INN = INNBlock.value;
+        var KPP = document.getElementById('brokerKPPCreate').value;
+        var OKTMO = document.getElementById('brokerOTKMOCreate').value;
+        var BusinessAddress = document.getElementById('brokerAddressCreate').value;
+        var Phone = document.getElementById('uPhoneCreate').value;
+        var Email = document.getElementById('uLoginCreate').value;
+        var FullNameOfTheDirector = document.getElementById('brokerDirCreate').value;
+
+        var INNError = document.getElementById('INNError');
+
+        var data = await CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector);
+        if(data.PromiseResult != 0) {
+            INNBlock.style.borderBottom = '2px solid red';
+            INNBlock.focus;
+            INNError.textContent = 'Данный номер уже используется!'
+            return false;
+        }
+        else {
+            INNBlock.style.borderBottom = '2 solid black';
+            INNError.textContent = '';
+            return true;
+        }
+        
+    }
+
+
+
+    async function CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector)
+    {
+        const formData = new FormData();
+        formData.append('file', file); // fileInput — элемент <input type="file" />
+        formData.append('NameBroker', NameBroker);
+        formData.append('UrisidikciiyId', 1);
+        formData.append('INN', INN);
+        formData.append('KPP', KPP);
+        formData.append('OKTMO', OKTMO);
+        formData.append('BusinessAddress', BusinessAddress);
+        formData.append('Phone', Phone);
+        formData.append('Email', Email);
+        formData.append('FullNameOfTheDirector', FullNameOfTheDirector)
+
+        const baseUrl = '@Model.apiSettings.BaseUrl';
+        const response = await fetch(baseUrl + 'Universal/CreateBroker', {
+            method: 'POST',
+            body: formData
+        });
+        const data = response.json();
+        console.log('code: ', data);
+        return data;
+        
     }
 
     window.onpopstate = function(event)

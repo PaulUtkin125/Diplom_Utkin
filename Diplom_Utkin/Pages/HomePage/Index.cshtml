@@ -254,8 +254,9 @@
 	async function validMail(event) {
 		event.preventDefault();
 		try {
+			const baseUrl = '@Model.apiSettings.BaseUrl';
 			const mail = document.getElementById('regLogin').value;
-			const response = await fetch('http://localhost:5189/api/Logo/validationMail', {
+			const response = await fetch(baseUrl+'Logo/validationMail', {
 				method:'POST',
 				headers:{
 					'Content-Type':'application/json'
@@ -283,8 +284,9 @@
 		event.preventDefault();
 
 		try {
+			const baseUrl = '@Model.apiSettings.BaseUrl';
 			const mail = document.getElementById('regLogin').value;
-			const response = await fetch('http://localhost:5189/api/Universal/SendCode', {
+			const response = await fetch(baseUrl+'Universal/SendCode', {
 				method:'POST',
 				headers:{
 					'Content-Type':'application/json'

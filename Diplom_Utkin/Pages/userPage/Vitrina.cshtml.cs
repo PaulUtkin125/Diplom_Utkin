@@ -4,6 +4,7 @@ using Diplom_Utkin.Model.Support;
 using Finansu.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NuGet.Configuration;
 
 namespace Diplom_Utkin.Pages.userPage
 {
@@ -16,9 +17,14 @@ namespace Diplom_Utkin.Pages.userPage
         private readonly APIService _APIService;
         public List<InvestTools> AllInvestToolsList { get; set; } = default!;
 
-        public VitrinaModel()
+        private readonly IConfiguration _configuration;
+        public readonly ApiSettings apiSettings;
+        public VitrinaModel(IConfiguration configuration)
         {
-            _APIService = new APIService();
+            _configuration = configuration;
+            apiSettings = new ApiSettings();
+            apiSettings.BaseUrl = _configuration["API:BaseUrl"];
+            _APIService = new APIService(apiSettings.BaseUrl);
         }
         [BindProperty]
         public CardModel _cardModel { get; set; } = default!;

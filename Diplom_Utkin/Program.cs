@@ -16,6 +16,7 @@ namespace Diplom_Utkin
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddDistributedMemoryCache(); // Для хранения сессий в памяти
 
+            builder.Configuration.AddJsonFile("appsettings.json");
 
             // Add services to the container.
             builder.Services.AddRazorPages();

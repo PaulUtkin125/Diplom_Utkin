@@ -15,30 +15,29 @@
 				<div class="myRow">
 					<div class="form-group">
 						<label asp-for="_user.Loggin" class="control-label">E-mail</label>
-						<input asp-for="_user.Loggin" class="form-control" type="email" required disabled />
+						<input asp-for="_user.Loggin" class="form-control" id="portfile_mail" type="email" required disabled />
 
 					</div>
 					<div>
-						<button type="submit" onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></button>
+						<a onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></a>
 
 					</div>
 				</div>
 				<span asp-validation-for="_user.Loggin" class="text-danger"></span>
-			</form>
-
-			<form method="post">
+			
 				<div class="myRow">
 					<div class="form-group">
 						<label asp-for="_user.Phone" class="control-label">Телефон</label>
-						<input asp-for="_user.Phone" class="form-control" type="tel" required disabled />
+						<input asp-for="_user.Phone" class="form-control" id="portfile_phone" type="tel" required disabled />
 
 					</div>
 					<div>
-						<button type="submit" onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></button>
+						<a onclick="updatePhone()"><img src="/Image/icon-edit.svg" /></a>
 
 					</div>
 				</div>
 				<span asp-validation-for="_user.Phone" class="text-danger"></span>
+				<button class="myButton" style="display:none" name="action" onclick="Update_Method_Profile()" id="portfile_save_btn" value="NoN">Сохранть</button>
 			</form>
 		</div>
 		<div id="popup" class="popup kabinetSupportBox">
@@ -66,8 +65,36 @@
 				</form>
 
 				<form id="editForm" method="post">
-					<h1>Детали</h1>
+					<h1>Редактирование</h1>
 					<input style="visibility:hidden" name="TargetUserId" id="targetId_Edit" type="number" />
+					<div class="dataSlice" id="dataSlice_broker" style="display:none">
+
+						<div class="form-group">
+							<label class="control-label">Выберите иконку</label>
+							<input class="form-control" type="file" id="BrokerImgEdit" required />
+							<span class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Название</label>
+							<input class="form-control" type="text" id="BrokerNameEdit" required />
+							<span class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">ИНН</label>
+							<input class="form-control" type="number" maxlength="10" id="brokerINNEdit" required disabled/>
+							<span class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">КПП</label>
+							<input class="form-control" type="number" maxlength="9" id="brokerKPPEdit" required disabled />
+							<span class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Бизнес адрес</label>
+							<input class="form-control" type="text" maxlength="9" id="brokerAddressEdit" required/>
+							<span class="text-danger"></span>
+						</div>
+					</div>
 					<div class="dataSlice">
 
 
@@ -83,14 +110,16 @@
 						</div>
 						<div class="form-group">
 							<label class="control-label">Тип:</label>
-							<select class="form-control" id="uTypeEdit" required>
+							<select class="form-control" id="uTypeEdit" required disabled>
 								<option value="">Выберите тип</option>
 							</select>
 							<span class="text-danger"></span>
 						</div>
 					</div>
+
 					<div class="myRow">
-						<button class="myButton" name="action" onclick="Update_Method()">Сохранить</button>
+						<button class="myButton" name="action" onclick="Update_Method()" value="NoN">Сохранить</button>
+						<button class="myButton" name="action" style="display:none" value="create">Добавить</button>
 						<button class="myButton" name="action" type="submit" value="back_btn">Отменить</button>
 					</div>
 				</form>

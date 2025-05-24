@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using Diplom_Utkin.Model.Data;
 using Diplom_Utkin.Model.Support;
 using Finansu.Model;
@@ -19,9 +20,15 @@ namespace Diplom_Utkin.Pages.userPage
         public string[] chartName { get; set; }
 
         public User _user { get; set; }
-        public IndexModel()
+
+        private readonly IConfiguration _configuration;
+        public readonly ApiSettings apiSettings;
+        public IndexModel(IConfiguration configuration)
         {
-            _APIService = new APIService();
+            _configuration = configuration;
+            apiSettings = new ApiSettings();
+            apiSettings.BaseUrl = _configuration["API:BaseUrl"];
+            _APIService = new APIService(apiSettings.BaseUrl);
         }
 
         public IList<Portfolio> InvestToolsList { get; set; } = default!;

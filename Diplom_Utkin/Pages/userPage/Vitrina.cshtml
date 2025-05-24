@@ -13,30 +13,29 @@
 				<div class="myRow">
 					<div class="form-group">
 						<label asp-for="_user.Loggin" class="control-label">E-mail</label>
-						<input asp-for="_user.Loggin" class="form-control" type="email" required disabled />
+						<input asp-for="_user.Loggin" class="form-control" id="portfile_mail" type="email" required disabled />
 
 					</div>
 					<div>
-						<button type="submit" onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></button>
+						<a onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></a>
 
 					</div>
 				</div>
 				<span asp-validation-for="_user.Loggin" class="text-danger"></span>
-			</form>
 
-			<form method="post">
 				<div class="myRow">
 					<div class="form-group">
-						<label asp-for="_user.PaswordHash" class="control-label">Телефон</label>
-						<input asp-for="_user.PaswordHash" class="form-control" type="tel" required disabled />
+						<label asp-for="_user.Phone" class="control-label">Телефон</label>
+						<input asp-for="_user.Phone" class="form-control" id="portfile_phone" type="tel" required disabled />
 
 					</div>
 					<div>
-						<button type="submit" onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></button>
+						<a onclick="updatePhone()"><img src="/Image/icon-edit.svg" /></a>
 
 					</div>
 				</div>
-				<span asp-validation-for="_user.PaswordHash" class="text-danger"></span>
+				<span asp-validation-for="_user.Phone" class="text-danger"></span>
+				<button class="myButton" style="display:none" name="action" onclick="Update_Method_Profile()" id="portfile_save_btn" value="NoN">Сохранть</button>
 			</form>
 		</div>
 		<div class="popup kabinetSupportBox">
@@ -284,6 +283,7 @@
 		if(inputMony.value.replace('0', '').length < 1 || Number(inputMony.value) < 1) inputMony.style.borderBottom = '2px solid red';
 		else inputMony.style.borderBottom = '2px Solid #000000';
 	}
+
 </script>
 
 @section Scripts {

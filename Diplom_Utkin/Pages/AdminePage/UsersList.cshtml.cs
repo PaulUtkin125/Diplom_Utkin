@@ -3,6 +3,7 @@ using Diplom_Utkin.Model.Support;
 using Finansu.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NuGet.Configuration;
 
 namespace Diplom_Utkin.Pages.AdminePage
 {
@@ -14,9 +15,14 @@ namespace Diplom_Utkin.Pages.AdminePage
 
         private readonly APIService _APIService;
 
-        public UsersListModel()
+        private readonly IConfiguration _configuration;
+        public readonly ApiSettings apiSettings;
+        public UsersListModel(IConfiguration configuration)
         {
-            _APIService = new APIService();
+            _configuration = configuration;
+            apiSettings = new ApiSettings();
+            apiSettings.BaseUrl = _configuration["API:BaseUrl"];
+            _APIService = new APIService(apiSettings.BaseUrl);
         }
 
         public async Task<IActionResult> OnGetAsync()

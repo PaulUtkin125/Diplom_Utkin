@@ -1,17 +1,16 @@
 ﻿using Diplom_Utkin.Model.dopValidation;
 using Diplom_Utkin.Model.Support;
 using Finansu.Model;
-using Microsoft.Extensions.Configuration;
 
 namespace Diplom_Utkin.Model.Data
 {
     public class APIService
     {
         private HttpClient _httpClient;
-        public APIService()
+        public APIService(string baseUrl)
         {
             _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("http://localhost:5189/api/");
+            _httpClient.BaseAddress = new Uri(baseUrl);
         }
 
         public async Task<int?> ConfirmCode(string mail)

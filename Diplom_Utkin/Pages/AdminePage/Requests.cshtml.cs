@@ -1,3 +1,4 @@
+using System.Configuration;
 using Diplom_Utkin.Model.Data;
 using Diplom_Utkin.Model.Support;
 using Finansu.Model;
@@ -14,9 +15,15 @@ namespace Diplom_Utkin.Pages.AdminePage
 
         private readonly APIService _APIService;
 
-        public RequestsModel()
+        private readonly IConfiguration _configuration;
+        public readonly ApiSettings apiSettings;
+
+        public RequestsModel(IConfiguration configuration)
         {
-            _APIService = new APIService();
+            _configuration = configuration;
+            apiSettings = new ApiSettings();
+            apiSettings.BaseUrl = _configuration["API:BaseUrl"];
+            _APIService = new APIService(apiSettings.BaseUrl);
         }
 
 
@@ -69,6 +76,7 @@ namespace Diplom_Utkin.Pages.AdminePage
                 adminId = (int)TempData["adminId"];
                 TempData["adminId"] = adminId;
                 _user = await _APIService.moneyLoadAsync(adminId);
+                Brokers = await _APIService.NotNewBrokersList();
             }
         }
     }

@@ -153,7 +153,8 @@
 	}
 
 	async function BuyData(id_){
-		const response = await fetch('http://localhost:5189/api/Universal/targetToolInformation', {
+		const baseUrl = '@Model.apiSettings.BaseUrl';
+		const response = await fetch(baseUrl + 'Universal/targetToolInformation', {
 			method: 'POST',
 			headers:{
 				'Content-Type':'application/json'
@@ -247,7 +248,8 @@
 	}
 
 	async function BuyMethodAPI(userId, ToolId, quentity, price){
-		const response = await fetch('http://localhost:5189/api/User/BueMethod', {
+		const baseUrl = '@Model.apiSettings.BaseUrl';
+		const response = await fetch(baseUrl + 'User/BueMethod', {
 			method: 'POST',
 			headers:{
 				'Content-Type':'application/json'
@@ -260,6 +262,60 @@
 		const data = response.json();
 
 		return data;
+	}
+
+
+	var startLogin1 = '';
+	var startPhone1 = '';
+
+	function updateLogin(){
+		document.getElementById('portfile_mail').disabled = false;
+		document.getElementById('portfile_save_btn').style.display = 'block';
+	}
+	function updatePhone(){
+		document.getElementById('portfile_phone').disabled = false;
+		document.getElementById('portfile_save_btn').style.display = 'block';
+	}
+
+	function Update_Method_Profile(){
+		const id_ = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model._user.Id));
+		const mail_ = document.getElementById('portfile_mail').value;
+		const phone_ = document.getElementById('portfile_phone').value;
+
+		const idRole_ = 2;
+
+		updateUser(id_, mail_, idRole_, phone_);
+	}
+
+	async function loadAllUserType() {
+		const baseUrl = '@Model.apiSettings.BaseUrl';
+		const response = await fetch(baseUrl + 'Admin/AllUserType', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+		var UserTypeList = response.json();
+		return UserTypeList;
+	}
+
+	async function updateUser(id_, mail_, idRole_, phone_) {
+		const baseUrl = '@Model.apiSettings.BaseUrl';
+		const response = await fetch(baseUrl + 'Admin/updateUser', {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ id: id_, Loggin: mail_, Phone: phone_, TypeOfUserId: idRole_ })
+		});
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+		const data = response.json();
+		console.log('User updated successfully:', data);
 	}
 
 	window.onpopstate = function(event)

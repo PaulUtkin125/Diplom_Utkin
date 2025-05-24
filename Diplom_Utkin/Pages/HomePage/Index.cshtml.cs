@@ -9,10 +9,15 @@ namespace Diplom_Utkin.Pages.HomePage
     public class IndexModel : PageModel
     {
         private readonly APIService _APIService;
+        private readonly IConfiguration _configuration;
+        public readonly ApiSettings apiSettings;
 
-        public IndexModel()
+        public IndexModel(IConfiguration configuration)
         {
-            _APIService = new APIService();
+            _configuration = configuration;
+            apiSettings = new ApiSettings();
+            apiSettings.BaseUrl = _configuration["API:BaseUrl"];
+            _APIService = new APIService(apiSettings.BaseUrl);
         }
 
         public int idU { get; set; }
