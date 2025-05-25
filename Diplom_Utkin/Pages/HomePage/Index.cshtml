@@ -104,8 +104,112 @@
 							</div>
 							<input type="hidden" asp-for="logoValidationReg.Email" id="supportLogin" />
 							<input type="hidden" asp-for="logoValidationReg.Password" id="supportPassword" />
+
+							<input type="file" style="visibility:hidden; height:1px;" id="supportFile" />
+							<input type="hidden" id="supportBrokerName" />
+							<input type="hidden" id="supportbrokerINN" />
+							<input type="hidden" id="supportbrokerKPP" />
+							<input type="hidden" id="supportBrokerOTKMO" />
+							<input type="hidden" id="supportBrokerAddress" />
+							<input type="hidden" id="supportbrokerPhone" />
+							<input type="hidden" id="supportBrokerDir" />
+
 							<div class="form-group">
-								<button class="myButton" type="submit" name="action" value="Registr_btn">Подтвердить</button>
+								<button class="myButton" type="submit" name="action" id="userReg_btn" value="Registr_btn">Подтвердить</button>
+								<button class="myButton" style="display:none" type="submit" name="action" id="BrokerReg_btn" value="NoN">Подтвердитьffdg</button>
+							</div>
+						</form>
+					</div>
+				</div>
+
+
+				<div class="contentVhod" id="vhodBrokerBox">
+					<div class="form-block">
+						<form method="post">
+							<h1>Авторизация</h1>
+							<div class="form-group">
+								<label asp-for="User.Login" class="control-label">E-mail</label>
+								<input asp-for="User.Login" class="form-control" type="email" id="loginBroker" />
+								<span asp-validation-for="User.Login" class="text-danger"></span>
+							</div>
+
+							<div class="form-group">
+								<label asp-for="User.Password" class="control-label">Пароль</label>
+								<input asp-for="User.Password" class="form-control" type="password" id="passwordloginBroker" />
+								<span asp-validation-for="User.Password" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<button class="myButton" name="action" type="submit" value="vhodBroker_btn">Войти</button>
+							</div>
+						</form>
+						<div class="form-group">
+							<button class="myButton" onclick="regBrokerOpen()">У Вас нет аккаунта? Зарегистрируйтесь</button>
+						</div>
+					</div>
+				</div>
+				<div class="contentVhod" id="brocerCreateForm">
+					<div class="form-block">
+						<form onsubmit="return validationCreateBroker(event)" method="post">
+							<h1>Регистрация</h1>
+
+							<div class="myRow">
+								<div class="dataSlice">
+									<div class="form-group">
+										<label class="control-label">Выберите иконку</label>
+										<input class="form-control" type="file" accept=".jpg, .jpeg, .png" id="BrokerImgCreate" />
+										<span class="text-danger"></span>
+									</div>
+									<div class="form-group">
+										<label class="control-label">Название</label>
+										<input class="form-control" type="text" id="BrokerNameCreate" required />
+										<span class="text-danger"></span>
+									</div>
+									<div class="form-group">
+										<label class="control-label">ИНН</label>
+										<input class="form-control" type="text" maxlength="10" id="brokerINNCreate" required />
+										<span id="INNError" class="text-danger"></span>
+									</div>
+									<div class="form-group">
+										<label class="control-label">КПП</label>
+										<input class="form-control" type="text" maxlength="9" id="brokerKPPCreate" required />
+										<span class="text-danger"></span>
+									</div>
+									<div class="form-group">
+										<label class="control-label">ОТКМО</label>
+										<input class="form-control" type="text" maxlength="11" id="brokerOTKMOCreate" required />
+										<span class="text-danger"></span>
+									</div>
+								</div>
+
+								<div class="dataSlice">
+									<div class="form-group">
+										<label class="control-label">Бизнес адрес</label>
+										<input class="form-control" type="text" id="brokerAddressCreate" required />
+										<span class="text-danger"></span>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label">E-mail</label>
+										<input class="form-control" type="email" id="uLoginCreate" required />
+										<span class="text-danger"></span>
+									</div>
+									<div class="form-group">
+										<label class="control-label">Телефон</label>
+										<input class="form-control" type="tel" placeholder="+7 (901) 168-12-12" maxlength="18" id="uPhoneCreate" />
+										<span class="text-danger"></span>
+									</div>
+									<div class="form-group">
+										<label class="control-label">Директор:</label>
+										<input class="form-control" type="text" id="brokerDirCreate" />
+										<span class="text-danger"></span>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="myRow">
+								<button class="myButton" type="submit">Зарегестрироваться</button>
+								<button class="myButton" onclick="BrokerOpen()">У Вас есть аккаунта? Авторизуйтесь</button>
 							</div>
 						</form>
 					</div>
@@ -212,17 +316,12 @@
 				const items = document.querySelectorAll('.carousel-wrapper div');
 
 				let itemCount = items.length;
-
-				// Дублируем первые элементы для создания эффекта закольцованности
 				for (let i = 0; i < itemCount; i++) {
 					let clone = items[i].cloneNode(true);
 					carouselWrapper.appendChild(clone);
 				}
 
-				// Обновляем количество элементов
 				itemCount = items.length * 2;
-
-				// Устанавливаем ширину контейнера в зависимости от количества элементов
 				carouselWrapper.style.width = `${itemCount * 33.33}vw`;
 
 			</script>
@@ -237,6 +336,7 @@
 		<div>
 			<p>Не является индивидуальной инвестиционной рекомендацией.</p>
 			<p>Приобретение иностранных ценных бумаг связано с дополнительными рисками.</p>
+			<p><a onclick="BrokerOpen()" class="myA">Для партнеров</a></p>
 			<p><a onclick="AdminOpen()" class="myA">Спец. возможности</a></p>
 		</div>
 
@@ -251,18 +351,22 @@
 
 
 <script>
+	const baseUrl = '@Model.apiSettings.BaseUrl';
+	const popup = document.getElementById('regBox');
+	const childElements = popup.querySelectorAll('*');
+
 	async function validMail(event) {
 		event.preventDefault();
+		
 		try {
-			const baseUrl = '@Model.apiSettings.BaseUrl';
 			const mail = document.getElementById('regLogin').value;
 			const response = await fetch(baseUrl+'Logo/validationMail', {
 				method:'POST',
 				headers:{
 					'Content-Type':'application/json'
 				},
-				body: JSON.stringify({ toMail: mail }) // Преобразуем данные в JSON
-			}); // URL вашего API
+				body: JSON.stringify({ toMail: mail })
+			});
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			}
@@ -272,8 +376,12 @@
 				alert('Данный E-mail уже используется! укажите другой');
 				return false;
 			}
-			alert('Код подтверждения отправлен');
-			fetchData(event);
+			// alert('Код подтверждения отправлен');
+			popup.style.cursor = 'wait';
+			childElements.forEach(child => {
+				child.style.cursor = 'wait';
+			});
+			await fetchData(event);
 		}
 		catch (error) {
 			console.error('There was a problem with the fetch operation:', error);
@@ -284,15 +392,14 @@
 		event.preventDefault();
 
 		try {
-			const baseUrl = '@Model.apiSettings.BaseUrl';
 			const mail = document.getElementById('regLogin').value;
 			const response = await fetch(baseUrl+'Universal/SendCode', {
 				method:'POST',
 				headers:{
 					'Content-Type':'application/json'
 				},
-				body: JSON.stringify({ toMail: mail }) // Преобразуем данные в JSON
-			}); // URL вашего API
+				body: JSON.stringify({ toMail: mail })
+			});
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			}
@@ -303,6 +410,11 @@
 			document.getElementById('supportPassword').value = document.getElementById('regPassword').value;
 			document.getElementById('supportLogin').value = mail;
 
+			popup.style.cursor = 'auto';
+			childElements.forEach(child => {
+				child.style.cursor = 'auto';
+			});
+
 			comfirmOpen();
 		} 
 		catch (error) {
@@ -311,20 +423,24 @@
 	}
 
 	function validationCode(event) {
+
 		const enteredCode = document.getElementById('confirmCode').value;
-		const targetMail = document.getElementById('targetMail').value;
+		const targetMail = document.getElementById('supportLogin').value;
 		const storedCode = localStorage.getItem(targetMail);
 
 		if (enteredCode != storedCode) {
 			document.getElementById('confirmCode').style.color = 'red';
-			// alert('Ошибка: Код подтверждения не совпадает. Пожалуйста, проверьте введённый код.');
-			event.preventDefault();
+			document.getElementById('confirmError').textContent = 'Ошибка: Код подтверждения не совпадает. Пожалуйста, проверьте введённый код.';
 			return false;
 		}
 		else{
 			document.getElementById('confirmCode').style.color = 'black';
 			console.log('Код подтверждения верный.');
 			// alert('Пользователь успешно зарегистрирован!');
+
+			if(document.getElementById('userReg_btn').style.display == 'none'  ){
+				createBrocer_Btn();
+			}
 			return true;
 		}
 		
@@ -333,14 +449,21 @@
 	function vhodOpen() {
 		openPopup();
 
+		document.getElementById('brocerCreateForm').style.display = 'none';
+		document.getElementById('vhodBrokerBox').style.display = 'none';
 		document.getElementById('confirmCodeBox').style.display = 'none';
 		document.getElementById('vhodAdminBox').style.display = 'none';
 		document.getElementById('regBox').style.display = 'none';
+
 		document.getElementById('vhodBox').style.display = 'block';
 	}
 	function regOpen() {
 		openPopup();
 
+		document.getElementById('userReg_btn').style.display = 'block';
+		document.getElementById('BrokerReg_btn').style.display = 'none';
+
+		document.getElementById('vhodBrokerBox').style.display = 'none';
 		document.getElementById('confirmCodeBox').style.display = 'none';
 		document.getElementById('vhodAdminBox').style.display = 'none';
 		document.getElementById('vhodBox').style.display = 'none';
@@ -348,19 +471,378 @@
 	}
 
 	function comfirmOpen() {
-			
+		
+		document.getElementById('brocerCreateForm').style.display = 'none';
+		document.getElementById('vhodBrokerBox').style.display = 'none';
 		document.getElementById('regBox').style.display = 'none';
 		document.getElementById('vhodBox').style.display = 'none';
 		document.getElementById('vhodAdminBox').style.display = 'none';
+
 		document.getElementById('confirmCodeBox').style.display = 'block';
+
+		document.getElementById('confirmCode').value = '';
 	}
 
 	function AdminOpen(){
 		openPopup();
 
+		document.getElementById('brocerCreateForm').style.display = 'none';
+		document.getElementById('vhodBrokerBox').style.display = 'none';
 		document.getElementById('confirmCodeBox').style.display = 'none';
 		document.getElementById('regBox').style.display = 'none';
 		document.getElementById('vhodBox').style.display = 'none';
+
 		document.getElementById('vhodAdminBox').style.display = 'block';
+	}
+
+
+
+	////////////////////////////////   for broker   //////////////////////////////////////////////////
+	
+	function BrokerOpen() {
+		openPopup();
+
+		document.getElementById('vhodBrokerBox').style.display = 'block';
+
+		document.getElementById('brocerCreateForm').style.display = 'none';
+		document.getElementById('confirmCodeBox').style.display = 'none';
+		document.getElementById('vhodAdminBox').style.display = 'none';
+		document.getElementById('regBox').style.display = 'none';
+		document.getElementById('vhodBox').style.display = 'none';
+	}
+
+	function regBrokerOpen(){
+		openPopup();
+
+		document.getElementById('userReg_btn').style.display = 'none';
+		document.getElementById('BrokerReg_btn').style.display = 'block';
+
+		document.querySelector('.popup').style.width = 'max-content';
+		document.getElementById('brocerCreateForm').style.display = 'block';
+
+		document.getElementById('vhodBrokerBox').style.display = 'none';
+		document.getElementById('confirmCodeBox').style.display = 'none';
+		document.getElementById('vhodAdminBox').style.display = 'none';
+		document.getElementById('regBox').style.display = 'none';
+		document.getElementById('vhodBox').style.display = 'none';
+	}
+
+	let input = document.getElementById("brokerINNCreate");
+	input.addEventListener("keyup", (e) => { formatINN(e.target); });
+	input.addEventListener("keypress", (e) => { formatINN(e.target); });
+
+	function formatINN(input) {
+		var input_val = input.value;
+		console.log('input.value: ', input.value);
+		if (input_val === "") { return; }
+		input_val = input_val.replace(/\D/g, "");
+		input.value = input_val;
+		var updated_len = input_val.length;
+
+
+		if(updated_len < 10) input.style.borderBottom = '2px solid red';
+		else input.style.borderBottom = '0';
+	}
+
+	let inputOTKMO = document.getElementById("brokerOTKMOCreate");
+	inputOTKMO.addEventListener("keyup", (e) => { formatOTKMO(e.target); });
+	inputOTKMO.addEventListener("keypress", (e) => { formatOTKMO(e.target); });
+
+	function formatOTKMO(inputOTKMO) {
+		var input_val = inputOTKMO.value;
+		console.log('input.value: ', inputOTKMO.value);
+		if (input_val === "") { return; }
+		input_val = input_val.replace(/\D/g, "");
+		inputOTKMO.value = input_val;
+		var updated_len = input_val.length;
+
+
+		if(updated_len < 11) inputOTKMO.style.borderBottom = '2px solid red';
+		else inputOTKMO.style.borderBottom = '0';
+	}
+
+	let inputKPP = document.getElementById("brokerKPPCreate");
+	inputKPP.addEventListener("keyup", (e) => { formatKPP(e.target); });
+	inputKPP.addEventListener("keypress", (e) => { formatKPP(e.target); });
+
+	function formatKPP(inputKPP) {
+		var input_val = inputKPP.value;
+		console.log('input.value: ', inputKPP.value);
+		if (input_val === "") { return; }
+		input_val = input_val.replace(/\D/g, "");
+		inputKPP.value = input_val;
+		var updated_len = input_val.length;
+
+
+		if(updated_len < 9) inputKPP.style.borderBottom = '2px solid red';
+		else inputKPP.style.borderBottom = '0';
+	}
+
+	let inputPhone = document.getElementById("uPhoneCreate");
+	inputPhone.addEventListener("keyup", (e) => { formatinputPhone(e.target); });
+	inputPhone.addEventListener("keypress", (e) => { formatinputPhone(e.target); });
+
+	function formatinputPhone(inputPhone) {
+		var input_val = inputPhone.value;
+		if (input_val === "") { return; }
+		var original_len = input_val.length;
+		var caret_pos = inputPhone.selectionStart;
+		input_val = input_val.replace(/\D/g, "");
+		if (input_val.length > 0 && input_val[0] !== "7") {
+			input_val = "7" + input_val;
+		}
+		if (input_val.length > 11) {
+			input_val = input_val.substring(0, 11);
+		}
+		var formatted = "+";
+
+		if (input_val.length > 0) {
+			formatted += input_val[0];
+		}
+		if (input_val.length > 1) {
+			formatted += " (" + input_val.substring(1, 4);
+		}
+		if (input_val.length >= 4) {
+			formatted += ")";
+		}
+		if (input_val.length >= 4) {
+			formatted += " " + input_val.substring(4, 7);
+		}
+		if (input_val.length >= 7) {
+			formatted += "-" + input_val.substring(7, 9);
+		}
+		if (input_val.length >= 9) {
+			formatted += "-" + input_val.substring(9, 11);
+		}
+
+		inputPhone.value = formatted;
+		var updated_len = formatted.length;
+		caret_pos = updated_len - original_len + caret_pos;
+		if (caret_pos < 0) caret_pos = 0;
+		inputPhone.setSelectionRange(caret_pos, caret_pos);
+
+
+		if (input_val.length < 11) {
+			inputPhone.style.borderBottom = '2px solid red';
+		} else {
+			inputPhone.style.borderBottom = '0';
+		}
+	}
+
+	async function validationCreateBroker(event){
+		event.preventDefault();
+
+
+		var file = document.getElementById('BrokerImgCreate').files[0];
+		var NameBroker = document.getElementById('BrokerNameCreate').value;
+		// var UrisidikciiyId = document.getElementById('Urisdiction').value;
+
+		var INNBlock = document.getElementById('brokerINNCreate');
+		var bMail =  document.getElementById('uLoginCreate');
+
+		var INN = INNBlock.value;
+		var KPP = document.getElementById('brokerKPPCreate').value;
+		var OKTMO = document.getElementById('brokerOTKMOCreate').value;
+		var BusinessAddress = document.getElementById('brokerAddressCreate').value;
+		var Phone = document.getElementById('uPhoneCreate').value;
+		var Email = bMail.value;
+		var FullNameOfTheDirector = document.getElementById('brokerDirCreate').value;
+
+		var INNError = document.getElementById('INNError');
+
+		console.log('file: ', file);
+		console.log('NameBroker: ', NameBroker);
+		console.log('INN: ', INN);
+		console.log('KPP: ', KPP);
+		console.log('OKTMO: ', OKTMO);
+		console.log('BusinessAddress: ', BusinessAddress);
+		console.log('Phone: ', Phone);
+		console.log('Email: ', Email);
+		console.log('FullNameOfTheDirector: ', FullNameOfTheDirector);
+
+
+		var isINN = await validationINN(INN);
+		console.log('isINN: ', isINN);
+		if (isINN == 1 ) {
+			INNError.textContent = 'Данный номер уже используется!';
+			INNBlock.style.borderBottom = '2px solid red';
+			return false;
+		}
+
+		if(document.getElementById('userReg_btn').style.display == 'none'  )
+		{
+			var data = await validationBrokerMail(event, Email);
+			if(!data){
+				bMail.style.borderBottom = '2px solid red';
+				return false;
+			}
+			else bMail.style.borderBottom = '0';
+			await brokerSendCode(event, Email);
+
+
+			//data = await CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector);
+
+			INNBlock.style.borderBottom = '0';
+			INNError.textContent = '';
+
+			document.getElementById('supportBrokerName').value = NameBroker;
+			// document.getElementById('supportFile').file = file;
+
+			console.log('file: ', file);
+
+			document.getElementById('supportbrokerKPP').value = KPP;
+			document.getElementById('supportBrokerOTKMO').value = OKTMO;
+			document.getElementById('supportBrokerAddress').value = BusinessAddress;
+			document.getElementById('supportbrokerPhone').value = Phone;
+			document.getElementById('supportLogin').value = Email;
+			document.getElementById('supportBrokerDir').value = FullNameOfTheDirector;
+			document.getElementById('supportbrokerINN').value = INN;
+
+			return true;
+		}
+
+		return false;
+	}
+
+	async function validationINN(inn){
+		try {
+			const response = await fetch(baseUrl+'Universal/ValidationINN', {
+				method:'POST',
+				headers:{
+					'Content-Type':'application/json'
+				},
+				body: JSON.stringify({ toMail: inn })
+			});
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+			return data;
+		}
+		catch (error) {
+			console.error('There was a problem with the fetch operation:', error);
+		}
+	}
+
+	async function validationBrokerMail(event, mail){
+		event.preventDefault();
+		try {
+			console.log('Email: ', mail);
+			const response = await fetch(baseUrl+'Logo/validationBrokerMail', {
+				method:'POST',
+				headers:{
+					'Content-Type':'application/json'
+				},
+				body: JSON.stringify({ toMail: mail })
+			});
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+			if (!data)
+			{
+				alert('Данный E-mail уже используется! укажите другой');
+				return false;
+			}
+			// alert('Код подтверждения отправлен');
+			popup.style.cursor = 'wait';
+			childElements.forEach(child => {
+				child.style.cursor = 'wait';
+			});
+			return true;
+		}
+		catch (error) {
+			console.error('There was a problem with the fetch operation:', error);
+		}
+	}
+
+	async function createBrocer_Btn(){
+		var file = document.getElementById('BrokerImgCreate').files[0];
+		var NameBroker = document.getElementById('BrokerNameCreate').value;
+		// var UrisidikciiyId = document.getElementById('Urisdiction').value;
+
+		var INNBlock = document.getElementById('brokerINNCreate');
+		var bMail =  document.getElementById('uLoginCreate');
+
+		var INN = INNBlock.value;
+		var KPP = document.getElementById('brokerKPPCreate').value;
+		var OKTMO = document.getElementById('brokerOTKMOCreate').value;
+		var BusinessAddress = document.getElementById('brokerAddressCreate').value;
+		var Phone = document.getElementById('uPhoneCreate').value;
+		var Email = bMail.value;
+		var FullNameOfTheDirector = document.getElementById('brokerDirCreate').value;
+
+		data = await CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector);
+	}
+
+	async function brokerSendCode(event, mail) {
+		event.preventDefault();
+
+		try {
+			const response = await fetch(baseUrl+'Universal/SendCode', {
+				method:'POST',
+				headers:{
+					'Content-Type':'application/json'
+				},
+				body: JSON.stringify({ toMail: mail })
+			});
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+
+			console.log('code: ', data);
+
+			localStorage.setItem(mail, String(data));
+
+			document.getElementById('supportPassword').value = "NoN";
+			document.getElementById('supportLogin').value = mail;
+
+			popup.style.cursor = 'auto';
+			childElements.forEach(child => {
+				child.style.cursor = 'auto';
+			});
+
+			comfirmOpenDop();
+		}
+		catch (error) {
+			console.error('There was a problem with the fetch operation:', error);
+		}
+	}
+
+	function comfirmOpenDop() {
+
+		document.getElementById('brocerCreateForm').style.display = 'none';
+		document.getElementById('vhodBrokerBox').style.display = 'none';
+		document.getElementById('regBox').style.display = 'none';
+		document.getElementById('vhodBox').style.display = 'none';
+		document.getElementById('vhodAdminBox').style.display = 'none';
+
+		document.getElementById('confirmCodeBox').style.display = 'block';
+	}
+
+	async function CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector)
+	{
+		const formData = new FormData();
+		formData.append('file', file);
+		formData.append('NameBroker', NameBroker);
+		formData.append('UrisidikciiyId', 1);
+		formData.append('INN', INN);
+		formData.append('KPP', KPP);
+		formData.append('OKTMO', OKTMO);
+		formData.append('BusinessAddress', BusinessAddress);
+		formData.append('Phone', Phone);
+		formData.append('Email', Email);
+		formData.append('FullNameOfTheDirector', FullNameOfTheDirector)
+
+		const baseUrl = '@Model.apiSettings.BaseUrl';
+		const response = await fetch(baseUrl + 'Universal/CreateBroker', {
+			method: 'POST',
+			body: formData
+		});
+		const data = response.json();
+		console.log('code: ', data);
+		return data;
+
 	}
 </script>

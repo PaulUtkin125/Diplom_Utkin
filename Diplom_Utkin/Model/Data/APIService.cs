@@ -105,7 +105,7 @@ namespace Diplom_Utkin.Model.Data
         public async Task<List<Portfolio>?> LoadUsersToolsAsinc(int id)
         {
             var processPositive = await _httpClient.PostAsJsonAsync("User/UserSTools", id);
-            var resalt = await processPositive.Content.ReadFromJsonAsync<List<Portfolio>?>();
+            var resalt = await processPositive.Content.ReadFromJsonAsync<List<Portfolio>>();
             if (resalt == null) return null;
             else return resalt;
         }

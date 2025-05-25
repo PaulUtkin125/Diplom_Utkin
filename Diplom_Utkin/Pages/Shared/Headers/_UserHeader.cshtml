@@ -24,8 +24,8 @@
                     <li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><label id="koshelBox_btn">@Model.Money</label> ₽</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" onclick="openVvod()">Пополнить</a></li>
-                            <li><a class="dropdown-item" onclick="openVuvod()">Вывести</a></li>
+							<li><a class="dropdown-item" onclick="openVvod()">Пополнить</a></li>
+							<li><a class="dropdown-item" onclick="openVuvod()">Вывести</a></li>
                         </ul>
                     </li>
 					<li class="nav-item myItem">
@@ -55,6 +55,7 @@
 		document.getElementById('popOperationType').value = '1';
 		document.getElementById('popOperationType').textContent = '1';
 		openPopup();
+		document.querySelector('.popup').style.width = '435px';
 	}
 	function openVvod(){
 		document.getElementById("buyForm").style.display = 'none';
@@ -64,6 +65,7 @@
 		document.getElementById('popOperationType').value = '0';
 		document.getElementById('popOperationType').textContent = '0';
 		openPopup();
+		document.querySelector('.popup').style.width = '435px';
 	}
 
 	function moneuBtn() {

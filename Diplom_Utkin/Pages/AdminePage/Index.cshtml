@@ -81,7 +81,7 @@
 						<div class="dataSlice">
 							<div class="form-group">
 								<label class="control-label">Выберите иконку</label>
-								<input class="form-control" type="file" accept=".jpg, .jpeg, .png" id="BrokerImgCreate" required />
+								<input class="form-control" type="file" accept=".jpg, .jpeg, .png" id="BrokerImgCreate" />
 								<span class="text-danger"></span>
 							</div>
 							<div class="form-group">
@@ -127,17 +127,13 @@
 								<label class="control-label">Директор:</label>
 								<input class="form-control" type="text" id="brokerDirCreate" />
 								<span class="text-danger"></span>
-								@*<select class="form-control" id="uTypeEdit" name="Urisdiction" required>
-									<option value="1">Российская федерация</option>
-								 </select> *@
-								<span class="text-danger"></span>
 							</div>
 						</div>
 					</div>
 
 
 					<div class="myRow">
-						<button class="myButton" name="action" value="create">Добавить</button>
+						<button class="myButton" type="submit" name="action" value="create">Добавить</button>
 						<button class="myButton" onclick="closePopup()" name="action" value="NoN">Отменить</button>
 					</div>
 				</form>
@@ -252,7 +248,7 @@
 
 
 		if(updated_len < 11) inputOTKMO.style.borderBottom = '2px solid red';
-		else inputOTKMO.styleOTKMO.borderBottom = '2px solid black';
+		else inputOTKMO.style.borderBottom = '2px solid black';
 	}
 
 	let inputKPP = document.getElementById("brokerKPPCreate");
@@ -264,12 +260,12 @@
 		console.log('input.value: ', inputKPP.value);
 		if (input_val === "") { return; }
 		input_val = input_val.replace(/\D/g, "");
-		inputOTKMO.value = input_val;
+		inputKPP.value = input_val;
 		var updated_len = input_val.length;
 
 
 		if(updated_len < 9) inputKPP.style.borderBottom = '2px solid red';
-		else inputKPP.styleOTKMO.borderBottom = '2px solid black';
+		else inputKPP.style.borderBottom = '2px solid black';
 	}
 
 	let inputPhone = document.getElementById("uPhoneCreate");
@@ -316,7 +312,8 @@
 		if (caret_pos < 0) caret_pos = 0;
 		inputPhone.setSelectionRange(caret_pos, caret_pos);
 
-		if (input_val.length < 18) {
+
+		if (input_val.length < 11) {
 			inputPhone.style.borderBottom = '2px solid red';
 		} else {
 			inputPhone.style.borderBottom = '2px Solid black';

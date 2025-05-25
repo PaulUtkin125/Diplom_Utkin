@@ -15,15 +15,19 @@ function openPopup() {
 	});
 	document.body.style.overflow = 'hidden';
 
-	document.querySelector('.popup').style.display = 'block';
+    document.querySelector('.popup').style.display = 'block';
     document.getElementById('overlay').style.display = 'block';
 
+    document.querySelector('.popup').style.width = '300px';
 }
 function closePopup() {
 	document.body.style.overflow = 'auto';
 
 	document.querySelector('.popup').style.display = 'none';
-	document.getElementById('overlay').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+
+    const forms = document.querySelectorAll('.popup form');
+    forms.forEach(form => form.reset());
 }
 
 function profilOpen() {

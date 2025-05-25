@@ -196,6 +196,7 @@
 
     function CreateForm_Open(){
         openPopup();
+        document.querySelector('.popup').style.width = 'max-content';
         document.getElementById('optionForm').style.display ='none';
         document.getElementById('CreateForm').style.display = 'block';
     }
@@ -249,7 +250,7 @@
         await updateUser(id_, mail_, idRole_, phone_);
     }
 
-        async function loadAllUserType() {
+    async function loadAllUserType() {
         const baseUrl = '@Model.apiSettings.BaseUrl';
         const response = await fetch(baseUrl + 'Admin/AllUserType', {
             method: 'GET',
@@ -299,14 +300,15 @@
         var INNError = document.getElementById('INNError');
 
         var data = await CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector);
-        if(data.PromiseResult != 0) {
+
+        if(data == 1) {
             INNBlock.style.borderBottom = '2px solid red';
-            INNBlock.focus;
+            INNBlock.focus();
             INNError.textContent = 'Данный номер уже используется!'
             return false;
         }
-        else {
-            INNBlock.style.borderBottom = '2 solid black';
+        else if(data == 0) {
+            INNBlock.style.borderBottom = '0';
             INNError.textContent = '';
             return true;
         }

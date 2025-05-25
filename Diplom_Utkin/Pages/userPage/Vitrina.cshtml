@@ -88,6 +88,33 @@
 						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType" />
 					</div>
 				</form>
+				<form id="buyForm" method="post" onsubmit="return BuyFormValidation()">
+					<h1 id="popTitleBuy"></h1>
+					<input style="visibility:hidden" id="targetId" disabled />
+					<div class="form-group myRow">
+						<div class="hd-imgBlock">
+							<img id="targetToolImg" />
+						</div>
+						<label id="toolName"></label>
+					</div>
+
+					<div class="form-group myRow">
+						<input id="peiceTool" disabled />
+					</div>
+
+					<div class="myRow">
+						<div class="form-group">
+							<label asp-for="targetSumm" id="edIzm" class="control-label"></label>
+							<input asp-for="targetSumm" id="summOperation" class="form-control" type="number" required />
+							<span asp-validation-for="targetSumm" id="summOperationError" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label id="dostupSredstv"></label>
+						</div>
+					</div>
+					<button id="buyBtn" class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
+					<button id="sellBtn" style="display:none" class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
+				</form>
 			</div>
 		</div>
 	</section>
@@ -283,6 +310,9 @@
 		if(inputMony.value.replace('0', '').length < 1 || Number(inputMony.value) < 1) inputMony.style.borderBottom = '2px solid red';
 		else inputMony.style.borderBottom = '2px Solid #000000';
 	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+
 
 </script>
 
