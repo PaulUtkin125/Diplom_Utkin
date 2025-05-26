@@ -835,6 +835,7 @@
 		formData.append('Email', Email);
 		formData.append('FullNameOfTheDirector', FullNameOfTheDirector)
 
+
 		const baseUrl = '@Model.apiSettings.BaseUrl';
 		const response = await fetch(baseUrl + 'Universal/CreateBroker', {
 			method: 'POST',

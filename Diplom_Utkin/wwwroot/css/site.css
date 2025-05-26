@@ -705,8 +705,13 @@ input[type=number]::-webkit-inner-spin-button {
     color:black;
 }
 
+.side-menu .settings img,
+.side-menu .settings {
+    width:100%;
+}
+
 .side-menu .myRow {
-    align-items:end;
+    align-items: end;
 }
 .side-menu .myRow button{
     margin-bottom:13px;

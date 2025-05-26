@@ -1,6 +1,7 @@
 ﻿using Diplom_Utkin.Model.dopValidation;
 using Diplom_Utkin.Model.Support;
 using Finansu.Model;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Diplom_Utkin.Model.Data
 {
@@ -94,6 +95,20 @@ namespace Diplom_Utkin.Model.Data
             return null;
         }
 
+        public async Task<int?> BrokerAutorizationAsynk(StartUserData user)
+        {
+            var processPositive = await _httpClient.PostAsJsonAsync("Logo/AutorisationBroker", user);
+            int? resalt;
+            if (processPositive.IsSuccessStatusCode)
+            {
+                resalt = await processPositive.Content.ReadFromJsonAsync<int?>();
+                return resalt;
+            }
+            return null;
+        }
+
+
+
         public async Task<List<string[]>?> loadChartAsynk(int id)
         {
             var processPositive = await _httpClient.PostAsJsonAsync("User/loadCart", id);
@@ -181,6 +196,20 @@ namespace Diplom_Utkin.Model.Data
         public async Task deleteUser(int id)
         {
             var processPositive = await _httpClient.PatchAsJsonAsync("Admin/deleteUser", id);
+        }
+
+        public async Task<Brokers> LoadBrokerDataAsync(int id)
+        {
+            var Broker = await _httpClient.PostAsJsonAsync("Broker/BrokerData", id);
+            var resalt = await Broker.Content.ReadFromJsonAsync<Brokers>();
+            return resalt;
+        }
+
+        public async Task<List<InvestTools>> InvestListAsync(int id)
+        {
+            var BrokerToolList = await _httpClient.PostAsJsonAsync("Broker/BrokersTools", id);
+            var resalt = await BrokerToolList.Content.ReadFromJsonAsync<List<InvestTools>>();
+            return resalt;
         }
     }
 }

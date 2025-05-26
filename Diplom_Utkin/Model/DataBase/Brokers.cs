@@ -24,5 +24,6 @@ namespace Finansu.Model
         public DateOnly dateSubmitted { get; set; } = new DateOnly();
         public TypeOfRequest TypeOfRequest { get; set; }
         public int TypeOfRequestId { get; set; } = 1;
+        public string? Password { get; set; } = null;
     }
 }

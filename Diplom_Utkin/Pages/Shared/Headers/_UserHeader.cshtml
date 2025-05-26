@@ -279,14 +279,14 @@
 		document.getElementById('portfile_save_btn').style.display = 'block';
 	}
 
-	function Update_Method_Profile(){
+	async function Update_Method_Profile(){
 		const id_ = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model._user.Id));
 		const mail_ = document.getElementById('portfile_mail').value;
 		const phone_ = document.getElementById('portfile_phone').value;
 
 		const idRole_ = 2;
 
-		updateUser(id_, mail_, idRole_, phone_);
+		await updateUser(id_, mail_, idRole_, phone_);
 	}
 
 	async function loadAllUserType() {

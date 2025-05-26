@@ -73,6 +73,19 @@ namespace Diplom_Utkin.Pages.HomePage
                         return Page();
                     }
 
+                case "vhodBroker_btn":
+                    User.RoleId = 3;
+                    var data2 = await _APIService.BrokerAutorizationAsynk(User);
+                    if (data2 != null)
+                    {
+                        TempData["brokerId"] = data2;
+                        return RedirectToPage("/BrokerPage/Index");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("User.Login", "Неправильный логин или пароль");
+                        return Page();
+                    }
                 default:
                     return Page();
 

@@ -1,0 +1,321 @@
+﻿@page
+@model Diplom_Utkin.Pages.BrokerPage.IndexModel
+@{
+	ViewData["Title"] = "Кабинет";
+}
+<div class="window-box kabinet-box">
+	@await Html.PartialAsync("Headers/_BrokerHeader")
+
+	<section>
+		<div id="overlay" class="overlay"></div>
+		<div id="sideMenu" class="side-menu">
+			<button class="myButton" onclick="profilClose()">Закрыть</button>
+			<form method="post">
+				<div class="form-group myRow">
+					<div class="hd-imgBlock settings">
+						<img src="data:image/png;base64, @Model._user.SourseFile" />
+					</div>
+					<div>
+						<a onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></a>
+					</div>
+				</div>
+				<div class="myRow">
+					<div class="form-group">
+						<label asp-for="_user.NameBroker" class="control-label">Название</label>
+						<input asp-for="_user.NameBroker" class="form-control" id="portfile_Name" type="text" required disabled />
+
+					</div>
+					<div>
+						<a onclick="updateName()"><img src="/Image/icon-edit.svg" /></a>
+
+					</div>
+				</div>
+				<span asp-validation-for="_user.NameBroker" class="text-danger"></span>
+
+				<div class="myRow">
+					<div class="form-group">
+						<label asp-for="_user.Email" class="control-label">E-mail</label>
+						<input asp-for="_user.Email" class="form-control" id="portfile_mail" type="email" required disabled />
+
+					</div>
+					<div>
+						<a onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></a>
+
+					</div>
+				</div>
+				<span asp-validation-for="_user.Email" class="text-danger"></span>
+
+				<div class="myRow">
+					<div class="form-group">
+						<label asp-for="_user.Phone" class="control-label">Телефон</label>
+						<input asp-for="_user.Phone" class="form-control" id="portfile_phone" type="tel" required disabled />
+
+					</div>
+					<div>
+						<a onclick="updatePhone()"><img src="/Image/icon-edit.svg" /></a>
+
+					</div>
+				</div>
+				<span asp-validation-for="_user.Phone" class="text-danger"></span>
+
+				<div class="myRow">
+					<div class="form-group">
+						<label asp-for="_user.INN" class="control-label">ИНН</label>
+						<input asp-for="_user.INN" class="form-control" id="portfile_INN" type="text" required disabled />
+
+					</div>
+				</div>
+				<button class="myButton" style="display:none" name="action" onclick="Update_Method_Profile()" id="portfile_save_btn" value="NoN">Сохранть</button>
+			</form>
+		</div>
+		<div id="popup" class="popup kabinetSupportBox">
+			<div class="poputContent">
+				<div class="top_">
+					<div>
+						<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
+					</div>
+				</div>
+
+				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
+
+				<form id="optionForm" method="post">
+					<h1>Детали</h1>
+					<input style="visibility:hidden" name="TargetbrokerId" id="targetId" type="number" />
+					<div class="form-group myRow">
+						<div class="hd-imgBlock">
+							<img id="targetBrokerImg" />
+						</div>
+						<label id="BrokerName"></label>
+					</div>
+					<div class="dataSlice">
+						<label id="brokerINN"></label>
+						<label id="brokerKPP"></label>
+						<label id="brokerOTKMO"></label>
+						<label id="brokerPhone"></label>
+						<label id="brokerAddress"></label>
+						<label id="brokerEmail"></label>
+					</div>
+					<div class="myRow">
+						<button class="myButton" name="action" type="submit" value="positive_btn">Принять</button>
+						<button class="myButton" name="action" type="submit" value="negative_btn">Отклонить</button>
+					</div>
+				</form>
+
+				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
+				<label style="display:none" id="CreateForm"></label>
+				<form id="CreateForm" onsubmit="return validationCreateBroker(event)" method="post">
+					<h1>Добавить</h1>
+
+					<div class="myRow">
+						<div class="dataSlice">
+							<div class="form-group">
+								<label class="control-label">Выберите иконку</label>
+								<input class="form-control" type="file" accept=".jpg, .jpeg, .png" id="BrokerImgCreate" />
+								<span class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label">Название</label>
+								<input class="form-control" type="text" id="BrokerNameCreate" required />
+								<span class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label">ИНН</label>
+								<input class="form-control" type="text" maxlength="10" id="brokerINNCreate" required />
+								<span id="INNError" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label">КПП</label>
+								<input class="form-control" type="text" maxlength="9" id="brokerKPPCreate" required />
+								<span class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label">ОТКМО</label>
+								<input class="form-control" type="text" maxlength="11" id="brokerOTKMOCreate" required />
+								<span class="text-danger"></span>
+							</div>
+						</div>
+
+						<div class="dataSlice">
+							<div class="form-group">
+								<label class="control-label">Бизнес адрес</label>
+								<input class="form-control" type="text" id="brokerAddressCreate" required />
+								<span class="text-danger"></span>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label">E-mail</label>
+								<input class="form-control" type="email" id="uLoginCreate" required />
+								<span class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label">Телефон</label>
+								<input class="form-control" type="tel" placeholder="+7 (901) 168-12-12" value="+7" maxlength="18" id="uPhoneCreate" />
+								<span class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label">Директор:</label>
+								<input class="form-control" type="text" id="brokerDirCreate" />
+								<span class="text-danger"></span>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="myRow">
+						<button class="myButton" type="submit" name="action" value="create">Добавить</button>
+						<button class="myButton" onclick="closePopup()" name="action" value="NoN">Отменить</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</section>
+
+	<div class="myRow space-between">
+		<div class="dataSlice">
+			<label>Инструментов в управлении: @Model.InvestTools.Count()</label>
+		</div>
+		<a onclick="CreateForm_Open()">
+			Добавить
+		</a>
+	</div>
+
+
+	<div class="tb_Box">
+		<h1>Инструменты</h1>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						Иконка
+					</th>
+					<th>
+						<a>
+							Название
+						</a>
+					</th>
+					<th>
+						<a>
+							Закрыт
+						</a>
+					</th>
+					<th>
+						<a>
+							Заморожен
+						</a>
+					</th>
+					<th>
+						Действие
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.InvestTools)
+				{
+					<tr>
+						<td>
+							<div class="hd-imgBlock settings">
+								<img src="data:image/png;base64, @item.ImageSource" />
+							</div>
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.NameInvestTool)
+						</td>
+						<td>
+							@{
+								if (item.isClosed)
+								{
+									<text>Да</text>
+								}else
+								{
+									<text>Нет</text>
+								}
+
+							}
+							
+						</td>
+						<td>
+							@{
+								if (item.isFrozen)
+								{
+									<text>Да</text>
+								}
+								else
+								{
+									<text>Нет</text>
+								}
+
+							}
+						</td>
+						<td class="tbColCenter">
+							<form method="post">
+								<input type="number" name="brokerId" value="@item.Id" style="display:none" />
+								<button type="submit" name="action" value="positive_btn">Принять</button>
+								<span>|</span>
+								<button type="submit" name="action" value="negative_btn">Отклонить</button>
+							</form>
+							<span>|</span>
+							<a onclick="optionFormOpen(@item.Id)">Детали</a>
+						</td>
+
+
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<script>
+
+	let inputPhone = document.getElementById("portfile_phone");
+	inputPhone.addEventListener("keyup", (e) => { formatinputPhone(e.target); });
+	inputPhone.addEventListener("keypress", (e) => { formatinputPhone(e.target); });
+
+
+	function formatinputPhone(inputPhone) {
+		var input_val = inputPhone.value;
+		if (input_val === "") { return; }
+		var original_len = input_val.length;
+		var caret_pos = inputPhone.selectionStart;
+		input_val = input_val.replace(/\D/g, "");
+		if (input_val.length > 0 && input_val[0] !== "7") {
+			input_val = "7" + input_val;
+		}
+		if (input_val.length > 11) {
+			input_val = input_val.substring(0, 11);
+		}
+		var formatted = "+";
+
+		if (input_val.length > 0) {
+			formatted += input_val[0];
+		}
+		if (input_val.length > 1) {
+			formatted += " (" + input_val.substring(1, 4);
+		}
+		if (input_val.length >= 4) {
+			formatted += ")";
+		}
+		if (input_val.length >= 4) {
+			formatted += " " + input_val.substring(4, 7);
+		}
+		if (input_val.length >= 7) {
+			formatted += "-" + input_val.substring(7, 9);
+		}
+		if (input_val.length >= 9) {
+			formatted += "-" + input_val.substring(9, 11);
+		}
+
+		inputPhone.value = formatted;
+		var updated_len = formatted.length;
+		caret_pos = updated_len - original_len + caret_pos;
+		if (caret_pos < 0) caret_pos = 0;
+		inputPhone.setSelectionRange(caret_pos, caret_pos);
+
+
+		if (input_val.length < 11) {
+			inputPhone.style.borderBottom = '2px solid red';
+		} else {
+			inputPhone.style.borderBottom = '2px Solid black';
+		}
+	}
+</script>
