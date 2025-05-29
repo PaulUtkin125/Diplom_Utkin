@@ -10,7 +10,7 @@
 		<div id="overlay" class="overlay"></div>
 		<div id="sideMenu" class="side-menu">
 			<button class="myButton" onclick="profilClose()">Закрыть</button>
-			<form method="post">
+			<form id="profile" method="post">
 				<div class="myRow">
 					<div class="form-group">
 						<label asp-for="_user.Loggin" class="control-label">E-mail</label>
@@ -38,6 +38,7 @@
 				<span asp-validation-for="_user.Phone" class="text-danger"></span>
 				<button class="myButton" style="display:none" name="action" onclick="Update_Method_Profile()" id="portfile_save_btn" value="NoN">Сохранть</button>
 			</form>
+			<div id="balanceHistoriBlock" class="dataSlice balanceHistori"></div>
 		</div>
 		<div class="popup kabinetSupportBox">
 			<div class="poputContent">
@@ -237,7 +238,7 @@
 								@Html.DisplayFor(modelItem => item.AllManey) ₽
 							</td>
 							<td class="tbColCenter">
-								@if (!item.InvestTool.isClosed)
+								@if (!item.InvestTool.isFrozen)
 								{
 									<a onclick="buyOpen(@item.InvestTool.Id)">Докупить</a>
 									<span> | </span>
@@ -365,6 +366,77 @@
 		if(inputMony.value.replace('0', '').length < 1 || Number(inputMony.value) < 1) inputMony.style.borderBottom = '2px solid red';
 		else inputMony.style.borderBottom = '2px Solid #000000';
 	}
+
+
+	async function OpenbalanceHistori() {
+		var id_ = @Model.uId;
+		var data = await loadBalanceHistory(id_);
+
+		createBalanceBlock(data);
+
+		profilOpenBase();
+
+		document.getElementById('balanceHistoriBlock').style.display = 'block';
+		document.getElementById('profile').style.display = 'none';
+	}
+
+	async function loadBalanceHistory(id_)
+	{
+		const baseUrl = '@Model.apiSettings.BaseUrl';
+		const response = await fetch(baseUrl + 'User/LoadBalanceHistory', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ id: id_})
+		});
+		if (!response.ok) {
+			console.log('Error: ', response.json());
+			throw new Error('Network response was not ok');
+		}
+		const data = response.json();
+		return data;
+		
+	}
+
+	function createBalanceBlock(list){
+		 const userList = document.getElementById('balanceHistoriBlock');
+
+
+		 list.forEach(Recorder => {
+			 var date = Recorder.date.split('T')[0];
+			 var operationType = '';
+			 if(Number(Recorder.money) < 0 && Recorder.investToolsId != '0' ) operationType = 'Продажа';
+			 else if(Number(Recorder.money) > 0 && Recorder.investToolsId != '0' ) operationType = 'Покупка';
+			 else if(Number(Recorder.money) < 0 && Recorder.investToolsId == '0') operationType = 'Вывод средст';
+			 else if(Number(Recorder.money) > 0 && Recorder.investToolsId == '0') operationType = 'Пополнение счета';
+			 
+			 var sum = '';
+			 var quentity1 = '';
+			 if(Recorder.investToolsId != '0') {
+				 sum = String((Number(Recorder.quentity) * Number(Recorder.money)).toFixed(2))+'₽';
+				 quentity1 = Recorder.quentity + 'шт.';
+			 }
+			 else sum =  String(Number(Recorder.money).toFixed(2))+'₽';
+
+			 const investToolNames = Recorder.investToolsId != '0'
+										? Recorder.investTools.nameInvestTool
+										: '';
+
+			 const bDiv = document.createElement('div');
+			 bDiv.classList.add('itemBalance');
+			 bDiv.innerHTML = `<label>${date}</label>
+								<div class="myRow">
+									<div class="bTitle">${operationType} ${investToolNames}</div>
+									<div class="dataSlice">
+										<label class="bTotalPrice">${sum}</label>
+										<label class="bCounter">${quentity1}</label>
+									</div>
+								</div>`;
+			 userList.appendChild(bDiv);
+		 });
+	}
+
 </script>
 
 @section Scripts {

@@ -80,92 +80,82 @@
 
 				<form id="optionForm" method="post">
 					<h1>Детали</h1>
-					<input style="visibility:hidden" name="TargetbrokerId" id="targetId" type="number" />
+					<input style="visibility:hidden" id="targetId" type="number" />
 					<div class="form-group myRow">
 						<div class="hd-imgBlock">
 							<img id="targetBrokerImg" />
 						</div>
-						<label id="BrokerName"></label>
+						<label type="text" id="BrokerName"/>
 					</div>
 					<div class="dataSlice">
-						<label id="brokerINN"></label>
-						<label id="brokerKPP"></label>
-						<label id="brokerOTKMO"></label>
-						<label id="brokerPhone"></label>
-						<label id="brokerAddress"></label>
-						<label id="brokerEmail"></label>
+						<label id="targetToolPrice" type="number"/>
 					</div>
 					<div class="myRow">
-						<button class="myButton" name="action" type="submit" value="positive_btn">Принять</button>
-						<button class="myButton" name="action" type="submit" value="negative_btn">Отклонить</button>
+						<button class="myButton" onclick="editFormOpen(event)">Изменить</button>
+						<button class="myButton" name="action" type="submit" value="negative_btn">Удалить</button>
 					</div>
 				</form>
 
 				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
-				<label style="display:none" id="CreateForm"></label>
-				<form id="CreateForm" onsubmit="return validationCreateBroker(event)" method="post">
+				
+				<form id="CreateForm" onsubmit="return validationCreateTool(event)" method="post">
 					<h1>Добавить</h1>
 
-					<div class="myRow">
-						<div class="dataSlice">
-							<div class="form-group">
-								<label class="control-label">Выберите иконку</label>
-								<input class="form-control" type="file" accept=".jpg, .jpeg, .png" id="BrokerImgCreate" />
-								<span class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label class="control-label">Название</label>
-								<input class="form-control" type="text" id="BrokerNameCreate" required />
-								<span class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label class="control-label">ИНН</label>
-								<input class="form-control" type="text" maxlength="10" id="brokerINNCreate" required />
-								<span id="INNError" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label class="control-label">КПП</label>
-								<input class="form-control" type="text" maxlength="9" id="brokerKPPCreate" required />
-								<span class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label class="control-label">ОТКМО</label>
-								<input class="form-control" type="text" maxlength="11" id="brokerOTKMOCreate" required />
-								<span class="text-danger"></span>
-							</div>
+					<div class="dataSlice">
+						<div class="form-group">
+							<label class="control-label">Выберите иконку</label>
+							<input class="form-control" type="file" accept=".jpg, .jpeg, .png" id="ToolImgCreate" required />
+							<span class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Название</label>
+							<input class="form-control" type="text" id="ToolNameCreate" required />
+							<span class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Стартовая цена (за единицу)</label>
+							<input class="form-control" type="number" maxlength="10" id="startPriceCreate" required />
+							<span id="startPriceError" class="text-danger"></span>
 						</div>
 
-						<div class="dataSlice">
-							<div class="form-group">
-								<label class="control-label">Бизнес адрес</label>
-								<input class="form-control" type="text" id="brokerAddressCreate" required />
-								<span class="text-danger"></span>
-							</div>
-
-							<div class="form-group">
-								<label class="control-label">E-mail</label>
-								<input class="form-control" type="email" id="uLoginCreate" required />
-								<span class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label class="control-label">Телефон</label>
-								<input class="form-control" type="tel" placeholder="+7 (901) 168-12-12" value="+7" maxlength="18" id="uPhoneCreate" />
-								<span class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label class="control-label">Директор:</label>
-								<input class="form-control" type="text" id="brokerDirCreate" />
-								<span class="text-danger"></span>
-							</div>
-						</div>
 					</div>
-
 
 					<div class="myRow">
 						<button class="myButton" type="submit" name="action" value="create">Добавить</button>
 						<button class="myButton" onclick="closePopup()" name="action" value="NoN">Отменить</button>
 					</div>
 				</form>
+
+				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
+				
+				<form id="EditForm" onsubmit="return validationEditTool(event)" method="post">
+					<h1>Редактирование</h1>
+					<input style="visibility:hidden" id="targetIdEdit" type="number" />
+					<div class="dataSlice">
+						<div class="form-group">
+							<label class="control-label">Выберите иконку</label>
+							<input class="form-control" type="file" accept=".jpg, .jpeg, .png" id="ToolImgEdit" />
+							<span class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Название</label>
+							<input class="form-control" type="text" id="ToolNameEdit" />
+							<span class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Стартовая цена (за единицу)</label>
+							<input class="form-control" type="number" id="ToolPriceEdit" disabled />
+							<span id="startPriceError" class="text-danger"></span>
+						</div>
+
+					</div>
+
+					<div class="myRow">
+						<button class="myButton" type="submit" name="action" value="NoN">Сохранить</button>
+						<button class="myButton" onclick="closePopup()" name="action" value="NoN">Отменить</button>
+					</div>
+				</form>
+
 			</div>
 		</div>
 	</section>
@@ -248,16 +238,12 @@
 						</td>
 						<td class="tbColCenter">
 							<form method="post">
-								<input type="number" name="brokerId" value="@item.Id" style="display:none" />
-								<button type="submit" name="action" value="positive_btn">Принять</button>
+								<button onclick="EditFormFastOpen(@item.Id, event)" type="submit" name="action" value="NoN">Редактировать</button>
 								<span>|</span>
-								<button type="submit" name="action" value="negative_btn">Отклонить</button>
+								<button onclick="fastDeleteTool(@item.Id)" type="submit" name="action" value="NoN">Зархивировать</button>
 							</form>
-							<span>|</span>
 							<a onclick="optionFormOpen(@item.Id)">Детали</a>
 						</td>
-
-
 					</tr>
 				}
 			</tbody>
@@ -316,6 +302,140 @@
 			inputPhone.style.borderBottom = '2px solid red';
 		} else {
 			inputPhone.style.borderBottom = '2px Solid black';
+		}
+	};
+
+	async function validationCreateTool(event){
+		event.preventDefault();
+		let startPrice = document.getElementById('startPriceCreate');
+
+		console.log(startPrice.value);
+
+		if(startPrice.value < 1){
+			startPrice.style.borderBottom = '2px solid red';
+			return false;
+		}
+		else{
+			startPrice.style.borderBottom = '0';
+		}
+
+		var name = document.getElementById('ToolNameCreate').value;
+		var file = document.getElementById('ToolImgCreate').files[0];
+		var price = String(document.getElementById('startPriceCreate').value);
+		var bId = String(@Model.brokerId);
+
+		console.log('file', file);
+		console.log('BrokersId', bId);
+		console.log('NameInvestTool', name);
+		console.log('Price', price);
+
+		var data = await createTool(file, name, price, bId );
+
+		return true;
+	}
+
+	async function createTool(file, name, price, bId ){
+		try{
+			const formData = new FormData();
+			formData.append('file', file);
+			formData.append('BrokersId', bId);
+			formData.append('NameInvestTool', name);
+			formData.append('Price', price);
+
+
+			const baseUrl = '@Model.apiSettings.BaseUrl';
+			const response = await fetch(baseUrl + 'Broker/CreateTool', {
+				method: 'PUT',
+				body: formData
+			});
+			if (!response.ok) {
+					throw new Error('Network response was not ok');
+			}
+		}
+		catch(error) {
+			console.error('There was a problem with the fetch operation:', error);
+		}
+	}
+
+	async function validationEditTool(event)
+	{
+		event.preventDefault();
+		let startPrice = document.getElementById('ToolPriceEdit');
+
+
+		if(startPrice.value < 1){
+			startPrice.style.borderBottom = '2px solid red';
+			return false;
+		}
+		else{
+			startPrice.style.borderBottom = '0';
+		}
+
+		var name = document.getElementById('ToolNameEdit').value;
+		var file = document.getElementById('ToolImgEdit').files[0];
+		var price = Number(document.getElementById('ToolPriceEdit').value);
+		var tId = document.getElementById('targetIdEdit').value;
+
+		console.log('file', file);
+		console.log('id', tId);
+		console.log('name', name);
+		console.log('price', price);
+
+		var data = await editTool(file, name, price, tId );
+
+		return true;
+	}
+
+	async function editTool(file, name, price, tId ){
+		try{
+			const formData = new FormData();
+			formData.append('file', file);
+			formData.append('id', tId);
+			formData.append('name', name);
+			formData.append('price', price);
+
+
+			const baseUrl = '@Model.apiSettings.BaseUrl';
+			const response = await fetch(baseUrl + 'Broker/UpdateTool', {
+				method: 'PATCH',
+				body: formData
+			});
+			if (!response.ok) {
+					throw new Error('Network response was not ok');
+			}
+		}
+		catch(error) {
+			console.error('There was a problem with the fetch operation:', error);
+		}
+	}
+
+	async function deleteTool()
+	{
+		var id_ = document.getElementById('targetId').value;
+		await deleteToolMethod(id_);
+	}
+
+	async function fastDeleteTool(id_){
+		console.log(1);
+		await deleteToolMethod(id_);
+	}
+
+	async function deleteToolMethod(id_){
+		try{
+			const baseUrl = '@Model.apiSettings.BaseUrl';
+			const response = await fetch(baseUrl + 'Broker/DeleteTool', {
+				method: 'PATCH',
+				headers: {
+				'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ id: id_ })
+			});
+			if (!response.ok) {
+					throw new Error('Network response was not ok');
+			}
+		}
+		catch(error) {
+			console.error('There was a problem with the fetch operation:', error);
 		}
 	}
 </script>

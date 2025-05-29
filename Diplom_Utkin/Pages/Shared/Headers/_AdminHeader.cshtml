@@ -74,18 +74,19 @@
         brokerPhone.textContent = 'Телефон: ' + data.phone;
         brokerAddress.textContent = 'Юридический адресс:' + data.businessAddress;
         brokerEmail.textContent = 'E-mail: ' + data.email;
-    }
+    };
 
      async function optionFormOpenDop(id){
          openPopup();
          const data = await BrokerData(id);
+
          document.getElementById('CreateForm').style.display = 'none';
          document.getElementById('optionForm').style.display = 'block';
+
          document.getElementById('targetId').value = id;
-         
+
          document.getElementById('targetBrokerImg').setAttribute('src', 'data:image/png;base64,' + data.sourseFile);
          document.getElementById('BrokerName').textContent = data.nameBroker;
-
          document.getElementById('brokerINN').textContent = 'ИНН: ' + data.inn;
          document.getElementById('brokerKPP').textContent = 'КПП: ' + data.kpp;
          document.getElementById('brokerOTKMO').textContent = 'ОТКМО: ' + data.oktmo;
@@ -95,7 +96,8 @@
 
          if(data.typeOfRequestId == 3) document.getElementById('positive_btn').style.display = 'block';
          else document.getElementById('positive_btn').style.display = 'none';
-     }
+
+     };
 
     async function BrokerData(id_){
         const baseUrl = '@Model.apiSettings.BaseUrl';
@@ -113,7 +115,7 @@
 
         return data;
 
-    }
+    };
 
 
     async function userFormOpen(id){
@@ -132,7 +134,7 @@
         document.getElementById('uPhone').textContent = 'Телефон: ' + data.phone;
         document.getElementById('uType').textContent = 'Тип: ' + data.typeOfUser.name;
 
-    }
+    };
 
     async function fastEditFormOpen(id){
         document.getElementById('targetId_Edit').value = id;
@@ -162,7 +164,7 @@
 
         uTypeSelect.value = data.typeOfUser.id;
         document.getElementById('uTypeEdit').value = data.typeOfUser.id;
-    }
+    };
 
     async function editFormOpen(id){
         document.getElementById('targetId_Edit').value = document.getElementById('targetId').value;
@@ -192,14 +194,14 @@
    
         uTypeSelect.value = data.typeOfUser.id;
         document.getElementById('uTypeEdit').value = data.typeOfUser.id;
-    }
+    };
 
     function CreateForm_Open(){
         openPopup();
         document.querySelector('.popup').style.width = 'max-content';
         document.getElementById('optionForm').style.display ='none';
         document.getElementById('CreateForm').style.display = 'block';
-    }
+    };
 
     async function UserData(id_){
         const baseUrl = '@Model.apiSettings.BaseUrl';
@@ -216,7 +218,7 @@
         const data = await response.json();
 
         return data;
-    }
+    };
 
     async function Update_Method(){
         const id_ = document.getElementById('targetId_Edit').value;
@@ -225,7 +227,7 @@
         const phone_ = document.getElementById('uPhoneEdit').value;
 
         await updateUser(id_, mail_, idRole_, phone_);
-    }
+    };
 
 
     var startLogin = '';
@@ -234,11 +236,11 @@
     function updateLogin(){
         document.getElementById('portfile_mail').disabled = false;
         document.getElementById('portfile_save_btn').style.display = 'block';
-    }
+    };
     function updatePhone(){
         document.getElementById('portfile_phone').disabled = false;
         document.getElementById('portfile_save_btn').style.display = 'block';
-    }
+    };
 
     async function Update_Method_Profile(){
         const id_ = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model._user.Id));
@@ -248,7 +250,7 @@
         const idRole_ = 1;
 
         await updateUser(id_, mail_, idRole_, phone_);
-    }
+    };
 
     async function loadAllUserType() {
         const baseUrl = '@Model.apiSettings.BaseUrl';
@@ -263,7 +265,7 @@
         }
         var UserTypeList = response.json();
         return UserTypeList;
-    }
+    };
 
     async function updateUser(id_, mail_, idRole_, phone_) {
         const baseUrl = '@Model.apiSettings.BaseUrl';
@@ -279,10 +281,9 @@
         }
         const data = response.json();
         console.log('User updated successfully:', data);
-    }
+    };
 
-    async function validationCreateBroker(event){
-        event.preventDefault();
+    function validationCreateBroker(){
         var file = document.getElementById('BrokerImgCreate').files[0];
         var NameBroker = document.getElementById('BrokerNameCreate').value;
         // var UrisidikciiyId = document.getElementById('Urisdiction').value;
@@ -299,7 +300,9 @@
 
         var INNError = document.getElementById('INNError');
 
-        var data = await CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector);
+        var data = CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector);
+
+        console.log(data);
 
         if(data == 1) {
             INNBlock.style.borderBottom = '2px solid red';
@@ -307,12 +310,12 @@
             INNError.textContent = 'Данный номер уже используется!'
             return false;
         }
-        else if(data == 0) {
+        if(data == 0) 
+        {
             INNBlock.style.borderBottom = '0';
             INNError.textContent = '';
             return true;
         }
-        
     }
 
 

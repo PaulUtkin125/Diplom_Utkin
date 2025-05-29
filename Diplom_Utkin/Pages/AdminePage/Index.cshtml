@@ -73,8 +73,7 @@
 				</form>
 
 				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
-				<label style="display:none" id="CreateForm"></label>
-				<form id="CreateForm" onsubmit="return validationCreateBroker(event)" method="post">
+				<form id="CreateForm" onsubmit="return validationCreateBroker()" method="post">
 					<h1>Добавить</h1>
 
 					<div class="myRow">
@@ -120,7 +119,7 @@
 							</div>
 							<div class="form-group">
 								<label class="control-label">Телефон</label>
-								<input class="form-control" type="tel" placeholder="+7 (901) 168-12-12" value="+7" maxlength="18" id="uPhoneCreate" />
+								<input class="form-control" type="tel" placeholder="+7 (901) 168-12-12" maxlength="18" id="uPhoneCreate" />
 								<span class="text-danger"></span>
 							</div>
 							<div class="form-group">
@@ -134,7 +133,7 @@
 
 					<div class="myRow">
 						<button class="myButton" type="submit" name="action" value="create">Добавить</button>
-						<button class="myButton" onclick="closePopup()" name="action" value="NoN">Отменить</button>
+						<button class="myButton" onclick="closePopup()">Отменить</button>
 					</div>
 				</form>
 			</div>

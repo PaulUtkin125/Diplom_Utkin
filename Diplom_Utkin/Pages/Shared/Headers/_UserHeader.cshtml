@@ -19,6 +19,9 @@
                     <li class="nav-item myItem">
                         <a class="nav-link" asp-page="/userPage/Vitrina">Витрина</a>
                     </li>
+					<li class="nav-item myItem">
+						<a class="nav-link">Новости</a>
+					</li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
@@ -26,10 +29,11 @@
                         <ul class="dropdown-menu">
 							<li><a class="dropdown-item" onclick="openVvod()">Пополнить</a></li>
 							<li><a class="dropdown-item" onclick="openVuvod()">Вывести</a></li>
+							<li><a class="dropdown-item" onclick="OpenbalanceHistori()">История</a></li>
                         </ul>
                     </li>
 					<li class="nav-item myItem">
-                        <a class="nav-link" onclick="profilOpen()">
+						<a class="nav-link" onclick="profilOpenClient() ">
                             <div class="hd-imgBlock settings">
                                 <img src="/Image/Profil.png" alt="Alternate Text" />
                             </div>
@@ -69,6 +73,7 @@
 	}
 
 	function moneuBtn() {
+
 		var mySym = Number(document.getElementById('koshelBox_btn').textContent.replace(" ₽", ""));
 		var sum = Number(document.getElementById('summText').value);
 		var vector = Number(document.getElementById('popOperationType').textContent);
@@ -100,6 +105,9 @@
 
 	function buyOpenMain(id){
 		openPopup();
+
+		document.querySelector('.popup').style.width = '370px';
+
 		document.getElementById('myForm').style.display = 'none';
 
 
@@ -173,6 +181,7 @@
 	}
 
 	function BuyFormValidation(){
+		//var peiceTool = document.getElementById('peiceTool').value;
 		const toolPrice = document.getElementById('peiceTool');
 		var toolPrice_value = toolPrice.value;
 
@@ -205,6 +214,12 @@
 			}
 			else summOperationBox.style.borderBottom = '0px';
 
+			if(toolPrice_value > Number(summOperation_value)){
+				summOperationBox.style.borderBottom = '2px solid red'
+				return false;
+			}
+			else summOperationBox.style.borderBottom = '0px';
+
 			var factQuentity = Math.floor(summOperation_value/toolPrice_value);
 			console.log('factQuentity1: ', factQuentity);
 
@@ -221,7 +236,6 @@
 		}
 		else
 		{
-			console.log(1);
 
 			if(summOperation_value < 1)
 			{
@@ -266,6 +280,23 @@
 		return data;
 	}
 
+	function  profilOpenBase(){
+		document.body.style.overflow = 'hidden';
+	   document.getElementById('overlay').style.display = 'block';
+	   document.getElementById('sideMenu').style.visibility = 'visible';
+
+	}
+
+	function profilOpenClient() {
+		profilOpenBase();
+
+		document.getElementById('balanceHistoriBlock').style.display = 'none';
+		document.getElementById('profile').style.display = 'block';
+		startLogin = document.getElementById('portfile_mail').value;
+		startPhone = document.getElementById('portfile_phone').value;
+	}
+
+	
 
 	var startLogin1 = '';
 	var startPhone1 = '';
@@ -280,7 +311,7 @@
 	}
 
 	async function Update_Method_Profile(){
-		const id_ = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model._user.Id));
+		const id_ = @Model._user.Id;
 		const mail_ = document.getElementById('portfile_mail').value;
 		const phone_ = document.getElementById('portfile_phone').value;
 
@@ -314,6 +345,7 @@
 			body: JSON.stringify({ id: id_, Loggin: mail_, Phone: phone_, TypeOfUserId: idRole_ })
 		});
 		if (!response.ok) {
+			console.log('Error: ', response.json());
 			throw new Error('Network response was not ok');
 		}
 		const data = response.json();

@@ -43,16 +43,16 @@
 	function updateLogin(){
 		document.getElementById('portfile_mail').disabled = false;
 		document.getElementById('portfile_save_btn').style.display = 'block';
-	}
+	};
 	function updatePhone(){
 		document.getElementById('portfile_phone').disabled = false;
 		document.getElementById('portfile_save_btn').style.display = 'block';
-	}
+	};
 
 	function updateName(){
 		document.getElementById('portfile_Name').disabled = false;
 		document.getElementById('portfile_save_btn').style.display = 'block';
-	}
+	};
 
 	async function Update_Method_Profile(){
 		const id_ = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model._user.Id));
@@ -61,7 +61,7 @@
 		const name_ = document.getElementById('portfile_Name').value;
 
 		await updateUser(id_, mail_, phone_, name_);
-	}
+	};
 
 	async function updateUser(id_, mail_, phone_, name_) {
 		const baseUrl = '@Model.apiSettings.BaseUrl';
@@ -77,10 +77,76 @@
 		}
 		const data = response.json();
 		console.log('User updated successfully:', data);
-	}
+	};
+
+	function CreateForm_Open()
+	{
+		openPopup();
+
+		document.getElementById('CreateForm').style.display = 'block';
+		document.getElementById('optionForm').style.display = 'none';
+		document.getElementById('EditForm').style.display = 'none';
+	};
+
+	async function optionFormOpen(id){
+		openPopup();
+		
+		const data = await ToolData(id);
+
+		document.getElementById('BrokerName').textContent = data.nameInvestTool;
+		document.getElementById('targetBrokerImg').setAttribute('src', 'data:image/png;base64,' + data.imageSource);
+		document.getElementById('targetToolPrice').textContent = data.price;
+
+		document.getElementById('EditForm').style.display = 'none';
+		document.getElementById('CreateForm').style.display = 'none';
+		document.getElementById('optionForm').style.display = 'block';
+		document.getElementById('targetId').value = id;
+
+
+		
+	};
+
+	async function ToolData(id_){
+		const baseUrl = '@Model.apiSettings.BaseUrl';
+		const response = await fetch(baseUrl + 'Universal/targetToolInformation', {
+			method: 'POST',
+			headers:{
+				'Content-Type':'application/json'
+			},
+			body: JSON.stringify({ id: id_ })
+		});
+		if(!response.ok){
+			throw new Error('Network response was not ok');
+		}
+		const data = await response.json();
+
+		return data;
+	};
+
+
+	async function editFormOpen(event){
+		event.preventDefault();
+		var toolId = document.getElementById('targetId').value;
+		await EditFormFastOpen(toolId, event);
+	};
+
+	async function EditFormFastOpen(id, event){
+		event.preventDefault();
+		openPopup();
+		const data = await ToolData(id);
+
+		document.getElementById('ToolNameEdit').value = data.nameInvestTool;
+		document.getElementById('ToolPriceEdit').value = data.price;
+		document.getElementById('targetIdEdit').value = id;
+
+		document.getElementById('EditForm').style.display = 'block';
+		document.getElementById('CreateForm').style.display = 'none';
+		document.getElementById('optionForm').style.display = 'none';
+
+	};
 
 	window.onpopstate = function(event)
 	{
 		vuhodOnStart(event);
-	}
+	};
 </script>

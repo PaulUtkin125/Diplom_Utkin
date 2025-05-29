@@ -109,9 +109,12 @@ namespace Diplom_Utkin.Pages.userPage
             
         }
 
-        public async Task<ActionResult> OnPost()
+        public async Task<ActionResult> OnPost(string? action, double? targetSumm, int? isVuvod)
         {
             await WorkOfData();
+
+
+
             return Page();
         }
 
