@@ -69,7 +69,7 @@
 					<input style="visibility:hidden" name="TargetUserId" id="targetId_Edit" type="number" />
 					<div class="dataSlice" id="dataSlice_broker" style="display:none">
 
-						<div class="form-group">
+						@*<div class="form-group">
 							<label class="control-label">Выберите иконку</label>
 							<input class="form-control" type="file" id="BrokerImgEdit" required />
 							<span class="text-danger"></span>
@@ -93,7 +93,7 @@
 							<label class="control-label">Бизнес адрес</label>
 							<input class="form-control" type="text" maxlength="9" id="brokerAddressEdit" required/>
 							<span class="text-danger"></span>
-						</div>
+						 </div> *@
 					</div>
 					<div class="dataSlice">
 
@@ -130,7 +130,7 @@
 	</section>
 
 	<div class="dataSlice">
-		<label>Новых заявок: @Model.Users.Count()</label>
+		<label>Клиентов: @Model.Users.Count()</label>
 	</div>
 
 	<div class="tb_Box">
