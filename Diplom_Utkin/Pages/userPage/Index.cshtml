@@ -47,7 +47,7 @@
 						<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
 					</div>
 				</div>
-				<form id="myForm" method="post" onsubmit="return moneuBtn()">
+				<form id="myForm" method="post" onsubmit="return moneuBtn() && isValidMony()">
 					<h1 id="popTitle">Пополнение счета</h1>
 					<div class="card">
 						<div class="card-front">
@@ -84,7 +84,7 @@
 							<input asp-for="targetSumm" id="summText" class="form-control" type="number" required />
 							<span asp-validation-for="targetSumm" id="summTextError" class="text-danger"></span>
 						</div>
-						<button class="myButton" name="action" onclick="isValidMony()" type="submit" value="btnBalans">Выполнить</button>
+						<button class="myButton" name="action" type="submit" value="btnBalans">Выполнить</button>
 					</div>
 					<div class="form-group">
 						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType" />
@@ -264,6 +264,58 @@
 </div>
 
 <script>
+	let inputPhone = document.getElementById("portfile_phone");
+	inputPhone.addEventListener("keyup", (e) => { formatinputPhone(e.target); });
+	inputPhone.addEventListener("keypress", (e) => { formatinputPhone(e.target); });
+
+
+	function formatinputPhone(inputPhone) {
+		var input_val = inputPhone.value;
+		if (input_val === "") { return; }
+		var original_len = input_val.length;
+		var caret_pos = inputPhone.selectionStart;
+		input_val = input_val.replace(/\D/g, "");
+		if (input_val.length > 0 && input_val[0] !== "7") {
+			input_val = "7" + input_val;
+		}
+		if (input_val.length > 11) {
+			input_val = input_val.substring(0, 11);
+		}
+		var formatted = "+";
+
+		if (input_val.length > 0) {
+			formatted += input_val[0];
+		}
+		if (input_val.length > 1) {
+			formatted += " (" + input_val.substring(1, 4);
+		}
+		if (input_val.length >= 4) {
+			formatted += ")";
+		}
+		if (input_val.length >= 4) {
+			formatted += " " + input_val.substring(4, 7);
+		}
+		if (input_val.length >= 7) {
+			formatted += "-" + input_val.substring(7, 9);
+		}
+		if (input_val.length >= 9) {
+			formatted += "-" + input_val.substring(9, 11);
+		}
+
+		inputPhone.value = formatted;
+		var updated_len = formatted.length;
+		caret_pos = updated_len - original_len + caret_pos;
+		if (caret_pos < 0) caret_pos = 0;
+		inputPhone.setSelectionRange(caret_pos, caret_pos);
+
+
+		if (input_val.length < 11) {
+			inputPhone.style.borderBottom = '2px solid red';
+		} else {
+			inputPhone.style.borderBottom = '2px Solid black';
+		}
+	}
+
 	let input = document.getElementById("cardNumber");
 	input.addEventListener("keyup", (e) => { formatCart(e.target); });
 	input.addEventListener("keypress", (e) => { formatCart(e.target); });
@@ -331,21 +383,37 @@
 		caret_pos = updated_len - original_len + caret_pos;
 		inputDate.setSelectionRange(caret_pos, caret_pos);
 
-		if(updated_len < 3) inputCode.style.border = '2px solid red';
+		if(updated_len < 3) 
+		{ 
+			inputCode.style.border = '2px solid red';
+			return false;
+		}
 		else inputCode.style.border = '0px';
+
+		return true;
+
 	}
 
 	function isValidMony()
 	{
 		let input = document.getElementById("cardNumber");
 		let inputDate = document.getElementById("cardActivityDate");
+
+		console.log(inputDate.value);
+
 		let inputCode = document.getElementById("cardCode");
 		let inputMony = document.getElementById("summText");
 
-		if(input.value.length < 19) input.style.border = '2px solid red';
+		if(input.value.length < 19){
+			input.style.border = '2px solid red';
+			return false;
+		}
 		else input.style.border = '0px';
 
-		if(inputDate.value.length < 5 || Number(inputDate.value.substring(0, 2)) > 12) inputDate.style.border = '2px solid red';
+		if(inputDate.value.length < 5 || Number(inputDate.value.substring(0, 2)) > 12) {
+			inputDate.style.border = '2px solid red';
+			return false;
+		}
 		else {
 			var curentDate = new Date();
 			var month = Number(inputDate.value.substring(0, 2)) - 1;
@@ -356,15 +424,28 @@
 
 			var userDate = new Date(year, month);
 
-			if(userDate < curentDate) inputDate.style.border = '2px solid red';
+			if(userDate < curentDate) {
+				inputDate.style.border = '2px solid red';
+				return false;
+			}
 			else inputDate.style.border = '0px';
+			return true;
 		}
 
-		if(inputCode.value.length < 3) inputCode.style.border = '2px solid red';
+		if(inputCode.value.length < 3) {
+			inputCode.style.border = '2px solid red';
+			return false;
+		}
 		else inputCode.style.border = '0px';
 
-		if(inputMony.value.replace('0', '').length < 1 || Number(inputMony.value) < 1) inputMony.style.borderBottom = '2px solid red';
+		if(inputMony.value.replace('0', '').length < 1 || Number(inputMony.value) < 1) {
+			inputMony.style.borderBottom = '2px solid red';
+			return false;
+		}
 		else inputMony.style.borderBottom = '2px Solid #000000';
+
+
+		return true;
 	}
 
 
@@ -401,7 +482,9 @@
 
 	function createBalanceBlock(list){
 		 const userList = document.getElementById('balanceHistoriBlock');
-
+		 userList.childNodes.forEach(Node => {
+			 userList.removeChild(Node);
+		 });
 
 		 list.forEach(Recorder => {
 			 var date = Recorder.date.split('T')[0];

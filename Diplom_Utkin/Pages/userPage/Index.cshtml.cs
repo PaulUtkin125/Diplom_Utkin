@@ -157,7 +157,7 @@ namespace Diplom_Utkin.Pages.userPage
                     }
                     break;
             }
-
+            await WorkOfData();
             return Page();
         }
 

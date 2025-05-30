@@ -10,7 +10,7 @@
 		<div id="overlay" class="overlay"></div>
 		<div id="sideMenu" class="side-menu">
 			<button class="myButton" onclick="profilClose()">Закрыть</button>
-			<form method="post">
+			<form method="post" onsubmit="return Update_Method_Profile()">
 				<div class="myRow">
 					<div class="form-group">
 						<label asp-for="_user.Loggin" class="control-label">E-mail</label>
@@ -22,7 +22,7 @@
 
 					</div>
 				</div>
-				<span asp-validation-for="_user.Loggin" class="text-danger"></span>
+				<span asp-validation-for="_user.Loggin" id="profileMailError" class="text-danger"></span>
 
 				<div class="myRow">
 					<div class="form-group">
@@ -35,8 +35,8 @@
 
 					</div>
 				</div>
-				<span asp-validation-for="_user.Phone" class="text-danger"></span>
-				<button class="myButton" style="display:none" name="action" onclick="Update_Method_Profile()" id="portfile_save_btn" value="NoN">Сохранть</button>
+				<span asp-validation-for="_user.Phone" id="profilePhoneError" class="text-danger"></span>
+				<button class="myButton" style="display:none" name="action" id="portfile_save_btn" value="NoN">Сохранть</button>
 			</form>
 		</div>
 		<div id="popup" class="popup kabinetSupportBox">
@@ -266,6 +266,11 @@
 		if(updated_len < 9) inputKPP.style.borderBottom = '2px solid red';
 		else inputKPP.style.borderBottom = '2px solid black';
 	}
+
+	let inputPhone = document.getElementById("portfile_phone");
+	inputPhone.addEventListener("keyup", (e) => { formatinputPhone(e.target); });
+	inputPhone.addEventListener("keypress", (e) => { formatinputPhone(e.target); });
+
 
 	let inputPhone = document.getElementById("uPhoneCreate");
 	inputPhone.addEventListener("keyup", (e) => { formatinputPhone(e.target); });

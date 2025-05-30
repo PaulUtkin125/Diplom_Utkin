@@ -51,6 +51,8 @@
 
 
 <script>
+	
+
 	function openVuvod(){
 		document.getElementById("buyForm").style.display = 'none';
 
@@ -77,29 +79,35 @@
 		var mySym = Number(document.getElementById('koshelBox_btn').textContent.replace(" ₽", ""));
 		var sum = Number(document.getElementById('summText').value);
 		var vector = Number(document.getElementById('popOperationType').textContent);
-		var isValid = true;
 
 		console.log("mySym:", mySym);
 		console.log("sum:", sum);
 		console.log("vector:", vector);
 
 
+
 		if (sum < 1) {
 			document.getElementById('summTextError').textContent = 'Сумма должна быть больше нуля!';
+			document.getElementById('summText').style.borderBottom = '2px solid red';
 			return false;
 		} else {
+			document.getElementById('summText').style.borderBottom = '0';
 			if (vector == 1) {
 				// вывод средств
 				if (sum > mySym) {
 					console.log("sum > mySym  :", sum > mySym);
 					document.getElementById('summTextError').textContent = 'Недостаточно средств!';
+					document.getElementById('summText').style.borderBottom = '2px solid red';
 					return false;
+				}
+				else{
+					document.getElementById('summText').style.borderBottom ='0';
 				}
 			}
 
 		}
 
-		return isValid;
+		return true;
 	}
 
 

@@ -247,9 +247,17 @@
         const mail_ = document.getElementById('portfile_mail').value;
         const phone_ = document.getElementById('portfile_phone').value;
 
+        if (phone_.length < 11){
+            document.getElementById('profilePhoneError').textContent = 'Номер телефона указан не полностью!'
+            return false;
+        }
+        else document.getElementById('profilePhoneError').textContent = '';
+
+
         const idRole_ = 1;
 
         await updateUser(id_, mail_, idRole_, phone_);
+        return true;
     };
 
     async function loadAllUserType() {

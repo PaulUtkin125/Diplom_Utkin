@@ -1,4 +1,5 @@
-﻿using Diplom_Utkin.Model.DataBase;
+﻿using System.ComponentModel.DataAnnotations;
+using Diplom_Utkin.Model.DataBase;
 
 namespace Finansu.Model
 {
@@ -17,8 +18,12 @@ namespace Finansu.Model
         public long INN {  get; set; }
         public long KPP { get; set; }
         public long OKTMO { get; set; }
+        
         public string Phone { get; set; }
         public string BusinessAddress { get; set; }
+
+        [Required(ErrorMessage = "Адрес электронной почты обязателен.")]
+        [EmailAddress(ErrorMessage = "Некорректный адрес электронной почты.")]
         public string Email { get; set; }
         public bool isAdmitted { get; set; } = false;
         public DateOnly dateSubmitted { get; set; } = new DateOnly();
