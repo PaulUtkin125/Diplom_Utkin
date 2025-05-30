@@ -65,7 +65,7 @@ namespace Diplom_Utkin.Pages.HomePage
                     if (data1 != null)
                     {
                         TempData["adminId"] = data1;
-                        return RedirectToPage("/AdminePage/Index");
+                        return RedirectToPage("/AdminePage/Requests");
                     }
                     else
                     {
