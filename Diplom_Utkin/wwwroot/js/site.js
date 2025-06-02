@@ -8,6 +8,9 @@ function vuhodOnStart(event) {
 
 }
 
+var sideModal = document.getElementById('sideMenu');
+var overlay = document.getElementById('overlay');
+
 function openPopup() {
 	window.scrollTo({
 		top: 0,
@@ -21,6 +24,15 @@ function openPopup() {
     document.querySelector('.popup').style.width = '300px';
 }
 function closePopup() {
+    var inputs = document.getElementsByTagName('input');
+    var textError = document.querySelectorAll('.text-danger');
+    textError.forEach(child => {
+        child.textContent = '';
+    });
+    for (let i = 0; i < inputs.length; i++) {
+        inputs[i].textContent = null;
+        inputs[i].style.borderBottom = '0';
+    }
 	document.body.style.overflow = 'auto';
 
 	document.querySelector('.popup').style.display = 'none';
@@ -33,20 +45,36 @@ function closePopup() {
 function profilOpen() {
     document.body.style.overflow = 'hidden';
     document.getElementById('overlay').style.display = 'block';
-    document.getElementById('sideMenu').style.visibility = 'visible';
+    sideModal.style.visibility = 'visible';
+    overlay.style.cursor = 'pointer';
 
      startLogin = document.getElementById('portfile_mail').value;
      startPhone = document.getElementById('portfile_phone').value;
+
  }
- function profilClose (){
+function profilClose() {
+
+    overlay.style.cursor = 'auto';
      document.body.style.overflow = 'auto';
      document.getElementById('overlay').style.display = 'none';
-     document.getElementById('sideMenu').style.visibility = 'collapse';
+     sideModal.style.visibility = 'collapse';
 
      document.getElementById('portfile_mail').disabled = true;
      document.getElementById('portfile_phone').disabled = true;
+
+    document.getElementById('portfile_mail').style.borderBottom = '0';
+    document.getElementById('portfile_phone').style.borderBottom = '0';
+
      document.getElementById('portfile_save_btn').style.display = 'none';
 
      document.getElementById('portfile_mail').value = startLogin;
      document.getElementById('portfile_phone').value = startPhone;
 }
+
+window.onclick = function (event) {
+    if (sideModal != null) {
+        if (event.target == overlay && sideModal.style.visibility == 'visible') {
+            profilClose();
+        }
+    }
+};

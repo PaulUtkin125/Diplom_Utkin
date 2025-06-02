@@ -9,7 +9,14 @@ html {
 }
 
 body {
-    height:100%;
+    height: 100%;
+    background: -webkit-linear-gradient(90deg, #d9c2b3,#e4a4bd,#8ba3f0);
+    background: linear-gradient(90deg, #d9c2b3,#e4a4bd,#8ba3f0);
+
+}
+
+footer p {
+    color: black;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -21,8 +28,12 @@ html {
   min-height: 100%;
 }
 
-.myA { 
-    color: #0d6efd; 
+.dropdown-menu{
+    height:max-content;
+}
+
+.myA {
+    color: #0d6efd;
     text-decoration: underline;
 }
 
@@ -35,6 +46,8 @@ html {
     display: flex;
     justify-content: space-between;
 }
+
+
 
 .home-hd h5{
    margin:0;
@@ -57,11 +70,12 @@ html {
 
 header nav div div ul{
     width:min-content;
+    height:100%;
 }
 
-body {
-    margin-bottom: 60px;
-    background: #F3F3F3;
+header nav li,
+header nav li a {
+    height: 100%;
 }
 
 .myContentBox {
@@ -140,28 +154,47 @@ body {
     margin-bottom:5px;
 }
 
+.myButton-support,
 .myButton {
     padding: 7px;
     margin: 10px 0%;
     border: 1.5px solid #000000;
+    background-color: #5c36ac99;
     border-radius: 10px;
     width: 100%;
     display: flex;
+    color: white;
     text-align: center;
     justify-content: center;
 }
 
-
+.myButton a:hover,
+.myButton-support:hover,
 .myButton:hover {
-    background-color: lightgray;
-    background-color: rgb(144, 129, 187, 0.5)
+    background-color: #8877b1;
+    cursor: pointer;
+    color: white;
+}
+
+.popup .control-width {
+    margin:0;
+    margin-top:10px;
+    text-decoration:none;
+}
+
+.control-width {
+    width:max-content;
+}
+
+.svgEdit:hover {
+    cursor:pointer;
 }
 
 .helowBox a {
     width: max-content;
     padding-left: 25px;
     padding-right: 25px;
-    background-color: rgb(144, 129, 187, 0.18)
+    background-color: #5c36ac99;
 }
 
 .helowBox {
@@ -169,11 +202,23 @@ body {
     text-align:end;
 }
 
+
 .helowBox a,
 .myButton a {
-    color: black;
+    color: white;
     text-decoration: none;
 }
+
+.myButton-support {
+    color: white;
+    text-decoration: none;
+}
+/*.myButton a:hover,
+.myButton-support:hover {
+    color: white;
+    cursor: pointer;
+}*/
+
 
 .vozmozhnosti_Box {
     justify-content: space-around;
@@ -181,7 +226,7 @@ body {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    padding-top:30px;
+    padding-top: 30px;
 }
 
 .item_Vozmozhnost {
@@ -212,15 +257,6 @@ body {
 .item_Vozmozhnost div img {
     width: 100%;
     width:100%;
-}
-
-.myButton a:hover {
-    color: white;
-}
-
-.helowBox a:hover{
-    color:white;
-    background-color: rgb(144, 129, 187, 0.5)
 }
 
 .logoForm {
@@ -260,6 +296,23 @@ body {
 
 .myRow a{
     align-self:center;
+}
+
+.otchot-mod a{
+    align-self:normal;
+}
+
+
+.otchot-mod div {
+    align-self: start;
+}
+
+.otchot-mod select {
+    height:min-content;
+}
+.otchot-mod button {
+    margin:0;
+    align-self:end;
 }
 
 .space-between {
@@ -307,7 +360,7 @@ body {
 .carousel-wrapper {
     display: flex;
     width: calc(100% + 33.33%);
-    animation: move 20s linear infinite; /* Анимация движения */
+    animation: move 20s linear infinite;
 }
 
 .carousel-wrapper div {
@@ -339,10 +392,15 @@ body {
     flex-direction: column;
     padding: 20px;
     width: 100%;
-    height:100%;
+    height: 100%;
     margin-top: -15px;
     background-color: transparent;
     box-shadow: 0px 0px 15px grey;
+    background-color: #F3F3F3;
+}
+
+.kabinetHeight{
+    height:100vh;
 }
 
 .salery-box {
@@ -403,36 +461,95 @@ canvas {
     border-radius: 15px;
 }
 
-.raschotBox form input:hover, 
+.raschotBox form input:hover,
 .tb_Box table thead a:hover,
-.poputContent input:hover{
-    opacity:0.79;
-    font-style:italic;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+.poputContent input:hover {
+    opacity: 0.79;
+    font-style: italic;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .tb_Box {
-    padding:20px;
+    margin:5px 0 5px 0;
+    height:100%;
+    overflow-y:auto;
     border-radius:15px;
 
 }
 
-.tb_Box h1 {
+.fonzize-reg h1 {
     font-size: 20px;
+}
+.report {
+    height:100%;
+}
+
+.report canvas {
+    margin-left: 15%;
+}
+
+.tb_header {
     padding: 5px;
+    margin: 10px 0 0 0;
     border-radius: 5px;
     background-color: rgb(144, 129, 187, 0.5);
+    align-items: center;
+}
+
+.tb_header h1{
+   font-size: 20px;
+   margin-bottom:0;
+}
+
+/*/ ///////////////////////////////////////////////////// /*/
+
+.search-container {
+    margin: 5px;
+    width: 35%;
+}
+
+.input-group{
+    height:30px;
+}
+
+.input-group-append{
+    height:100%;
+}
+
+.search-input {
+    border-radius: 25px;
+    padding: 10px 20px;
+    border: 1px solid #ced4da;
+    width: 100%;
+    height: 100%;
+    border: 1px solid black;
+}
+
+.search-button {
+    border-radius: 0 25px 25px 0;
+    height: 100%;
+    padding: 0 10px 0 10px;
+}
+
+.search-input:focus {
+    border-color:black;
+    box-shadow: none;
 }
 
 
+/*/ ///////////////////////////////////////////////////// /*/
 .table {
-    height:70vh;
-    font-size:20px;
-    color:black;
+    font-size: 20px;
+    color: black;
 }
 .tbColCenter button,
 .table a {
     cursor: pointer;
+}
+
+.tbColCenter button{
+    padding:0 6px 0 6px;
+    width:max-content;
 }
 
 .table thead tr th {
@@ -452,20 +569,36 @@ canvas {
 }
 
 .table tbody tr td {
-    padding-left: 50px;
+    text-align:center;
 }
 
+.table tbody tr td { 
+    text-align: center;
+}
+.table tbody a { 
+    padding:0 6px 0 6px;
+}
+.tbColCenter button:hover,
+.table button {
+    border: 0;
+    background-color: transparent;
+}
 
-.table tbody tr td a {
-    color:black;
-    text-decoration:none;
+.tb-imgBlock {
+    justify-content:center;
+    height:100%;
+    width:120px;
 }
 
 .tbColCenter {
     display: flex;
     justify-content: center;
-    height:100%;
-    align-items:center;
+    height: 100%;
+    align-items: center;
+}
+
+.tbColCenter form {
+    display:contents;
 }
 
 .dataSlice {
@@ -473,7 +606,15 @@ canvas {
     flex-direction:column;
 }
 
-/* ////////////////////////////////////////////////////////////// */
+.dop-canvas {
+    margin-top: 30px;
+    width: 30%;
+}
+.dop-canvas canvas {    
+    width: 320px;
+    height: 320px;
+}
+
 .card {
     width: 300px;
     height: 180px;
@@ -600,8 +741,6 @@ canvas {
     text-align: center;
 }
 
-/* ////////////////////////////////////////////////////////////// */
-
 .popup {
     display: none;
     position: absolute;
@@ -617,6 +756,8 @@ canvas {
     border-radius: 15px;
     margin-top:5%;
 }
+
+
 .poputContent {
     padding: 15px;
     height:max-content;
@@ -624,6 +765,7 @@ canvas {
 
 .kabinetSupportBox{
     width:max-content;
+    top:30%;
 }
 
 .kabinetSupportBox .myRow input{
@@ -632,7 +774,7 @@ canvas {
 }
 
 .kabinetSupportBox button {
-    width:30%;
+    width:max-content;
     margin-bottom:0;
     align-self:end;
 }
@@ -640,11 +782,9 @@ canvas {
 .main-panel {
     z-index:9002;
 }
-/* Убираем стрелки в Chrome, Safari и Edge */
 input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
-/* Убираем стрелки в Firefox */
 .poputContent input {
     -moz-appearance:textfield;
 }
@@ -683,6 +823,8 @@ input[type=number]::-webkit-inner-spin-button {
     z-index: 8999;
 }
 
+
+
 #popOperationType {
     visibility:collapse;
 }
@@ -696,7 +838,7 @@ input[type=number]::-webkit-inner-spin-button {
     right: 0;
     width: 300px;
     height: 100%;
-    background-color: lightgray;
+    background-color: #F3F3F3;
     color: white;
     transition: right 0.3s ease;
     padding: 20px;
@@ -714,11 +856,20 @@ input[type=number]::-webkit-inner-spin-button {
 .side-menu .myRow {
     align-items: end;
 }
+.side-menu input {
+    border-bottom:2px solid black;
+}
+
 .side-menu .myRow button{
     margin-bottom:13px;
     padding-left:0;
     background-color:transparent;
     border: 0;
+}
+
+.side-menu h1 {
+    text-align:center;
+    font-size:30px;
 }
 
 .scriner {
@@ -763,4 +914,18 @@ input[type=number]::-webkit-inner-spin-button {
 .itemBalance .bCounter {
     font-size: 14px;
     color: #3F3F3F;
+}
+
+.detale-img {
+    width:75%;
+}
+    .detale-img img {
+        aspect-ratio: 1/4;
+    }
+
+.dopImg {
+    margin-top: -15px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }

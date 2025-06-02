@@ -4,8 +4,6 @@
 	ViewData["Title"] = "Finance manager";
 }
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <div class="window-box kabinet-box">
 	@await Html.PartialAsync("Headers/_HomeHeader")
 	<section>
@@ -65,12 +63,12 @@
 				</div>
 				<div class="contentVhod" id="regBox">
 					<div class="form-block">
-						<form method="post" onsubmit="return userValid()">
+						<form method="post" onsubmit="return validMail(event)">
 							<h1>Регистрация</h1>
 							<div class="form-group">
 								<label asp-for="logoValidationReg.Email" class="control-label">E-mail</label>
 								<input asp-for="logoValidationReg.Email" class="form-control" type="email" id="regLogin" required />
-								<span asp-validation-for="logoValidationReg.Email" class="text-danger"></span>
+								<span asp-validation-for="logoValidationReg.Email" id="mailRegUserError" class="text-danger"></span>
 							</div>
 
 							<div class="form-group">
@@ -85,7 +83,7 @@
 								<span asp-validation-for="logoValidationReg.ConfirmPassword" class="text-danger"></span>
 							</div>
 							<div class="form-group">
-								<button class="myButton" type="submit" value="NoN">Зарегистрироваться</button>
+								<button class="myButton" type="submit">Зарегистрироваться</button>
 							</div>
 
 						</form>
@@ -149,7 +147,7 @@
 				</div>
 				<div class="contentVhod" id="brocerCreateForm">
 					<div class="form-block">
-						<form onsubmit="return validationCreateBroker()" method="post">
+						<form onsubmit="return validationCreateBroker(event)" method="post">
 							<h1>Регистрация</h1>
 
 							<div class="myRow">
@@ -161,47 +159,47 @@
 									</div>
 									<div class="form-group">
 										<label class="control-label">Название</label>
-										<input class="form-control" type="text" id="BrokerNameCreate" required />
-										<span class="text-danger"></span>
+										<input asp-for="Broker.NameBroker" class="form-control" type="text" id="BrokerNameCreate" required />
+										<span class="text-danger" asp-validation-for="Broker.NameBroker"></span>
 									</div>
 									<div class="form-group">
 										<label class="control-label">ИНН</label>
-										<input class="form-control" type="text" maxlength="10" id="brokerINNCreate" required />
-										<span id="INNError" class="text-danger"></span>
+										<input asp-for="Broker.INN" class="form-control" type="text" maxlength="10" id="brokerINNCreate" required />
+										<span asp-validation-for="Broker.INN" id="INNError" class="text-danger"></span>
 									</div>
 									<div class="form-group">
 										<label class="control-label">КПП</label>
-										<input class="form-control" type="text" maxlength="9" id="brokerKPPCreate" required />
-										<span class="text-danger"></span>
+										<input asp-for="Broker.KPP" class="form-control" type="text" maxlength="9" id="brokerKPPCreate" required />
+										<span asp-validation-for="Broker.KPP" class="text-danger"></span>
 									</div>
 									<div class="form-group">
 										<label class="control-label">ОТКМО</label>
-										<input class="form-control" type="text" maxlength="11" id="brokerOTKMOCreate" required />
-										<span class="text-danger"></span>
+										<input asp-for="Broker.OKTMO" class="form-control" type="text" maxlength="11" id="brokerOTKMOCreate" required />
+										<span asp-validation-for="Broker.OKTMO" class="text-danger"></span>
 									</div>
 								</div>
 
 								<div class="dataSlice">
 									<div class="form-group">
 										<label class="control-label">Бизнес адрес</label>
-										<input class="form-control" type="text" id="brokerAddressCreate" required />
-										<span class="text-danger"></span>
+										<input asp-for="Broker.BusinessAddress" class="form-control" type="text" id="brokerAddressCreate" required />
+										<span asp-validation-for="Broker.BusinessAddress" class="text-danger"></span>
 									</div>
 
 									<div class="form-group">
 										<label class="control-label">E-mail</label>
-										<input class="form-control" type="email" id="uLoginCreate" required />
-										<span class="text-danger"></span>
+										<input asp-for="Broker.Email" class="form-control" type="email" id="uLoginCreate" required />
+										<span asp-validation-for="Broker.Email" class="text-danger" id="mailBrokerCreateError"></span>
 									</div>
 									<div class="form-group">
 										<label class="control-label">Телефон</label>
-										<input class="form-control" type="tel" placeholder="+7 (901) 168-12-12" maxlength="18" id="uPhoneCreate" />
-										<span class="text-danger"></span>
+										<input asp-for="Broker.Phone" class="form-control" type="tel" placeholder="+7 (901) 168-12-12" maxlength="18" id="uPhoneCreate" />
+										<span class="text-danger" asp-validation-for="Broker.Phone"></span>
 									</div>
 									<div class="form-group">
 										<label class="control-label">Директор:</label>
-										<input class="form-control" type="text" id="brokerDirCreate" />
-										<span class="text-danger"></span>
+										<input asp-for="Broker.FullNameOfTheDirector" class="form-control" type="text" id="brokerDirCreate" />
+										<span asp-validation-for="Broker.FullNameOfTheDirector" class="text-danger"></span>
 									</div>
 								</div>
 							</div>
@@ -332,8 +330,8 @@
 <footer class="border-top footer text-muted">
 	<div class="container">
 		<hr>
-		&copy; 2025 - ООО «Finance manager»
 		<div>
+			<p>&copy; 2025 - ООО «Finance manager»</p>
 			<p>Не является индивидуальной инвестиционной рекомендацией.</p>
 			<p>Приобретение иностранных ценных бумаг связано с дополнительными рисками.</p>
 			<p><a onclick="BrokerOpen()" class="myA">Для партнеров</a></p>
@@ -355,9 +353,19 @@
 	const popup = document.getElementById('regBox');
 	const childElements = popup.querySelectorAll('*');
 
-	function userValid(){
-		validMail();
-		return false;
+	async function userValid(event){
+		event.preventDefault();
+		var loginError = document.getElementById('mailRegUserError').textContent;
+		if(loginError != '') return false;
+
+		var data = await validMail();
+		console.log('validMail.data: ', data);
+		if (!data) return false;
+
+		fetchData();
+		comfirmOpen();
+
+		return true;
 	}
 
 	async function validMail() {
@@ -371,6 +379,7 @@
 				body: JSON.stringify({ toMail: mail })
 			});
 			if (!response.ok) {
+				return false;
 				throw new Error('Network response was not ok');
 			}
 			const data = await response.json();
@@ -380,9 +389,8 @@
 				return false;
 			}
 			// alert('Код подтверждения отправлен');
-			fetchData();
-			comfirmOpen();
-			return false;
+			
+			return true;
 		}
 		catch (error) {
 			console.error('There was a problem with the fetch operation:', error);
@@ -473,6 +481,7 @@
 		document.getElementById('userReg_btn').style.display = 'block';
 		document.getElementById('BrokerReg_btn').style.display = 'none';
 
+		document.getElementById('brocerCreateForm').style.display = 'none';
 		document.getElementById('vhodBrokerBox').style.display = 'none';
 		document.getElementById('confirmCodeBox').style.display = 'none';
 		document.getElementById('vhodAdminBox').style.display = 'none';
@@ -639,8 +648,8 @@
 		}
 	}
 
-	function validationCreateBroker(){
-		
+	async function validationCreateBroker(event){
+		event.preventDefault();
 
 
 		var file = document.getElementById('BrokerImgCreate').files[0];
@@ -660,53 +669,39 @@
 
 		var INNError = document.getElementById('INNError');
 
-		console.log('file: ', file);
-		console.log('NameBroker: ', NameBroker);
-		console.log('INN: ', INN);
-		console.log('KPP: ', KPP);
-		console.log('OKTMO: ', OKTMO);
-		console.log('BusinessAddress: ', BusinessAddress);
-		console.log('Phone: ', Phone);
-		console.log('Email: ', Email);
-		console.log('FullNameOfTheDirector: ', FullNameOfTheDirector);
+		if(Phone.length < 18) return false;
 
-		if(Phone.length < 11) return false;
-
-		var isINN = validationINN(INN);
-		console.log('isINN: ', isINN);
-		if (isINN == 1 ) {
+		var isINN = await validationINN(INN);
+		if (isINN) {
 			INNError.textContent = 'Данный номер уже используется!';
 			INNBlock.style.borderBottom = '2px solid red';
 			return false;
 		}
-
-
-		if(Phone.length < 18){
-			
-			return false;
+		else {
+			INNError.textContent = '';
+			INNBlock.style.borderBottom = '0';
 		}
 
 		if(document.getElementById('userReg_btn').style.display == 'none'  )
 		{
-			var data = validationBrokerMail(Email);
+			var data = await validationBrokerMail(Email);
 			if(!data){
+				document.getElementById('mailBrokerCreateError').textContent = 'Этот адрес уже используется!';
 				bMail.style.borderBottom = '2px solid red';
 				return false;
 			}
-			else bMail.style.borderBottom = '0';
+			else 
+			{
+				bMail.style.borderBottom = '0';
+				document.getElementById('mailBrokerCreateError').textContent = '';
+			}
 
 			brokerSendCode(Email);
-
-
-			//data = await CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector);
 
 			INNBlock.style.borderBottom = '0';
 			INNError.textContent = '';
 
 			document.getElementById('supportBrokerName').value = NameBroker;
-			// document.getElementById('supportFile').file = file;
-
-			console.log('file: ', file);
 
 			document.getElementById('supportbrokerKPP').value = KPP;
 			document.getElementById('supportBrokerOTKMO').value = OKTMO;
@@ -735,7 +730,9 @@
 				throw new Error('Network response was not ok');
 			}
 			const data = await response.json();
-			return data;
+
+			console.log('function, validationINN: ', data)
+			return data == 1;
 		}
 		catch (error) {
 			console.error('There was a problem with the fetch operation:', error);
@@ -758,7 +755,6 @@
 			const data = await response.json();
 			if (!data)
 			{
-				alert('Данный E-mail уже используется! укажите другой');
 				return false;
 			}
 			// alert('Код подтверждения отправлен');
@@ -793,7 +789,6 @@
 	}
 
 	async function brokerSendCode(mail) {
-		event.preventDefault();
 
 		try {
 			const response = await fetch(baseUrl+'Universal/SendCode', {

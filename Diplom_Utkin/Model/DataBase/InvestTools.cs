@@ -1,4 +1,6 @@
-﻿namespace Finansu.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Finansu.Model
 {
     public class InvestTools
     {
@@ -9,9 +11,7 @@
 
         public string NameInvestTool { get; set; }
         public bool isClosed { get; set; } = false;
-
         public bool isFrozen { get; set; } = false;
-
         public double Price { get; set; }
         public string ImageSource { get; set; }
 

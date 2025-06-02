@@ -1,5 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
 using Diplom_Utkin.Model.Data;
+using Diplom_Utkin.Model.dopValidation;
 using Diplom_Utkin.Model.Support;
 using Finansu.Model;
 using Microsoft.AspNetCore.Mvc;
@@ -25,17 +26,49 @@ namespace Diplom_Utkin.Pages.BrokerPage
 
         public List<InvestTools> InvestTools { get; set; }
 
-        public async Task<ActionResult> OnGetAsync()
+        public CreateToolValidation investTool { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string Query { get; set; }
+        public string CurrnerSort { get; set; }
+        public string? sortName { get; set; }
+        public string? sortIsClosing { get; set; }
+        public async Task<ActionResult> OnGetAsync(string? sortOrder)
         {
             if (TempData["brokerId"] != null)
             {
                 brokerId = (int)TempData["brokerId"];
                 TempData["brokerId"] = brokerId;
                 _user = await _APIService.LoadBrokerDataAsync(brokerId);
-                InvestTools = await _APIService.InvestListAsync(brokerId);
+                
             }
             else return Unauthorized();
 
+
+            CurrnerSort = sortOrder;
+            TempData["sortOrder"] = sortOrder;
+            sortName = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            sortIsClosing = sortOrder == "status" ? "status_desc" : "status";
+
+            var toolIQ = await _APIService.InvestListAsync(brokerId);
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    toolIQ = toolIQ.OrderByDescending(x => x.NameInvestTool).ToList();
+                    break;
+                case "status":
+                    toolIQ = toolIQ.OrderBy(x => x.isClosed).ToList();
+                    break;
+                case "status_desc":
+                    toolIQ = toolIQ.OrderByDescending(x => x.isClosed).ToList();
+                    break;
+
+                default:
+                    toolIQ = toolIQ.OrderBy(x => x.NameInvestTool).ToList();
+                    break;
+            }
+
+            InvestTools = toolIQ;
             return Page();
         }
 
@@ -55,8 +88,33 @@ namespace Diplom_Utkin.Pages.BrokerPage
                 brokerId = (int)TempData["brokerId"];
                 TempData["brokerId"] = brokerId;
                 _user = await _APIService.LoadBrokerDataAsync(brokerId);
-                InvestTools = await _APIService.InvestListAsync(brokerId);
             }
+
+            string? sortOrder = (string?)TempData["sortOrder"];
+            TempData["sortOrder"] = sortOrder;
+
+            sortName = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            sortIsClosing = sortOrder == "status" ? "status_desc" : "status";
+
+            var toolIQ = await _APIService.InvestListAsync(brokerId);
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    toolIQ = toolIQ.OrderByDescending(x => x.NameInvestTool).ToList();
+                    break;
+                case "status":
+                    toolIQ = toolIQ.OrderBy(x => x.isClosed).ToList();
+                    break;
+                case "status_desc":
+                    toolIQ = toolIQ.OrderByDescending(x => x.isClosed).ToList();
+                    break;
+
+                default:
+                    toolIQ = toolIQ.OrderBy(x => x.NameInvestTool).ToList();
+                    break;
+            }
+
+            InvestTools = toolIQ;
         }
     }
 }

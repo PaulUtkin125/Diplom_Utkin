@@ -14,13 +14,13 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1 hd-nav">
                     <li class="nav-item myItem">
-                        <a class="nav-link" asp-page="/AdminePage/Index">Главная</a>
-                    </li>
-                    <li class="nav-item myItem">
                         <a class="nav-link" asp-page="/AdminePage/Requests">Заявки</a>
                     </li>
                     <li class="nav-item myItem">
                         <a class="nav-link" asp-page="/AdminePage/UsersList">Пользователи</a>
+                    </li>
+                    <li class="nav-item myItem">
+                        <a class="nav-link" asp-page="/AdminePage/ReportsPage">Отчеты</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -74,6 +74,21 @@
         brokerPhone.textContent = 'Телефон: ' + data.phone;
         brokerAddress.textContent = 'Юридический адресс:' + data.businessAddress;
         brokerEmail.textContent = 'E-mail: ' + data.email;
+
+        if(data.typeOfRequestId == 3) {
+             document.getElementById('positive_btn').style.display = 'block';
+             document.getElementById('negative_btn').style.display = 'none';
+         }
+         else if (data.typeOfRequestId == 2)
+         {
+             document.getElementById('positive_btn').style.display = 'none';
+             document.getElementById('negative_btn').style.display = 'block';
+
+         }
+         else if (data.typeOfRequestId == 1){
+             document.getElementById('positive_btn').style.display = 'block';
+             document.getElementById('negative_btn').style.display = 'block';
+         }
     };
 
      async function optionFormOpenDop(id){
@@ -85,7 +100,7 @@
 
          document.getElementById('targetId').value = id;
 
-         document.getElementById('targetBrokerImg').setAttribute('src', 'data:image/png;base64,' + data.sourseFile);
+         // document.getElementById('targetBrokerImg').setAttribute('src', 'data:image/png;base64,' + data.sourseFile);
          document.getElementById('BrokerName').textContent = data.nameBroker;
          document.getElementById('brokerINN').textContent = 'ИНН: ' + data.inn;
          document.getElementById('brokerKPP').textContent = 'КПП: ' + data.kpp;
@@ -94,8 +109,20 @@
          document.getElementById('brokerAddress').textContent = 'Юридический адресс:' + data.businessAddress;
          document.getElementById('brokerEmail').textContent = 'E-mail: ' + data.email;
 
-         if(data.typeOfRequestId == 3) document.getElementById('positive_btn').style.display = 'block';
-         else document.getElementById('positive_btn').style.display = 'none';
+         if(data.typeOfRequestId == 3) {
+             document.getElementById('positive_btn').style.display = 'block';
+             document.getElementById('negative_btn').style.display = 'none';
+         }
+         else if (data.typeOfRequestId == 2)
+         {
+             document.getElementById('positive_btn').style.display = 'none';
+             document.getElementById('negative_btn').style.display = 'block';
+
+         }
+         else if (data.typeOfRequestId == 1){
+             document.getElementById('positive_btn').style.display = 'block';
+             document.getElementById('negative_btn').style.display = 'block';
+         }
 
      };
 
@@ -132,14 +159,12 @@
 
         document.getElementById('uLogin').textContent = 'E-mail: ' + data.loggin;
         document.getElementById('uPhone').textContent = 'Телефон: ' + data.phone;
-        document.getElementById('uType').textContent = 'Тип: ' + data.typeOfUser.name;
 
     };
 
     async function fastEditFormOpen(id){
         document.getElementById('targetId_Edit').value = id;
         var data = await UserData(id);
-        var UserTypeList = await loadAllUserType();
 
 
         openPopup();
@@ -151,19 +176,6 @@
         document.getElementById('uLoginEdit').value = data.loggin;
         document.getElementById('uPhoneEdit').value = data.phone;
         
-        document.getElementById('uTypeEdit').innerHTML = '';
-
-        const uTypeSelect = document.getElementById('uTypeEdit');
-        uTypeSelect.innerHTML = '';
-            UserTypeList.forEach(type => {
-            const option = document.createElement('option');
-            option.value = type.id;
-            option.textContent = type.name;
-            uTypeSelect.appendChild(option);
-        });
-
-        uTypeSelect.value = data.typeOfUser.id;
-        document.getElementById('uTypeEdit').value = data.typeOfUser.id;
     };
 
     async function editFormOpen(id){
@@ -171,7 +183,7 @@
         const id_ = document.getElementById('targetId_Edit').value;
 
         var data = await UserData(id_);
-        var UserTypeList = await loadAllUserType();
+        
 
         document.getElementById('editForm').style.display ='block';
         document.getElementById('optionForm').style.display ='none';
@@ -181,16 +193,6 @@
         document.getElementById('uLoginEdit').value = data.loggin;
         document.getElementById('uPhoneEdit').value = data.phone;
 
-        document.getElementById('uTypeEdit').innerHTML = '';
-
-        const uTypeSelect = document.getElementById('uTypeEdit');
-        uTypeSelect.innerHTML = '';
-            UserTypeList.forEach(type => {
-            const option = document.createElement('option');
-            option.value = type.id;
-            option.textContent = type.name;
-            uTypeSelect.appendChild(option);
-        });
    
         uTypeSelect.value = data.typeOfUser.id;
         document.getElementById('uTypeEdit').value = data.typeOfUser.id;
@@ -242,12 +244,12 @@
         document.getElementById('portfile_save_btn').style.display = 'block';
     };
 
-    async function Update_Method_Profile(){
+    function Update_Method_Profile(){
         const id_ = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model._user.Id));
         const mail_ = document.getElementById('portfile_mail').value;
         const phone_ = document.getElementById('portfile_phone').value;
 
-        if (phone_.length < 11){
+        if (phone_.length < 18){
             document.getElementById('profilePhoneError').textContent = 'Номер телефона указан не полностью!'
             return false;
         }
@@ -256,23 +258,8 @@
 
         const idRole_ = 1;
 
-        await updateUser(id_, mail_, idRole_, phone_);
+        updateUser(id_, mail_, idRole_, phone_);
         return true;
-    };
-
-    async function loadAllUserType() {
-        const baseUrl = '@Model.apiSettings.BaseUrl';
-        const response = await fetch(baseUrl + 'Admin/AllUserType', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        var UserTypeList = response.json();
-        return UserTypeList;
     };
 
     async function updateUser(id_, mail_, idRole_, phone_) {
@@ -291,42 +278,7 @@
         console.log('User updated successfully:', data);
     };
 
-    function validationCreateBroker(){
-        var file = document.getElementById('BrokerImgCreate').files[0];
-        var NameBroker = document.getElementById('BrokerNameCreate').value;
-        // var UrisidikciiyId = document.getElementById('Urisdiction').value;
-        
-        var INNBlock = document.getElementById('brokerINNCreate');
-        
-        var INN = INNBlock.value;
-        var KPP = document.getElementById('brokerKPPCreate').value;
-        var OKTMO = document.getElementById('brokerOTKMOCreate').value;
-        var BusinessAddress = document.getElementById('brokerAddressCreate').value;
-        var Phone = document.getElementById('uPhoneCreate').value;
-        var Email = document.getElementById('uLoginCreate').value;
-        var FullNameOfTheDirector = document.getElementById('brokerDirCreate').value;
-
-        var INNError = document.getElementById('INNError');
-
-        var data = CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector);
-
-        console.log(data);
-
-        if(data == 1) {
-            INNBlock.style.borderBottom = '2px solid red';
-            INNBlock.focus();
-            INNError.textContent = 'Данный номер уже используется!'
-            return false;
-        }
-        if(data == 0) 
-        {
-            INNBlock.style.borderBottom = '0';
-            INNError.textContent = '';
-            return true;
-        }
-    }
-
-
+   
 
     async function CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector)
     {
@@ -352,6 +304,7 @@
         return data;
         
     }
+
 
     window.onpopstate = function(event)
     {

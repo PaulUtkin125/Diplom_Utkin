@@ -1,4 +1,5 @@
 ﻿using Diplom_Utkin.Model.dopValidation;
+using Diplom_Utkin.Model.Report;
 using Diplom_Utkin.Model.Support;
 using Finansu.Model;
 using Microsoft.AspNetCore.Mvc;
@@ -197,6 +198,41 @@ namespace Diplom_Utkin.Model.Data
         {
             var processPositive = await _httpClient.PatchAsJsonAsync("Admin/deleteUser", id);
         }
+
+        public async Task<List<Repport1Model>> Report1(DateTime start, DateTime end, int mode)
+        {
+            Report1Reauest report1Reauest = new Report1Reauest()
+            {
+                startDate = start,
+                endDate = end,
+                mode = mode
+            };
+            var BrokerList = await _httpClient.PostAsJsonAsync("Admin/ReportObiemOperationofBroker", report1Reauest);
+            var resalt = await BrokerList.Content.ReadFromJsonAsync<List<Repport1Model>>();
+            return resalt;
+        }
+
+        public async Task<List<AltBrokers>> Report2(DateTime start, DateTime end, int mode)
+        {
+            Report1Reauest report1Reauest = new Report1Reauest()
+            {
+                startDate = start,
+                endDate = end,
+                mode = mode
+            };
+            var BrokerList = await _httpClient.PostAsJsonAsync("Admin/ReportStatysBroker", report1Reauest);
+            var resalt = await BrokerList.Content.ReadFromJsonAsync<List<AltBrokers>>();
+            return resalt;
+        }
+
+
+
+
+
+
+
+
+
 
         public async Task<Brokers> LoadBrokerDataAsync(int id)
         {

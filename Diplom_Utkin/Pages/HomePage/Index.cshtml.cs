@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Diplom_Utkin.Model.Data;
 using Diplom_Utkin.Model.dopValidation;
+using Finansu.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -25,11 +26,14 @@ namespace Diplom_Utkin.Pages.HomePage
         [BindProperty]
         public StartUserData User { get; set; } = default!;
         
-        [BindProperty]
-        public logoValidationReg logoValidationReg { get; set; } = default!;
+        public logoValidationReg logoValidationReg { get; set; }
 
         [BindProperty]
         public ConfirmCodeValidation codeValidation { get; set; } = default!;
+       
+        [BindProperty]
+        public Brokers Broker { get; set; } = default!;
+
 
         public async Task<IActionResult> OnPost(string action)
         {
@@ -48,6 +52,7 @@ namespace Diplom_Utkin.Pages.HomePage
                         ModelState.AddModelError("User.Login", "Неправильный логин или пароль");
                         return Page();
                     }
+                ;
 
 
                 case "Registr_btn":
@@ -72,6 +77,7 @@ namespace Diplom_Utkin.Pages.HomePage
                         ModelState.AddModelError("User.Login", "Неправильный логин или пароль");
                         return Page();
                     }
+                ;
 
                 case "vhodBroker_btn":
                     User.RoleId = 3;
@@ -86,21 +92,14 @@ namespace Diplom_Utkin.Pages.HomePage
                         ModelState.AddModelError("User.Login", "Неправильный логин или пароль");
                         return Page();
                     }
+                ;
+
                 default:
                     return Page();
 
             }
         }
 
-        public void confSend()
-        {
-            var comCode = _APIService.ConfirmCode(User.Login).Result;
-            if (comCode is null)
-            {
-                ModelState.AddModelError("confirmError", "Произошел сбой в системе! Поаторите попытку позже");
-            }
-        }
-        
         public void OnGet()
         {
             TempData.Clear();

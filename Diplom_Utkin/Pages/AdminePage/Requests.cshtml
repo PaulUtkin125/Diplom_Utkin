@@ -3,14 +3,15 @@
 @{
 	ViewData["Title"] = "Кабинет";
 }
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<div class="window-box kabinet-box">
+<div class="window-box kabinet-box kabinetHeight">
 	@await Html.PartialAsync("Headers/_AdminHeader")
 
 	<section>
 		<div id="overlay" class="overlay"></div>
 		<div id="sideMenu" class="side-menu">
-			<button class="myButton" onclick="profilClose()">Закрыть</button>
+			<h1>Профиль</h1>
 			<form method="post">
 				<div class="myRow">
 					<div class="form-group">
@@ -19,7 +20,7 @@
 
 					</div>
 					<div>
-						<a onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></a>
+						<a onclick="updateLogin()"><img class="svgEdit" src="/Image/icon-edit.svg" /></a>
 
 					</div>
 				</div>
@@ -32,11 +33,10 @@
 
 					</div>
 					<div>
-						<a onclick="updatePhone()"><img src="/Image/icon-edit.svg" /></a>
-
+						<a onclick="updatePhone()"><img class="svgEdit" src="/Image/icon-edit.svg" /></a>
 					</div>
 				</div>
-				<span asp-validation-for="_user.Phone" class="text-danger"></span>
+				<span asp-validation-for="_user.Phone" id="profilePhoneError" class="text-danger"></span>
 				<button class="myButton" style="display:none" name="action" onclick="Update_Method_Profile()" id="portfile_save_btn" value="NoN">Сохранть</button>
 			</form>
 		</div>
@@ -49,14 +49,11 @@
 				</div>
 
 				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
-				<label id="CreateForm" style="display:none"></label>
 				<form id="optionForm" method="post">
 					<h1>Детали</h1>
-					<input style="visibility:hidden" name="TargetbrokerId" id="targetId" type="number" />
+					<input style="visibility:hidden; height:1px;" name="TargetbrokerId" id="targetId" type="number" />
+
 					<div class="form-group myRow">
-						<div class="hd-imgBlock">
-							<img id="targetBrokerImg" />
-						</div>
 						<label id="BrokerName"></label>
 					</div>
 					<div class="dataSlice">
@@ -74,69 +71,71 @@
 				</form>
 
 				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
-				<form id="CreateForm" onsubmit="return validationCreateBroker()" method="post">
-					<h1>Добавить</h1>
+				<div id="CreateForm" class="form-block">
+					<form onsubmit="return validationCreateBroker(event)" method="post">
+						<h1>Добавить</h1>
 
-					<div class="myRow">
-						<div class="dataSlice">
-							<div class="form-group">
-								<label class="control-label">Выберите иконку</label>
-								<input class="form-control" type="file" accept=".jpg, .jpeg, .png" id="BrokerImgCreate" />
-								<span class="text-danger"></span>
+						<div class="myRow">
+							<div class="dataSlice">
+								<div class="form-group">
+									<label class="control-label">Выберите иконку</label>
+									<input class="form-control" type="file" accept=".jpg, .jpeg, .png" id="BrokerImgCreate" />
+									<span class="text-danger"></span>
+								</div>
+								<div class="form-group">
+									<label class="control-label">Название</label>
+									<input asp-for="Broker.NameBroker" class="form-control" type="text" id="BrokerNameCreate" required />
+									<span class="text-danger" asp-validation-for="Broker.NameBroker"></span>
+								</div>
+								<div class="form-group">
+									<label class="control-label">ИНН</label>
+									<input asp-for="Broker.INN" class="form-control" type="text" maxlength="10" id="brokerINNCreate" required />
+									<span asp-validation-for="Broker.INN" id="INNError" class="text-danger"></span>
+								</div>
+								<div class="form-group">
+									<label class="control-label">КПП</label>
+									<input asp-for="Broker.KPP" class="form-control" type="text" maxlength="9" id="brokerKPPCreate" required />
+									<span asp-validation-for="Broker.KPP" class="text-danger"></span>
+								</div>
+								<div class="form-group">
+									<label class="control-label">ОТКМО</label>
+									<input asp-for="Broker.OKTMO" class="form-control" type="text" maxlength="11" id="brokerOTKMOCreate" required />
+									<span asp-validation-for="Broker.OKTMO" class="text-danger"></span>
+								</div>
 							</div>
-							<div class="form-group">
-								<label class="control-label">Название</label>
-								<input class="form-control" type="text" id="BrokerNameCreate" required />
-								<span class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label class="control-label">ИНН</label>
-								<input class="form-control" type="text" maxlength="10" id="brokerINNCreate" required />
-								<span id="INNError" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label class="control-label">КПП</label>
-								<input class="form-control" type="text" maxlength="9" id="brokerKPPCreate" required />
-								<span class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label class="control-label">ОТКМО</label>
-								<input class="form-control" type="text" maxlength="11" id="brokerOTKMOCreate" required />
-								<span class="text-danger"></span>
+
+							<div class="dataSlice">
+								<div class="form-group">
+									<label class="control-label">Бизнес адрес</label>
+									<input asp-for="Broker.BusinessAddress" class="form-control" type="text" id="brokerAddressCreate" required />
+									<span asp-validation-for="Broker.BusinessAddress" class="text-danger"></span>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label">E-mail</label>
+									<input asp-for="Broker.Email" class="form-control" type="email" id="uLoginCreate" required />
+									<span asp-validation-for="Broker.Email" class="text-danger" id="mailBrokerCreateError"></span>
+								</div>
+								<div class="form-group">
+									<label class="control-label">Телефон</label>
+									<input asp-for="Broker.Phone" class="form-control" type="tel" placeholder="+7 (901) 168-12-12" maxlength="18" id="uPhoneCreate" />
+									<span class="text-danger" asp-validation-for="Broker.Phone"></span>
+								</div>
+								<div class="form-group">
+									<label class="control-label">Директор:</label>
+									<input asp-for="Broker.FullNameOfTheDirector" class="form-control" type="text" id="brokerDirCreate" />
+									<span asp-validation-for="Broker.FullNameOfTheDirector" class="text-danger"></span>
+								</div>
 							</div>
 						</div>
 
-						<div class="dataSlice">
-							<div class="form-group">
-								<label class="control-label">Бизнес адрес</label>
-								<input class="form-control" type="text" id="brokerAddressCreate" required />
-								<span class="text-danger"></span>
-							</div>
 
-							<div class="form-group">
-								<label class="control-label">E-mail</label>
-								<input class="form-control" type="email" id="uLoginCreate" required />
-								<span class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label class="control-label">Телефон</label>
-								<input class="form-control" type="tel" placeholder="+7 (901) 168-12-12" maxlength="18" id="uPhoneCreate" />
-								<span class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label class="control-label">Директор:</label>
-								<input class="form-control" type="text" id="brokerDirCreate" />
-								<span class="text-danger"></span>
-							</div>
+						<div class="myRow">
+							<button class="myButton" type="submit">Добавить</button>
 						</div>
-					</div>
-
-
-					<div class="myRow">
-						<button class="myButton" type="submit" name="action" value="create">Добавить</button>
-						<button class="myButton" onclick="closePopup()">Отменить</button>
-					</div>
-				</form>
+					</form>
+				</div>
+			
 			</div>
 		</div>
 	</section>
@@ -148,14 +147,25 @@
 			<label>Принятых заявок: @Model.Brokers.Where(x => x.TypeOfRequestId == 2).Count()</label>
 			<label>Отклоненных заявок: @Model.Brokers.Where(x => x.TypeOfRequestId == 3).Count()</label>
 		</div>
-		<a onclick="CreateForm_Open()">
+		<a onclick="CreateForm_Open()" class="myButton-support control-width">
 			Добавить
 		</a>
 	</div>
-	
 
+	<div class="myRow tb_header space-between">
+		<h1>Заявки</h1>
+		<div class="search-container text-center">
+			<form method="get" asp-page="./Search">
+				<div class="input-group">
+					<input type="text" name="query" class="form-control search-input" placeholder="Вводить название брокера" value="@Model.Query" />
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-primary search-button">Поиск</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 	<div class="tb_Box">
-		<h1>заявки</h1>
 		<table class="table">
 			<thead>
 				<tr>
@@ -163,17 +173,17 @@
 						Иконка
 					</th>
 					<th>
-						<a>
+						<a asp-route-sortOrder="@Model.sortName">
 							Название
 						</a>
 					</th>
 					<th>
-						<a>
+						<a asp-route-sortOrder="@Model.sortDir">
 							Директор
 						</a>
 					</th>
 					<th>
-						<a>
+						<a asp-route-sortOrder="@Model.sortStatus">
 							Статус
 						</a>
 					</th>
@@ -187,7 +197,7 @@
 				{
 					<tr>
 						<td>
-							<div class="hd-imgBlock settings">
+							<div class="">
 								<img src="data:image/png;base64, @item.SourseFile" />
 							</div>
 						</td>
@@ -208,9 +218,14 @@
 									<button type="submit" name="action" value="positive_btn">Принять</button>
 									<span>|</span>
 								}
-								<button type="submit" name="action" value="negative_btn">Отклонить</button>
+								@if (item.TypeOfRequestId == 1 || item.TypeOfRequestId == 2)
+								{
+									
+									<button type="submit" name="action" value="negative_btn">Отклонить</button>
+									<span>|</span>
+								}
 							</form>
-							<span>|</span>
+							
 							<a onclick="optionFormOpenDop(@item.Id)">Детали</a>
 
 						</td>
@@ -223,6 +238,9 @@
 	</div>
 </div>
 <script>
+	const baseUrl = '@Model.apiSettings.BaseUrl';
+
+
 	let input = document.getElementById("brokerINNCreate");
 	input.addEventListener("keyup", (e) => { formatINN(e.target); });
 	input.addEventListener("keypress", (e) => { formatINN(e.target); });
@@ -274,6 +292,78 @@
 		else inputKPP.style.borderBottom = '2px solid black';
 	}
 
+	async function validationCreateBroker(event){
+		event.preventDefault();
+
+		var file = document.getElementById('BrokerImgCreate').files[0];
+		var NameBroker = document.getElementById('BrokerNameCreate').value;
+		// var UrisidikciiyId = document.getElementById('Urisdiction').value;
+
+		var INNBlock = document.getElementById('brokerINNCreate');
+
+		var INN = INNBlock.value;
+		var KPP = document.getElementById('brokerKPPCreate').value;
+		var OKTMO = document.getElementById('brokerOTKMOCreate').value;
+		var BusinessAddress = document.getElementById('brokerAddressCreate').value;
+		var Phone = document.getElementById('uPhoneCreate').value;
+		var Email = document.getElementById('uLoginCreate').value;
+		var FullNameOfTheDirector = document.getElementById('brokerDirCreate').value;
+
+		if(Phone.length < 18) return false;
+
+		var INNError = document.getElementById('INNError');
+		var isINN = await validationINN(INN);
+		console.log('isINN: ', isINN);
+		if (isINN == false ) {
+			INNError.textContent = 'Данный номер уже используется!';
+			INNBlock.style.borderBottom = '2px solid red';
+			return false;
+		}
+
+		var data = CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector);
+
+		console.log(data);
+
+		if(data == 1) {
+			INNBlock.style.borderBottom = '2px solid red';
+			INNBlock.focus();
+			INNError.textContent = 'Данный номер уже используется!'
+			return false;
+		}
+		if(data == 0)
+		{
+			INNBlock.style.borderBottom = '0';
+			INNError.textContent = '';
+			return true;
+		}
+		return true;
+	}
+
+
+	async function validationINN(inn){
+		try {
+
+			const response = await fetch(baseUrl+'Universal/ValidationINN', {
+				method:'POST',
+				headers:{
+					'Content-Type':'application/json'
+				},
+				body: JSON.stringify({ toMail: inn })
+			});
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+				return false;
+			}
+			const data = await response.json();
+			return data == 1;
+		}
+		catch (error) {
+			console.error('There was a problem with the fetch operation:', error);
+			return false;
+		}
+	}
+
+
 	let inputPhone = document.getElementById("portfile_phone");
 	inputPhone.addEventListener("keyup", (e) => { formatinputPhone(e.target); });
 	inputPhone.addEventListener("keypress", (e) => { formatinputPhone(e.target); });
@@ -282,7 +372,6 @@
 	let inputPhoneCreate = document.getElementById("uPhoneCreate");
 	inputPhoneCreate.addEventListener("keyup", (e) => { formatinputPhone(e.target); });
 	inputPhoneCreate.addEventListener("keypress", (e) => { formatinputPhone(e.target); });
-
 
 	function formatinputPhone(inputPhone) {
 		var input_val = inputPhone.value;

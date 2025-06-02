@@ -6,6 +6,7 @@ namespace Diplom_Utkin.Model.dopValidation
     {
         [Required(ErrorMessage = "Поле должно быть заполнено")]
         [MinLength(8, ErrorMessage = "Минимальная длина 8 симвалов")]
+        [EmailAddress(ErrorMessage = "Некорректный адрес электронной почты.")]
         public string Login { get; set; }
 
         [Required(ErrorMessage = "Поле должно быть заполнено")]

@@ -11,6 +11,7 @@ namespace Diplom_Utkin.Pages.AdminePage
     {
         public int adminId { get; set; }
         public User _user { get; set; }
+
         public List<Brokers> Brokers { get; set; }
 
         private readonly APIService _APIService;
@@ -18,6 +19,7 @@ namespace Diplom_Utkin.Pages.AdminePage
         private readonly IConfiguration _configuration;
         public readonly ApiSettings apiSettings;
 
+        
         public RequestsModel(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -26,18 +28,64 @@ namespace Diplom_Utkin.Pages.AdminePage
             _APIService = new APIService(apiSettings.BaseUrl);
         }
 
+        public Brokers Broker { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync()
+        [BindProperty(SupportsGet = true)]
+        public string Query { get; set; }
+        public string CurrnerSort { get; set; }
+        public string? sortName { get; set; }
+        public string? sortDir { get; set; }
+        public string? sortStatus { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(string? sortOrder)
         {
             if (TempData["adminId"] != null)
             {
                 adminId = (int)TempData["adminId"];
                 TempData["adminId"] = adminId;
                 _user = await _APIService.moneyLoadAsync(adminId);
-                Brokers = await _APIService.NotNewBrokersList();
             }
             else return Unauthorized();
 
+
+            CurrnerSort = sortOrder;
+            TempData["sortOrder"] = sortOrder;
+            sortName = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            sortDir = sortOrder == "dir" ? "dir_desc" : "dir";
+            sortStatus = sortOrder == "status" ? "status_desc" : "status";
+
+            var brokersIQ = await _APIService.NotNewBrokersList();
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    brokersIQ = brokersIQ.OrderByDescending(x => x.NameBroker).ToList();
+                    break;
+                case "dir_desc":
+                    brokersIQ = brokersIQ.OrderByDescending(x => x.FullNameOfTheDirector).ToList();
+                    break;
+                case "dir":
+                    brokersIQ = brokersIQ.OrderBy(x => x.FullNameOfTheDirector).ToList();
+                    break;
+
+                case "status":
+                    brokersIQ = brokersIQ.OrderBy(x => x.TypeOfRequestId).ToList();
+                    break;
+                case "status_desc":
+                    brokersIQ = brokersIQ.OrderByDescending(x => x.TypeOfRequestId).ToList();
+                    break;
+                default:
+                    brokersIQ = brokersIQ.OrderBy(x => x.NameBroker).ToList();
+                    break;
+            }
+
+            if (!string.IsNullOrEmpty(Query))
+            {
+                brokersIQ = brokersIQ
+                    .Where(p => p.NameBroker.StartsWith(Query, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            Brokers = brokersIQ;
 
             return Page();
         }
@@ -76,8 +124,41 @@ namespace Diplom_Utkin.Pages.AdminePage
                 adminId = (int)TempData["adminId"];
                 TempData["adminId"] = adminId;
                 _user = await _APIService.moneyLoadAsync(adminId);
-                Brokers = await _APIService.NotNewBrokersList();
             }
+
+            string? sortOrder = (string?)TempData["sortOrder"];
+            TempData["sortOrder"] = sortOrder;
+
+            sortName = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            sortDir = sortOrder == "dir" ? "dir_desc" : "dir";
+            sortStatus = sortOrder == "status" ? "status_desc" : "status";
+
+            var brokersIQ = await _APIService.NotNewBrokersList();
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    brokersIQ = brokersIQ.OrderByDescending(x => x.NameBroker).ToList();
+                    break;
+                case "dir_desc":
+                    brokersIQ = brokersIQ.OrderByDescending(x => x.FullNameOfTheDirector).ToList();
+                    break;
+                case "dir":
+                    brokersIQ = brokersIQ.OrderBy(x => x.FullNameOfTheDirector).ToList();
+                    break;
+
+                case "status":
+                    brokersIQ = brokersIQ.OrderBy(x => x.TypeOfRequestId).ToList();
+                    break;
+                case "status_desc":
+                    brokersIQ = brokersIQ.OrderBy(x => x.TypeOfRequestId).ToList();
+                    break;
+                default:
+                    brokersIQ = brokersIQ.OrderBy(x => x.NameBroker).ToList();
+                    break;
+            }
+
+            Brokers = brokersIQ;
         }
     }
 }

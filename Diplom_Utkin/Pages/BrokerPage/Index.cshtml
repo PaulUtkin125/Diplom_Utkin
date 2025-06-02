@@ -3,20 +3,20 @@
 @{
 	ViewData["Title"] = "Кабинет";
 }
-<div class="window-box kabinet-box">
+<div class="window-box kabinet-box kabinetHeight">
 	@await Html.PartialAsync("Headers/_BrokerHeader")
 
 	<section>
 		<div id="overlay" class="overlay"></div>
 		<div id="sideMenu" class="side-menu">
-			<button class="myButton" onclick="profilClose()">Закрыть</button>
+			<h1>Профиль</h1>
 			<form method="post">
 				<div class="form-group myRow">
 					<div class="hd-imgBlock settings">
 						<img src="data:image/png;base64, @Model._user.SourseFile" />
 					</div>
 					<div>
-						<a onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></a>
+						<a onclick="updateLogin()"><img class="svgEdit" src="/Image/icon-edit.svg" /></a>
 					</div>
 				</div>
 				<div class="myRow">
@@ -26,7 +26,7 @@
 
 					</div>
 					<div>
-						<a onclick="updateName()"><img src="/Image/icon-edit.svg" /></a>
+						<a onclick="updateName()"><img class="svgEdit" src="/Image/icon-edit.svg" /></a>
 
 					</div>
 				</div>
@@ -39,8 +39,7 @@
 
 					</div>
 					<div>
-						<a onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></a>
-
+						<a onclick="updateLogin()"><img class="svgEdit" src="/Image/icon-edit.svg" /></a>
 					</div>
 				</div>
 				<span asp-validation-for="_user.Email" class="text-danger"></span>
@@ -49,11 +48,9 @@
 					<div class="form-group">
 						<label asp-for="_user.Phone" class="control-label">Телефон</label>
 						<input asp-for="_user.Phone" class="form-control" id="portfile_phone" type="tel" required disabled />
-
 					</div>
 					<div>
-						<a onclick="updatePhone()"><img src="/Image/icon-edit.svg" /></a>
-
+						<a onclick="updatePhone()"><img class="svgEdit" src="/Image/icon-edit.svg" /></a>
 					</div>
 				</div>
 				<span asp-validation-for="_user.Phone" class="text-danger"></span>
@@ -62,7 +59,6 @@
 					<div class="form-group">
 						<label asp-for="_user.INN" class="control-label">ИНН</label>
 						<input asp-for="_user.INN" class="form-control" id="portfile_INN" type="text" required disabled />
-
 					</div>
 				</div>
 				<button class="myButton" style="display:none" name="action" onclick="Update_Method_Profile()" id="portfile_save_btn" value="NoN">Сохранть</button>
@@ -104,18 +100,18 @@
 					<div class="dataSlice">
 						<div class="form-group">
 							<label class="control-label">Выберите иконку</label>
-							<input class="form-control" type="file" accept=".jpg, .jpeg, .png" id="ToolImgCreate" required />
-							<span class="text-danger"></span>
+							<input asp-for="investTool.file" class="form-control" type="file" accept=".jpg, .jpeg, .png" id="ToolImgCreate" required />
+							<span asp-validation-for="investTool.file" class="text-danger"></span>
 						</div>
 						<div class="form-group">
 							<label class="control-label">Название</label>
-							<input class="form-control" type="text" id="ToolNameCreate" required />
-							<span class="text-danger"></span>
+							<input asp-for="investTool.NameInvestTool" class="form-control" type="text" id="ToolNameCreate" required />
+							<span asp-validation-for="investTool.NameInvestTool" id="nameToolErrorBox" class="text-danger"></span>
 						</div>
 						<div class="form-group">
 							<label class="control-label">Стартовая цена (за единицу)</label>
-							<input class="form-control" type="number" maxlength="10" id="startPriceCreate" required />
-							<span id="startPriceError" class="text-danger"></span>
+							<input asp-for="investTool.Price" class="form-control" type="number" maxlength="10" id="startPriceCreate" required />
+							<span asp-validation-for="investTool.Price" id="startPriceError" class="text-danger"></span>
 						</div>
 
 					</div>
@@ -139,13 +135,13 @@
 						</div>
 						<div class="form-group">
 							<label class="control-label">Название</label>
-							<input class="form-control" type="text" id="ToolNameEdit" />
-							<span class="text-danger"></span>
+							<input asp-for="investTool.NameInvestTool" class="form-control" type="text" id="ToolNameEdit" />
+							<span asp-validation-for="investTool.NameInvestTool" class="text-danger"></span>
 						</div>
 						<div class="form-group">
 							<label class="control-label">Стартовая цена (за единицу)</label>
 							<input class="form-control" type="number" id="ToolPriceEdit" disabled />
-							<span id="startPriceError" class="text-danger"></span>
+							<span class="text-danger"></span>
 						</div>
 
 					</div>
@@ -164,14 +160,27 @@
 		<div class="dataSlice">
 			<label>Инструментов в управлении: @Model.InvestTools.Count()</label>
 		</div>
-		<a onclick="CreateForm_Open()">
+		<a onclick="CreateForm_Open()" class="myButton-support control-width">
 			Добавить
 		</a>
 	</div>
 
 
-	<div class="tb_Box">
+	<div class="myRow tb_header space-between">
 		<h1>Инструменты</h1>
+		<div class="search-container text-center">
+			<form method="get" asp-page="./Search">
+				<div class="input-group">
+					<input type="text" name="query" class="form-control search-input" placeholder="Вводить название брокера" value="@Model.Query" />
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-primary search-button">Поиск</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="tb_Box">
 		<table class="table">
 			<thead>
 				<tr>
@@ -179,18 +188,13 @@
 						Иконка
 					</th>
 					<th>
-						<a>
+						<a asp-route-sortOrder="@Model.sortName">
 							Название
 						</a>
 					</th>
 					<th>
-						<a>
+						<a asp-route-sortOrder="@Model.sortIsClosing">
 							Закрыт
-						</a>
-					</th>
-					<th>
-						<a>
-							Заморожен
 						</a>
 					</th>
 					<th>
@@ -221,26 +225,13 @@
 								}
 
 							}
-							
-						</td>
-						<td>
-							@{
-								if (item.isFrozen)
-								{
-									<text>Да</text>
-								}
-								else
-								{
-									<text>Нет</text>
-								}
-
-							}
 						</td>
 						<td class="tbColCenter">
 							<form method="post">
 								<button onclick="EditFormFastOpen(@item.Id, event)" type="submit" name="action" value="NoN">Редактировать</button>
 								<span>|</span>
 								<button onclick="fastDeleteTool(@item.Id)" type="submit" name="action" value="NoN">Зархивировать</button>
+								<span>|</span>
 							</form>
 							<a onclick="optionFormOpen(@item.Id)">Детали</a>
 						</td>
@@ -309,7 +300,9 @@
 		event.preventDefault();
 		let startPrice = document.getElementById('startPriceCreate');
 
-		console.log(startPrice.value);
+		var nameToolCreateBox = document.getElementById('ToolNameCreate');
+		if(nameToolCreateBox.value == '' || nameToolCreateBox.value.length < 5 ) nameToolCreateBox.style.borderBottom = '2px solid red';
+		else  nameToolCreateBox.style.borderBottom = '0';
 
 		if(startPrice.value < 1){
 			startPrice.style.borderBottom = '2px solid red';

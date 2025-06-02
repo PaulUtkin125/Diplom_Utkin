@@ -14,11 +14,9 @@
 					<div class="form-group">
 						<label asp-for="_user.Loggin" class="control-label">E-mail</label>
 						<input asp-for="_user.Loggin" class="form-control" id="portfile_mail" type="email" required disabled />
-
 					</div>
 					<div>
-						<a onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></a>
-
+						<a onclick="updateLogin()"><img class="svgEdit" src="/Image/icon-edit.svg" /></a>
 					</div>
 				</div>
 				<span asp-validation-for="_user.Loggin" id="profileMailError" class="text-danger"></span>
@@ -30,8 +28,7 @@
 						
 					</div>
 					<div>
-						<a onclick="updatePhone()"><img src="/Image/icon-edit.svg" /></a>
-
+						<a onclick="updatePhone()"><img class="svgEdit" src="/Image/icon-edit.svg" /></a>
 					</div>
 				</div>
 				<span asp-validation-for="_user.Phone" id="profilePhoneError" class="text-danger"></span>

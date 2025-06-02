@@ -1,0 +1,465 @@
+﻿@page
+@model Diplom_Utkin.Pages.AdminePage.ReportsPageModel
+@{
+	ViewData["Title"] = "Кабинет";
+}
+<div class="window-box kabinet-box kabinetHeight">
+	@await Html.PartialAsync("Headers/_AdminHeader")
+
+	<section>
+		<div id="overlay" class="overlay"></div>
+		<div id="sideMenu" class="side-menu">
+			<h1>Профиль</h1>
+			<form method="post">
+				<div class="myRow">
+					<div class="form-group">
+						<label asp-for="_user.Loggin" class="control-label">E-mail</label>
+						<input asp-for="_user.Loggin" class="form-control" id="portfile_mail" type="email" required disabled />
+
+					</div>
+					<div>
+						<a onclick="updateLogin()"><img class="svgEdit" src="/Image/icon-edit.svg" /></a>
+
+					</div>
+				</div>
+				<span asp-validation-for="_user.Loggin" class="text-danger"></span>
+
+				<div class="myRow">
+					<div class="form-group">
+						<label asp-for="_user.Phone" class="control-label">Телефон</label>
+						<input asp-for="_user.Phone" class="form-control" id="portfile_phone" type="tel" required disabled />
+
+					</div>
+					<div>
+						<a onclick="updatePhone()"><img class="svgEdit" src="/Image/icon-edit.svg" /></a>
+					</div>
+				</div>
+				<span asp-validation-for="_user.Phone" id="profilePhoneError" class="text-danger"></span>
+				<button class="myButton" style="display:none" name="action" onclick="Update_Method_Profile()" id="portfile_save_btn" value="NoN">Сохранть</button>
+			</form>
+		</div>
+		<div id="popup" class="popup kabinetSupportBox">
+			<div class="poputContent">
+				<div class="top_">
+					<div>
+						<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
+					</div>
+				</div>
+
+				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
+				<form id="optionForm" method="post">
+					<h1>Детали</h1>
+					<input style="visibility:hidden; height:1px;" name="TargetbrokerId" id="targetId" type="number" />
+
+					<div class="form-group myRow">
+						<label id="BrokerName"></label>
+					</div>
+					<div class="dataSlice">
+						<label id="brokerINN"></label>
+						<label id="brokerKPP"></label>
+						<label id="brokerOTKMO"></label>
+						<label id="brokerPhone"></label>
+						<label id="brokerAddress"></label>
+						<label id="brokerEmail"></label>
+					</div>
+					<div class="myRow">
+						<button id="positive_btn" class="myButton" name="action" type="submit" value="positive_btn">Принять</button>
+						<button id="negative_btn" class="myButton" name="action" type="submit" value="negative_btn">Отклонить</button>
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</section>
+
+	<div class="myRow space-between">
+		<form method="post" onsubmit="return validRepForm()" class="myRow otchot-mod">
+			<div class="dataSlice">
+				<label>Тип отчета:</label>
+				<select id="reportType" name="TypeReport">
+					<option value="0">Выберите тип отчета</option>
+					<option value="1">Отчет по обороту денежных средств (по партнерам)</option>
+					<option value="2">Отчет по заявкам на регистрацию брокеров</option>
+				</select>
+				<span id="typeError" class="text-danger"></span>
+			</div>
+			
+
+			<div class="dataSlice">
+				<label>От</label>
+				<input asp-for="report1Reauest.startDate" type="date" name="dateStart" id="startData" />
+				<span id="startDateError" class="text-danger"></span>
+			</div>
+
+			<div class="dataSlice">
+				<label>До</label>
+				<input type="date" asp-for="report1Reauest.endDate" name="dateEnd" id="dateEnd" />
+				<span id="endDateError" class="text-danger"></span>
+			</div>
+
+
+			<button name="action" type="submit" id="report_btn" value="formatdReport" class="myButton-support control-width">Сформировать</button>
+		</form>
+	</div>
+
+	<div class="myRow tb_header space-between">
+		<h1 id="titleReport">Отчет @Model.reportTite</h1>
+		@*<div class="search-container text-center">
+			<form method="get" asp-page="./Search">
+				<div class="input-group">
+					<input type="text" name="query" class="form-control search-input" placeholder="Вводить название брокера" />
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-primary search-button">Поиск</button>
+					</div>
+				</div>
+			</form>
+		 </div> *@
+	</div>
+	<div class="tb_Box">
+		@if (Model.repport1Model != null)
+		{
+			<div class="myRow report">
+				<div class="tb_Box fonzize-reg">
+					<div>
+						<h1 id="rep1_period">Отчетный период: @Model.startdataSave.Date.ToString().Split()[0] - @Model.enddataSave.Date.ToString().Split()[0]</h1>
+						<table class="table">
+							<thead>
+								<tr>
+									<th>
+										Название
+									</th>
+									<th>
+										Объем покупок клиентов
+									</th>
+									<th>
+										Объем продаж клиентов
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								@{
+									foreach (var item in Model.repport1Model)
+									{
+										<tr>
+											<td>
+												@Html.DisplayFor(modelItem => item.BrokerName)
+											</td>
+											<td>
+												@Html.DisplayFor(modelItem => item.sumPokupokClientov)
+											</td>
+											<td>
+												@Html.DisplayFor(modelItem => item.sumProdazhClientov)
+											</td>
+										</tr>
+									}
+								}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="dataSlice dop-canvas">
+					<canvas id="myPieChart1"></canvas>
+					<canvas id="myPieChart2"></canvas>
+				</div>
+
+
+				<script>
+					var ctx1 = document.getElementById('myPieChart1').getContext('2d');
+
+					var myPieChart1 = new Chart(ctx1, {
+						type: 'pie',
+						data: {
+							labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.name)),
+							datasets: [{
+								data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.price)),
+
+							}]
+						},
+						options: {
+							animation: {
+								duration: 0
+							},
+							responsive: true,
+							plugins: {
+								title: {
+								  display: true,
+								  text: 'Объем покупок клиентов',
+								  font: { size: 20, weight: 'bold' },
+								  padding: { top: 10, bottom: 0 }
+								},
+								legend: {
+									position: 'right',
+									labels: {
+										font:{
+											size:18
+										}
+									}
+								},
+								tooltip: {
+									callbacks: {
+										  label: function(context) {
+											return context.parsed + ' ₽';
+
+										  }
+									}
+								}
+							}
+						}
+					});
+
+					var ctx2 = document.getElementById('myPieChart2').getContext('2d');
+					var myPieChart2 = new Chart(ctx2, {
+						type: 'pie',
+						data: {
+							labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.name)),
+							datasets: [{
+								data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.negativePrice)),
+
+							}]
+						},
+						options: {
+							animation: {
+								duration: 0
+							},
+							responsive: true,
+							plugins: {
+								title: {
+								  display: true,
+								  text: 'Объем продаж клиентов',
+								  font: { size: 20, weight: 'bold'},
+								  padding: { top: 10, bottom: 0 }
+								},
+								legend: {
+									position: 'right',
+									labels: {
+										font:{
+											size:18
+										}
+									}
+								},
+								tooltip: {
+									callbacks: {
+										  label: function(context) {
+											return context.parsed + ' ₽';
+
+										  }
+									}
+								}
+							}
+						}
+					});
+				</script>
+			</div>
+		}
+	    @if(Model.report2Models != null)
+		{
+			<div class="tb_Box fonzize-reg">
+				<div>
+					<h1 id="rep1_period">Отчетный период: @Model.startdataSave.Date.ToString().Split()[0] - @Model.enddataSave.Date.ToString().Split()[0]</h1>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>
+									Название
+								</th>
+								<th>
+									ИНН
+								</th>
+								<th>
+									КПП
+								</th>
+								<th>
+									E-mail
+								</th>
+								<th>
+									Статус
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							@{
+								foreach (var item in Model.report2Models)
+								{
+									<tr>
+										<td>
+											@Html.DisplayFor(modelItem => item.NameBroker)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.INN)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.KPP)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.Email)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.TypeOfRequest)
+										</td>
+									</tr>
+								}
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		}
+
+	</div>
+	
+
+	
+
+</div>
+
+<script>
+
+	function validRepForm()
+	{
+		let type = document.getElementById('reportType');
+		let startData = document.getElementById('startData');
+		let dateEnd = document.getElementById('dateEnd');
+
+		let typeError = document.getElementById('typeError');
+		let startDateError = document.getElementById('startDateError');
+		let endDateError = document.getElementById('endDateError');
+
+		let report_btn = document.getElementById('report_btn');
+
+		if(type.value == 0 ){
+			typeError.textContent = 'Виберите тип отчета!'
+			type.style.borderBottom = '2px solid red';
+
+			report_btn.style.alignSelf = 'center';
+			return false;
+		}
+		else {
+			typeError.textContent = ''
+			type.style.borderBottom = '0';
+
+			report_btn.style.alignSelf = 'end';
+		}
+
+
+		if (startData.value == '01.01.0001'||startData.value == ''){
+			startDateError.textContent = 'укажите дату!'
+			startData.style.borderBottom = '2px solid red';
+
+			report_btn.style.alignSelf = 'center';
+			return false;
+		}
+		else {
+			startDateError.textContent = ''
+			startData.style.borderBottom = '0';
+
+			report_btn.style.alignSelf = 'end';
+		}
+
+		if (dateEnd.value == '01.01.0001'||dateEnd.value == ''){
+			endDateError.textContent = 'укажите дату!'
+			dateEnd.style.borderBottom = '2px solid red';
+
+			report_btn.style.alignSelf = 'center';
+			return false;
+		}
+		else {
+			endDateError.textContent = ''
+			dateEnd.style.borderBottom = '0';
+
+			report_btn.style.alignSelf = 'end';
+		}
+
+		const selectedDate = new Date(dateEnd.value);
+		const currentDate = new Date();
+
+		currentDate.setHours(0, 0, 0, 0);
+
+
+		if(selectedDate > currentDate){
+			endDateError.textContent = 'Указана некоректнаяя дата!'
+
+			report_btn.style.alignSelf = 'center';
+			return false;
+		}
+		else {
+			endDateError.textContent = ''
+
+			report_btn.style.alignSelf = 'end';
+		}
+
+		if(startData.value > dateEnd.value ){
+			endDateError.textContent = 'Указан не корректный интервал!';
+			startDateError.textContent = 'Указан не корректный интервал!';
+
+			report_btn.style.alignSelf = 'center';
+			return false;
+		}
+		else {
+			endDateError.textContent = ''
+			startDateError.textContent = '';
+		}
+
+
+		return true;
+	}
+
+
+
+
+
+
+
+
+
+	let inputPhone = document.getElementById("portfile_phone");
+	inputPhone.addEventListener("keyup", (e) => { formatinputPhone(e.target); });
+	inputPhone.addEventListener("keypress", (e) => { formatinputPhone(e.target); });
+
+
+	function formatinputPhone(inputPhone) {
+		var input_val = inputPhone.value;
+		if (input_val === "") { return; }
+		var original_len = input_val.length;
+		var caret_pos = inputPhone.selectionStart;
+		input_val = input_val.replace(/\D/g, "");
+		if (input_val.length > 0 && input_val[0] !== "7") {
+			input_val = "7" + input_val;
+		}
+		if (input_val.length > 11) {
+			input_val = input_val.substring(0, 11);
+		}
+		var formatted = "+";
+
+		if (input_val.length > 0) {
+			formatted += input_val[0];
+		}
+		if (input_val.length > 1) {
+			formatted += " (" + input_val.substring(1, 4);
+		}
+		if (input_val.length >= 4) {
+			formatted += ")";
+		}
+		if (input_val.length >= 4) {
+			formatted += " " + input_val.substring(4, 7);
+		}
+		if (input_val.length >= 7) {
+			formatted += "-" + input_val.substring(7, 9);
+		}
+		if (input_val.length >= 9) {
+			formatted += "-" + input_val.substring(9, 11);
+		}
+
+		inputPhone.value = formatted;
+		var updated_len = formatted.length;
+		caret_pos = updated_len - original_len + caret_pos;
+		if (caret_pos < 0) caret_pos = 0;
+		inputPhone.setSelectionRange(caret_pos, caret_pos);
+
+
+		if (input_val.length < 11) {
+			inputPhone.style.borderBottom = '2px solid red';
+		} else {
+			inputPhone.style.borderBottom = '2px Solid black';
+		}
+	};
+</script>

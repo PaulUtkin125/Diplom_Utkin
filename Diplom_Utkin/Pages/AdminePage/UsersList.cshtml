@@ -4,23 +4,21 @@
 	ViewData["Title"] = "Кабинет";
 }
 
-<div class="window-box kabinet-box">
+<div class="window-box kabinet-box kabinetHeight">
 	@await Html.PartialAsync("Headers/_AdminHeader")
 
 	<section>
 		<div id="overlay" class="overlay"></div>
 		<div id="sideMenu" class="side-menu">
 			<button class="myButton" onclick="profilClose()">Закрыть</button>
-			<form method="post">
+			<form method="post" onsubmit="return Update_Method_Profile()">
 				<div class="myRow">
 					<div class="form-group">
 						<label asp-for="_user.Loggin" class="control-label">E-mail</label>
 						<input asp-for="_user.Loggin" class="form-control" id="portfile_mail" type="email" required disabled />
-
 					</div>
 					<div>
-						<a onclick="updateLogin()"><img src="/Image/icon-edit.svg" /></a>
-
+						<a onclick="updateLogin()"><img class="svgEdit" src="/Image/icon-edit.svg" /></a>
 					</div>
 				</div>
 				<span asp-validation-for="_user.Loggin" class="text-danger"></span>
@@ -32,12 +30,12 @@
 
 					</div>
 					<div>
-						<a onclick="updatePhone()"><img src="/Image/icon-edit.svg" /></a>
+						<a onclick="updatePhone()"><img class="svgEdit" src="/Image/icon-edit.svg" /></a>
 
 					</div>
 				</div>
-				<span asp-validation-for="_user.Phone" class="text-danger"></span>
-				<button class="myButton" style="display:none" name="action" onclick="Update_Method_Profile()" id="portfile_save_btn" value="NoN">Сохранть</button>
+				<span asp-validation-for="_user.Phone" id="profilePhoneError" class="text-danger"></span>
+				<button class="myButton" style="display:none" name="action" type="submit" id="portfile_save_btn" value="NoN">Сохранть</button>
 			</form>
 		</div>
 		<div id="popup" class="popup kabinetSupportBox">
@@ -56,10 +54,9 @@
 					<div class="dataSlice">
 						<label id="uLogin"></label>
 						<label id="uPhone"></label>
-						<label id="uType"></label>
 					</div>
 					<div class="myRow">
-						<a onclick="editFormOpen()">Редактировать</a>
+						<a class="myButton control-width" onclick="editFormOpen()">Редактировать</a>
 						<button class="myButton" name="action" type="submit" value="delete_btn">Удалить</button>
 					</div>
 				</form>
@@ -79,14 +76,7 @@
 						</div>
 						<div class="form-group">
 							<label class="control-label">Телефон</label>
-							<input class="form-control" type="tel" pattern="[0-9]{10}" maxlength="10" id="uPhoneEdit" />
-							<span class="text-danger"></span>
-						</div>
-						<div class="form-group">
-							<label class="control-label">Тип:</label>
-							<select class="form-control" id="uTypeEdit" required disabled>
-								<option value="">Выберите тип</option>
-							</select>
+							<input class="form-control" placeholder="+7 (125) 125-12-45" type="tel"  maxlength="18" id="uPhoneEdit" />
 							<span class="text-danger"></span>
 						</div>
 					</div>
@@ -107,23 +97,30 @@
 		<label>Клиентов: @Model.Users.Count()</label>
 	</div>
 
+	<div class="myRow tb_header space-between">
+		<h1>Клиенты</h1>
+		<div class="search-container text-center">
+			<form method="get" asp-page="./Search">
+				<div class="input-group">
+					<input type="text" name="query" class="form-control search-input" placeholder="Вводить название брокера" value="@Model.Query" />
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-primary search-button">Поиск</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 	<div class="tb_Box">
-		<h1>Новые заявки</h1>
 		<table class="table">
 			<thead>
 				<tr>
 					<th>
-						<a>
+						<a asp-route-sortOrder="@Model.sortMail">
 							Логин
 						</a>
 					</th>
 					<th>
-						<a>
-							Тип
-						</a>
-					</th>
-					<th>
-						<a>
+						<a asp-route-sortOrder="@Model.sortPhone">
 							Телефон
 						</a>
 					</th>
@@ -141,9 +138,6 @@
 							@Html.DisplayFor(modelItem => item.Loggin)
 						</td>
 						<td>
-							@Html.DisplayFor(modelItem => item.TypeOfUser.Name)
-						</td>
-						<td>
 							@Html.DisplayFor(modelItem => item.Phone)
 						</td>
 						<td class="tbColCenter">
@@ -151,7 +145,7 @@
 								<input type="number" id="userId" name="userId" value="@item.Id" style="display:none" />
 								<a onclick="fastEditFormOpen(@item.Id)">Редактировать</a>
 								<span>|</span>
-								<button class="myButton" name="action" type="submit" value="delete_btn">Удалить</button>
+								<button name="action" type="submit" value="delete_btn">Удалить</button>
 							</form>
 							<span>|</span>
 							<a onclick="userFormOpen(@item.Id)">Детали</a>
@@ -165,6 +159,10 @@
 	</div>
 </div>
 <script>
+	let inputPhoneEdit = document.getElementById("uPhoneEdit");
+	inputPhoneEdit.addEventListener("keyup", (e) => { formatinputPhone(e.target); });
+	inputPhoneEdit.addEventListener("keypress", (e) => { formatinputPhone(e.target); });
+
 	let inputPhone = document.getElementById("portfile_phone");
 	inputPhone.addEventListener("keyup", (e) => { formatinputPhone(e.target); });
 	inputPhone.addEventListener("keypress", (e) => { formatinputPhone(e.target); });

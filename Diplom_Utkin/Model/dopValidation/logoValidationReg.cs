@@ -5,8 +5,8 @@ namespace Diplom_Utkin.Model.dopValidation
     public class logoValidationReg
     {
         [Required(ErrorMessage = "Адрес электронной почты обязателен.")]
-        [EmailAddress(ErrorMessage = "Некорректный адрес электронной почты.")]
         [MinLength(8, ErrorMessage = "Минимальная длина 8 симвалов")]
+        [EmailAddress(ErrorMessage = "Некорректный адрес электронной почты.")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Поле должно быть заполнено")]
