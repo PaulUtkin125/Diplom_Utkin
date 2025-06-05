@@ -1,10 +1,9 @@
 ﻿@page
-@model Diplom_Utkin.Pages.userPage.IndexModel
+@model Diplom_Utkin.Pages.userPage.ReportUserModel
 @{
-	ViewData["Title"] = "Кабинет";
+	ViewData["Title"] = "Отчеты";
 }
-
-<div class="window-box kabinet-box kabinetHeight">
+<div class="window-box kabinet-box  kabinetHeight">
 	@await Html.PartialAsync("Headers/_UserHeader")
 	<section>
 		<div id="overlay" class="overlay"></div>
@@ -15,13 +14,12 @@
 					<div class="form-group">
 						<label asp-for="_user.Loggin" class="control-label">E-mail</label>
 						<input asp-for="_user.Loggin" class="form-control" id="portfile_mail" type="email" required disabled />
-
 					</div>
 					<div>
 						<a onclick="updateLogin()"><img class="svgEdit" src="/Image/icon-edit.svg" /></a>
 					</div>
 				</div>
-				<span asp-validation-for="_user.Loggin" class="text-danger"></span>
+				<span asp-validation-for="_user.Loggin" id="profileMailError" class="text-danger"></span>
 
 				<div class="myRow">
 					<div class="form-group">
@@ -45,7 +43,7 @@
 						<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
 					</div>
 				</div>
-				<form id="myForm" onsubmit="return moneuBtn() && isValidMony()" method="post">
+				<form id="myForm" method="post" onsubmit="return moneuBtn() && isValidMony()">
 					<h1 id="popTitle">Пополнение счета</h1>
 					<div class="card">
 						<div class="card-front">
@@ -58,7 +56,7 @@
 							</div>
 							<div class="card-details">
 								<div class="card-name">
-									<img src="/Image/payment_systemMIR.png"/>
+									<img src="/Image/payment_systemMIR.png" />
 								</div>
 								<div class="expiration-date">
 									<label>Срок</label>
@@ -88,179 +86,352 @@
 						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType" />
 					</div>
 				</form>
-
-				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
-
-
-				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
-				<form id="buyForm" onsubmit="return BuyFormValidation()" method="post">
-					<div class="toolCard">
-						<h1 id="popTitleBuy"></h1>
-						<input style="visibility:hidden" id="targetId" disabled />
-						<div class="vitrinaImg">
+				<form id="buyForm" method="post" onsubmit="return BuyFormValidation()">
+					<h1 id="popTitleBuy"></h1>
+					<input style="visibility:hidden" id="targetId" disabled />
+					<div class="form-group myRow">
+						<div class="hd-imgBlock">
 							<img id="targetToolImg" />
 						</div>
 						<label id="toolName"></label>
-						<div class="form-group dataSlice">
-							<label id="peiceTool" class="control-label" hidden></label>
-							<label id="dostupSredstv"></label>
-							<div class="form-group">
-								<label asp-for="targetSumm" id="edIzm" class="control-label"></label>
-								<input asp-for="targetSumm" id="summOperation" class="form-control" type="number" required />
-								<span asp-validation-for="targetSumm" id="summOperationError" class="text-danger"></span>
-							</div>
-							<label style="visibility:hidden" id="dostupSredstv"></label>
-						</div>
-
-						<button id="buyBtn" class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
-						<button id="sellBtn" style="display:none" class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
 					</div>
+
+					<div class="form-group myRow">
+						<input id="peiceTool" disabled />
+					</div>
+
+					<div class="myRow">
+						<div class="form-group">
+							<label asp-for="targetSumm" id="edIzm" class="control-label"></label>
+							<input asp-for="targetSumm" id="summOperation" class="form-control" type="number" required />
+							<span asp-validation-for="targetSumm" id="summOperationError" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label id="dostupSredstv"></label>
+						</div>
+					</div>
+					<button id="buyBtn" class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
+					<button id="sellBtn" style="display:none" class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
 				</form>
 			</div>
 		</div>
-
 	</section>
-	<div id="portfel-block">
-		<div class="informations d-inline-flex">
+	
+
+	<div class="myRow space-between">
+		<form method="post" onsubmit="return validRepForm()" class="myRow otchot-mod">
+			<div class="dataSlice">
+				<label>Тип отчета:</label>
+				<select id="reportType" name="TypeReport">
+					<option value="0">Выберите тип отчета</option>
+					<option value="1">Отчет о сделках</option>  @* по диапазону дат *@
+					<option value="2">Отчет о структуре портфеля</option> @* на текущую дату *@
+				</select>
+				<span id="typeError" class="text-danger"></span>
+			</div>
+
+
+			<div class="dataSlice">
+				<label>От</label>
+				<input asp-for="request.startDate" type="date" name="dateStart" id="startData" />
+				<span asp-validation-for="request.startDate" id="startDateError" class="text-danger"></span>
+			</div>
+
+			<div class="dataSlice">
+				<label>До</label>
+				<input asp-for="request.endDate"  type="date" name="dateEnd" id="dateEnd" />
+				<span asp-validation-for="request.endDate" id="endDateError" class="text-danger"></span>
+			</div>
+
+
+			<button name="action" type="submit" id="report_btn" value="formatdReport" class="myButton-support control-width">Сформировать</button>
+		</form>
+	</div>
+
+	<div class="myRow tb_header space-between">
+		<h1 id="titleReport">Отчет @Model.reportTite</h1>
+	</div>
+	<div class="tb_Box">
+		@if (Model.InvestToolList != null)
+		{
 			<div>
-				<h1>Структура портфеля</h1>
-				<canvas id="myPieChart" width="700" height="500"></canvas>
+				<div class="tb_Box fonzize-reg tb_boxDop">
+					<div>
+						<table class="table">
+							<thead>
+								<tr>
+									<th>
+										Дата
+									</th>
+									<th>
+										Инструмент
+									</th>
+									<th>
+										Тип операции
+									</th>
+									<th>
+										Количество
+									</th>
+									<th>
+										Стоимость
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								@{
+									foreach (var item in Model.InvestToolList)
+									{
+										<tr>
+											<td>
+												@Html.DisplayFor(modelItem => item.Date)
+											</td>
+											<td>
+												@Html.DisplayFor(modelItem => item.InvestTools.NameInvestTool)
+											</td>
+											<td>
+												@if (item.Money > 0)
+												{
+													<text>Покупка</text>
+												}
+												else {
+													<text>Продажа</text>
+												}
+												
+											</td>
+											<td>
+												@Html.DisplayFor(modelItem => item.Quentity)
+											</td>
+											<td>
+												@Html.DisplayFor(modelItem => item.Money)
+											</td>
+										</tr>
+									}
+								}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		}
+		@if (Model.porfolioList != null)
+		{
+			<div class="myRow">
+				<div class="tb_Box fonzize-reg">
+					<div>
+						<table class="table">
+							<thead>
+								<tr>
+									<th>
+										Название
+									</th>
+									<th>
+										Количество
+									</th>
+									<th>
+										Стоимость
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								@{
+									foreach (var item in Model.porfolioList)
+									{
+										<tr>
+											<td>
+												@Html.DisplayFor(modelItem => item.InvestTool.NameInvestTool)
+											</td>
+											<td>
+												@Html.DisplayFor(modelItem => item.Quentity)
+											</td>
+											<td>
+												@Html.DisplayFor(modelItem => item.AllManey)
+											</td>
+										</tr>
+									}
+								}
+							</tbody>
+						</table>
+					</div>
+				</div>
 
-				<script>
-					var ctx = document.getElementById('myPieChart').getContext('2d');
+				<div class="dataSlice dop-canvas dop-canvas-user">
+					<canvas id="myPieChart1"></canvas>
+				</div>
+			</div>
+			
 
-					var myPieChart = new Chart(ctx, {
-						type: 'pie',
-						data: {
-							labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.chartName)),
-							datasets: [{
-								data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.chartData)),
 
-							}]
+			<script>
+				var ctx1 = document.getElementById('myPieChart1').getContext('2d');
+
+				var myPieChart1 = new Chart(ctx1, {
+					type: 'pie',
+					data: {
+						labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.name)),
+						datasets: [{
+							data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.price)),
+
+						}]
+					},
+					options: {
+						animation: {
+							duration: 0
 						},
-						options: {
-							animation: {
-								duration: 0
+						responsive: true,
+						plugins: {
+							title: {
+							  display: true,
+							  text: 'Объем покупок клиентов',
+							  font: { size: 20, weight: 'bold' },
+							  padding: { top: 10, bottom: 0 }
 							},
-							responsive: true,
-							plugins: {
-								legend: {
-									position: 'right',
-									labels: {
-										font:{
-											size:18
-										}
+							legend: {
+								position: 'bottom',
+								labels: {
+									font:{
+										size:18
 									}
-								},
-								tooltip: {
-									callbacks: {
-										  label: function(context) {
-											return context.parsed + ' ₽';
+								}
+							},
+							tooltip: {
+								callbacks: {
+									  label: function(context) {
+										return context.parsed + ' ₽';
 
-										  }
-									}
+									  }
 								}
 							}
 						}
-					});
-				</script>
-			</div>
-
-			<div class="d-inline-flex salery-box">
-				<div class="raschotBox">
-					<form action="#" method="get">
-						<div class="d-inline-flex">
-							<h1>Рассчитать доходность</h1>
-							<div class="form-group">
-								<label asp-for="startDate" class="control-label">От</label>
-								<input asp-for="startDate" id="startDate" class="form-control" type="date" value="@Model.startDate" required />
-								<span asp-validation-for="startDate" id="StartDateError" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="endDate" class="control-label">До</label>
-								<input asp-for="endDate" id="endDate" class="form-control" type="date" value="@Model.endDate" required />
-								<span asp-validation-for="endDate" id="endDateError" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<button class="myButton" name="action" type="submit" value="raschot_Btn">Рассчитать</button>
-							</div>
-						</div>
-					</form>
-					<div>
-						<h1>Прибыль:</h1>
-						<div class="priblValue">
-							<label asp-for="Pribl" class="control-label">@Model.Pribl ₽</label>
-							<span asp-validation-for="Pribl" class="text-danger"></span>
-						</div>
-					</div>
-
-				</div>
-			</div>
-		</div>
-
-		
-		<div class="myRow tb_header space-between">
-			<h1>Инструменты</h1>
-		</div>
-		<div class="tb_Box cab_model">
-			<table class="table">
-				<thead>
-					<tr>
-						<th>
-							Иконка
-						</th>
-						<th>
-							<a asp-route-sortOrder="@Model.sortName">
-								Название
-							</a>
-						</th>
-						<th>
-							<a asp-route-sortOrder="@Model.sortSum">
-								Стоимость
-							</a>
-						</th>
-						<th>
-							Действие
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var item in Model.InvestToolsList)
-					{
-						<tr>
-							<td>
-								<div class="hd-imgBlock settings">
-									<img src="data:image/png;base64, @item.InvestTool.ImageSource" />
-								</div>
-							</td>
-							<td>
-								@Html.DisplayFor(modelItem => item.InvestTool.NameInvestTool)
-							</td>
-							<td>
-								@Html.DisplayFor(modelItem => item.AllManey) ₽
-							</td>
-							<td class="tbColCenter">
-								@if (!item.InvestTool.isFrozen)
-								{
-									<a onclick="buyOpen(@item.InvestTool.Id)">Докупить</a>
-									<span> | </span>
-									<a onclick="sellOpen(@item.InvestTool.Id, @item.Quentity)"> Продать </a>
-								}
-
-							</td>
-
-
-						</tr>
 					}
-				</tbody>
-			</table>
-		</div>
+				});
+			</script>
+		} 
+
 	</div>
-	
+
 </div>
 
 <script>
-	
+	async function OpenbalanceHistori() {
+		var id_ = @Model.uId;
+		var data = await loadBalanceHistory(id_);
+
+		createBalanceBlock(data);
+
+		profilOpen();
+
+		document.getElementById('balanceHistoriBlock').style.display = 'block';
+		document.getElementById('profile').style.display = 'none';
+	}
+
+	document.getElementById('reportType').addEventListener('change', function() {
+		var selectedValue = document.getElementById('reportType').value;
+		let startData1 = document.getElementById('startData');
+		let dateEnd1 = document.getElementById('dateEnd');
+
+		console.log('selectedValue: ', selectedValue);
+
+		if(selectedValue == '1'){
+			startData1.disabled = false;
+			dateEnd1.disabled = false;
+
+		}
+		else{
+			startData1.disabled = true;
+			dateEnd1.disabled = true;
+		}
+	});
+
+	function validRepForm()
+	{
+		let type = document.getElementById('reportType');
+		let startData = document.getElementById('startData');
+		let dateEnd = document.getElementById('dateEnd');
+
+		let typeError = document.getElementById('typeError');
+		let startDateError = document.getElementById('startDateError');
+		let endDateError = document.getElementById('endDateError');
+
+		let report_btn = document.getElementById('report_btn');
+
+		if(type.value == 0 ){
+			typeError.textContent = 'Виберите тип отчета!'
+			type.style.borderBottom = '2px solid red';
+
+			report_btn.style.alignSelf = 'center';
+			return false;
+		}
+		else {
+			typeError.textContent = ''
+			type.style.borderBottom = '0';
+
+			report_btn.style.alignSelf = 'end';
+		}
+
+		if(type.value == 2) return true;
+		
+		if (startData.value == '01.01.0001'||startData.value == ''){
+			startDateError.textContent = 'укажите дату!'
+			startData.style.borderBottom = '2px solid red';
+
+			report_btn.style.alignSelf = 'center';
+			return false;
+		}
+		else {
+			startDateError.textContent = ''
+			startData.style.borderBottom = '0';
+
+			report_btn.style.alignSelf = 'end';
+		}
+
+		if (dateEnd.value == '01.01.0001'||dateEnd.value == ''){
+			endDateError.textContent = 'укажите дату!'
+			dateEnd.style.borderBottom = '2px solid red';
+
+			report_btn.style.alignSelf = 'center';
+			return false;
+		}
+		else {
+			endDateError.textContent = ''
+			dateEnd.style.borderBottom = '0';
+
+			report_btn.style.alignSelf = 'end';
+		}
+
+		const selectedDate = new Date(dateEnd.value);
+		const currentDate = new Date();
+
+		currentDate.setHours(0, 0, 0, 0);
+
+
+		if(selectedDate > currentDate){
+			endDateError.textContent = 'Указана некоректнаяя дата!'
+
+			report_btn.style.alignSelf = 'center';
+			return false;
+		}
+		else {
+			endDateError.textContent = ''
+
+			report_btn.style.alignSelf = 'end';
+		}
+
+		if(startData.value > dateEnd.value ){
+			endDateError.textContent = 'Указан не корректный интервал!';
+			startDateError.textContent = 'Указан не корректный интервал!';
+
+			report_btn.style.alignSelf = 'center';
+			return false;
+		}
+		else {
+			endDateError.textContent = ''
+			startDateError.textContent = '';
+		}
+
+
+		return true;
+	}
+
 
 	let inputPhone = document.getElementById("portfile_phone");
 	inputPhone.addEventListener("keyup", (e) => { formatinputPhone(e.target); });
@@ -381,15 +552,8 @@
 		caret_pos = updated_len - original_len + caret_pos;
 		inputDate.setSelectionRange(caret_pos, caret_pos);
 
-		if(updated_len < 3) 
-		{ 
-			inputCode.style.border = '2px solid red';
-			return false;
-		}
+		if(updated_len < 3) inputCode.style.border = '2px solid red';
 		else inputCode.style.border = '0px';
-
-		return true;
-
 	}
 
 	function isValidMony()
@@ -446,18 +610,8 @@
 		return true;
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////////
 
-	async function OpenbalanceHistori() {
-		var id_ = @Model.uId;
-		var data = await loadBalanceHistory(id_);
-
-		createBalanceBlock(data);
-
-		profilOpen();
-
-		document.getElementById('balanceHistoriBlock').style.display = 'block';
-		document.getElementById('profile').style.display = 'none';
-	}
 
 	async function loadBalanceHistory(id_)
 	{
@@ -475,7 +629,7 @@
 		}
 		const data = response.json();
 		return data;
-		
+
 	}
 
 	function createBalanceBlock(list){
@@ -516,13 +670,13 @@
 				 oldDate = date
 			 }
 
-			 
+
 			 var operationType = '';
 			 if(Number(Recorder.money) < 0 && Recorder.investToolsId != '0' ) operationType = 'Продажа';
 			 else if(Number(Recorder.money) > 0 && Recorder.investToolsId != '0' ) operationType = 'Покупка';
 			 else if(Number(Recorder.money) < 0 && Recorder.investToolsId == '0') operationType = 'Вывод средст';
 			 else if(Number(Recorder.money) > 0 && Recorder.investToolsId == '0') operationType = 'Пополнение счета';
-			 
+
 			 var sum = '';
 			 var quentity1 = '';
 			 if(Recorder.investToolsId != '0') {
@@ -547,7 +701,6 @@
 			 userList.appendChild(bDiv);
 		 });
 	}
-
 </script>
 
 @section Scripts {

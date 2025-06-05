@@ -147,7 +147,30 @@ namespace Diplom_Utkin.Model.Data
             if (resalt == 0.0) return null;
             else return resalt;
         }
-
+        public async Task<List<DvizhenieSredstv>> Report1u(DateTime start, DateTime end, int mode)
+        {
+            Report1Reauest report1Reauest = new Report1Reauest()
+            {
+                startDate = start,
+                endDate = end,
+                mode = mode
+            };
+            var BrokerList = await _httpClient.PostAsJsonAsync("User/Report1", report1Reauest);
+            var resalt = await BrokerList.Content.ReadFromJsonAsync<List<DvizhenieSredstv>>();
+            return resalt;
+        }
+        public async Task<List<Portfolio>> Report2u(int mode)
+        {
+            Report1Reauest report1Reauest = new Report1Reauest()
+            {
+                startDate = DateTime.Now,
+                endDate = DateTime.Now,
+                mode = mode
+            };
+            var BrokerList = await _httpClient.PostAsJsonAsync("User/Report2", report1Reauest);
+            var resalt = await BrokerList.Content.ReadFromJsonAsync<List<Portfolio>>();
+            return resalt;
+        }
 
 
 

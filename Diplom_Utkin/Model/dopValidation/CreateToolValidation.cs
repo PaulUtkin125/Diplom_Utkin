@@ -15,5 +15,6 @@ namespace Diplom_Utkin.Model.dopValidation
         
         [Required(ErrorMessage = "Поле должно быть заполнено!")]
         public string Price { get; set; }
+        public string TypeTool { get; set; }
     }
 }

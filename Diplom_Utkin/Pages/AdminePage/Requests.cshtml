@@ -12,7 +12,7 @@
 		<div id="overlay" class="overlay"></div>
 		<div id="sideMenu" class="side-menu">
 			<h1>Профиль</h1>
-			<form method="post">
+			<form method="post" onsubmit="return Update_Method_Profile(event)">
 				<div class="myRow">
 					<div class="form-group">
 						<label asp-for="_user.Loggin" class="control-label">E-mail</label>
@@ -37,7 +37,7 @@
 					</div>
 				</div>
 				<span asp-validation-for="_user.Phone" id="profilePhoneError" class="text-danger"></span>
-				<button class="myButton" style="display:none" name="action" onclick="Update_Method_Profile()" id="portfile_save_btn" value="NoN">Сохранть</button>
+				<button class="myButton" style="display:none" name="action" id="portfile_save_btn" value="NoN">Сохранть</button>
 			</form>
 		</div>
 		<div id="popup" class="popup kabinetSupportBox">

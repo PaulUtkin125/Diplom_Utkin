@@ -10,7 +10,7 @@
 		<div id="overlay" class="overlay"></div>
 		<div id="sideMenu" class="side-menu">
 			<h1>Профиль</h1>
-			<form method="post">
+			<form onsubmit="return Update_Method_Profile(event)" method="post">
 				<div class="myRow">
 					<div class="form-group">
 						<label asp-for="_user.Loggin" class="control-label">E-mail</label>
@@ -35,7 +35,7 @@
 					</div>
 				</div>
 				<span asp-validation-for="_user.Phone" id="profilePhoneError" class="text-danger"></span>
-				<button class="myButton" style="display:none" name="action" onclick="Update_Method_Profile()" id="portfile_save_btn" value="NoN">Сохранть</button>
+				<button class="myButton" style="display:none" name="action" id="portfile_save_btn" value="NoN">Сохранть</button>
 			</form>
 		</div>
 		<div id="popup" class="popup kabinetSupportBox">
@@ -104,16 +104,6 @@
 
 	<div class="myRow tb_header space-between">
 		<h1 id="titleReport">Отчет @Model.reportTite</h1>
-		@*<div class="search-container text-center">
-			<form method="get" asp-page="./Search">
-				<div class="input-group">
-					<input type="text" name="query" class="form-control search-input" placeholder="Вводить название брокера" />
-					<div class="input-group-append">
-						<button type="submit" class="btn btn-primary search-button">Поиск</button>
-					</div>
-				</div>
-			</form>
-		 </div> *@
 	</div>
 	<div class="tb_Box">
 		@if (Model.repport1Model != null)

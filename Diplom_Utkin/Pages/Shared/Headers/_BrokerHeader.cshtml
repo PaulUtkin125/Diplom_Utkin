@@ -54,13 +54,30 @@
 		document.getElementById('portfile_save_btn').style.display = 'block';
 	};
 
-	async function Update_Method_Profile(){
+	async function Update_Method_Profile(event){
+		event.preventDefault();
+		var isValid = true;
 		const id_ = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model._user.Id));
 		const mail_ = document.getElementById('portfile_mail').value;
 		const phone_ = document.getElementById('portfile_phone').value;
 		const name_ = document.getElementById('portfile_Name').value;
 
-		await updateUser(id_, mail_, phone_, name_);
+		if(phone_.length < 18 ){
+			document.getElementById('profilePhoneError').textContent = 'Номер телефона указан не полностью!';
+			document.getElementById('portfile_phone').style.borderBottom = '2px solid red';
+
+			isValid = false;
+		}
+		else {
+			 document.getElementById('profilePhoneError').textContent = '';
+			 document.getElementById('portfile_phone').style.borderBottom = '2px solid black';
+		}
+
+		 if(isValid){
+			var data = await updateUser(id_, mail_, phone_, name_);
+			if(data == 1) event.target.submit();
+		 }
+		
 	};
 
 	async function updateUser(id_, mail_, phone_, name_) {
@@ -76,7 +93,7 @@
 			throw new Error('Network response was not ok');
 		}
 		const data = response.json();
-		console.log('User updated successfully:', data);
+		return data;
 	};
 
 	function CreateForm_Open()

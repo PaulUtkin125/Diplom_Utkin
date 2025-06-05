@@ -14,6 +14,7 @@ namespace Finansu.Model
         public bool isFrozen { get; set; } = false;
         public double Price { get; set; }
         public string ImageSource { get; set; }
+        public string TypeTool { get; set; }
 
     }
 }

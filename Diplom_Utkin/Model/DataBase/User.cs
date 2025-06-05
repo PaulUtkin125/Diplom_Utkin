@@ -9,6 +9,7 @@ namespace Finansu.Model
         [Required(ErrorMessage = "Адрес электронной почты обязателен.")]
         [EmailAddress(ErrorMessage = "Некорректный адрес электронной почты.")]
         public string Loggin { get; set; }
+        [Required(ErrorMessage = "Поле должно быть заполнено!")]
         public string? Phone { get; set; }
         public string PaswordHash { get; set; }
         public TypeOfUser TypeOfUser { get; set; }

@@ -17,10 +17,13 @@
                         <a class="nav-link" asp-page="/userPage/Index">Портфель</a>
                     </li>
                     <li class="nav-item myItem">
-                        <a class="nav-link" asp-page="/userPage/Vitrina">Витрина</a>
+						<a class="nav-link" asp-page="/userPage/Vitrina">Витрина</a>
                     </li>
 					<li class="nav-item myItem">
-						<a class="nav-link">Новости</a>
+						<a class="nav-link" asp-page="/userPage/NewsPage">Новости</a>
+					</li>
+					<li class="nav-item myItem">
+						<a class="nav-link" asp-page="/userPage/ReportUser">Отчеты</a>
 					</li>
                 </ul>
                 <ul class="navbar-nav">
@@ -33,7 +36,7 @@
                         </ul>
                     </li>
 					<li class="nav-item myItem">
-						<a class="nav-link" onclick="profilOpenClient() ">
+						<a class="nav-link" onclick="profilOpenClient()">
                             <div class="hd-imgBlock settings">
                                 <img src="/Image/Profil.png" alt="Alternate Text" />
                             </div>
@@ -48,10 +51,28 @@
         </div>
     </nav>
 </header>
+<div id="notification-container"></div>
 
 
 <script>
-	
+	  function showNotification(message) {
+	  const container = document.getElementById('notification-container');
+
+	  const notif = document.createElement('div');
+	  notif.classList.add('notification');
+	  notif.textContent = message;
+
+	  notif.addEventListener('click', () => hideNotification(notif));
+
+	  container.appendChild(notif);
+
+	  setTimeout(() => hideNotification(notif), 4000);
+	}
+
+	function hideNotification(element) {
+	  element.style.animation = 'slideOut 0.5s forwards';
+	  element.addEventListener('animationend', () => element.remove());
+	}
 
 	function openVuvod(){
 		document.getElementById("buyForm").style.display = 'none';
@@ -76,7 +97,7 @@
 
 	function moneuBtn() {
 
-		var mySym = Number(document.getElementById('koshelBox_btn').textContent.replace(" ₽", ""));
+		var mySym = Number(document.getElementById('koshelBox_btn').textContent); //////////////
 		var sum = Number(document.getElementById('summText').value);
 		var vector = Number(document.getElementById('popOperationType').textContent);
 
@@ -129,7 +150,7 @@
 			behavior:'smooth'
 		});
 
-		var userMoney = Number(document.getElementById('koshelBox_btn').textContent.replace( ',', '.'));
+		var userMoney = Number(document.getElementById('koshelBox_btn').textContent.replace( ',', '.').replace(' руб.', ''));
 
 		console.log(userMoney);
 
@@ -142,13 +163,13 @@
 		const data = await BuyData(id);
 		document.getElementById('toolName').textContent = data.nameInvestTool;
 		document.getElementById('targetToolImg').setAttribute('src', 'data:image/png;base64,' + data.imageSource);
-		document.getElementById('peiceTool').value = data.price;
+		document.getElementById('peiceTool').textContent = data.price;
 
 		document.getElementById('dostupSredstv').textContent = 'Доступно ' + String(userMoney) + ' ₽';
 		buyOpenMain(id);
 	}
 
-	async function sellOpen(id, quentity){
+	async function sellOpen(id, quentity, price){
 		window.scrollTo({
 			top:0,
 			behavior:'smooth'
@@ -165,7 +186,8 @@
 		const data = await BuyData(id);
 		document.getElementById('toolName').textContent = data.nameInvestTool;
 		document.getElementById('targetToolImg').setAttribute('src', 'data:image/png;base64,' + data.imageSource);
-		document.getElementById('peiceTool').value = data.price;
+		document.getElementById('peiceTool').textContent = data.price;
+		document.getElementById('peiceTool').style.visibility = 'colapsed';
 
 		buyOpenMain(id)
 	}
@@ -188,25 +210,39 @@
 
 	}
 
-	function BuyFormValidation(){
-		//var peiceTool = document.getElementById('peiceTool').value;
-		const toolPrice = document.getElementById('peiceTool');
-		var toolPrice_value = toolPrice.value;
 
+	function BuyFormValidation(){
+		const toolPrice = document.getElementById('peiceTool');
+		var toolPrice_value = toolPrice.textContent.replace( ',', '.');
+
+		var mySym = Number(document.getElementById('koshelBox_btn').textContent.replace( ',', '.'));
 		var toolId = document.getElementById('targetId').textContent;
 
 		const summOperationBox = document.getElementById('summOperation');
-		var summOperation_value = summOperationBox.value;
+		var summOperation_value = Number(summOperationBox.value);
 		
+		console.log('summOperation_value: ', summOperation_value);
+		console.log('mySym: ', mySym);
+
 		var uId = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.uId));
 
+		console.log('uId: ', uId);
+
 		if(document.getElementById('sellBtn').style.display == 'none'){
+			if(mySym < summOperation_value)
+			{
+				showNotification('Недостаточно средств!');
+				return false;
+			}
 
 			toolId = Number(toolId);
-			toolPrice_value = Number(toolPrice_value.replace(',', '.'));
-			factQuentity = Number(String(factQuentity).replace(',', '.'));
+			toolPrice_value = Number(toolPrice_value);
+			factQuentity = Number(String(factQuentity));
 
 			console.log('summOperation_value: ', summOperation_value);
+			console.log('toolId: ', toolId);
+			console.log('toolPrice_value: ', toolPrice_value);
+			console.log('factQuentity: ', factQuentity);
 			if(summOperation_value < 1)
 			{
 				summOperationBox.style.borderBottom = '2px solid red';
@@ -215,9 +251,10 @@
 			else summOperationBox.style.borderBottom = '0px';
 
 			console.log('toolPrice_value: ', toolPrice_value);
-			if(summOperation_value < toolPrice_value.replace )
+			if(summOperation_value < toolPrice_value )
 			{
 				summOperationBox.style.borderBottom = '2px solid red';
+				showNotification('Минимальная цана'+toolPrice_value+' ₽!');
 				return false;
 			}
 			else summOperationBox.style.borderBottom = '0px';
@@ -239,8 +276,7 @@
 			console.log('toolPrice_value: ', toolPrice_value);
 
 			const data = BuyMethodAPI(uId, toolId, factQuentity, toolPrice_value );
-
-
+			return true;
 		}
 		else
 		{
@@ -252,20 +288,17 @@
 			}
 			else summOperationBox.style.borderBottom = '0px';
 
-			if(String(summOperation_value).includes('.')|| String(summOperation_value).includes(','))
-			{
-				summOperationBox.style.borderBottom = '2px solid red';
-				return false;
-			}
-			else summOperationBox.style.borderBottom = '0px';
 
 			var factQuentity = summOperation_value;
 
 			toolId = Number(toolId);
-			toolPrice_value = Number(toolPrice_value.replace(',', '.'));
+			toolPrice_value = Number(toolPrice_value);
 			factQuentity = Number(factQuentity);
 
+
 			const data = BuyMethodAPI(uId, toolId,  factQuentity, -toolPrice_value);
+			return true;
+
 		}
 
 		return true;
@@ -288,20 +321,11 @@
 		return data;
 	}
 
-	function  profilOpenBase(){
-		document.body.style.overflow = 'hidden';
-	   document.getElementById('overlay').style.display = 'block';
-	   document.getElementById('sideMenu').style.visibility = 'visible';
-
-	}
-
 	function profilOpenClient() {
-		profilOpenBase();
+		profilOpen();
 
 		document.getElementById('balanceHistoriBlock').style.display = 'none';
 		document.getElementById('profile').style.display = 'block';
-		startLogin = document.getElementById('portfile_mail').value;
-		startPhone = document.getElementById('portfile_phone').value;
 	}
 
 	
@@ -318,14 +342,30 @@
 		document.getElementById('portfile_save_btn').style.display = 'block';
 	}
 
-	async function Update_Method_Profile(){
+	async function Update_Method_Profile(event){
+		 event.preventDefault();
+		 var isValid = true;
 		const id_ = @Model._user.Id;
 		const mail_ = document.getElementById('portfile_mail').value;
 		const phone_ = document.getElementById('portfile_phone').value;
+		if(phone_.length < 18 ){
+			document.getElementById('profilePhoneError').textContent = 'Номер телефона указан не полностью!';
+			document.getElementById('portfile_phone').style.borderBottom = '2px solid red';
+
+			isValid = false;
+		}
+		 else {
+			 document.getElementById('profilePhoneError').textContent = '';
+			 document.getElementById('portfile_phone').style.borderBottom = '2px solid black';
+		 }
 
 		const idRole_ = 2;
+		if(isValid){
+			var data = await updateUser(id_, mail_, idRole_, phone_);
+			 if(data == 1) event.target.submit();
+		}
+		
 
-		await updateUser(id_, mail_, idRole_, phone_);
 	}
 
 	async function loadAllUserType() {
@@ -358,6 +398,7 @@
 		}
 		const data = response.json();
 		console.log('User updated successfully:', data);
+		return true;
 	}
 
 	window.onpopstate = function(event)

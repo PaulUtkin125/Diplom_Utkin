@@ -223,6 +223,7 @@
     };
 
     async function Update_Method(){
+
         const id_ = document.getElementById('targetId_Edit').value;
         const mail_ = document.getElementById('uLoginEdit').value;
         const idRole_ = document.getElementById('uTypeEdit').value;
@@ -244,22 +245,31 @@
         document.getElementById('portfile_save_btn').style.display = 'block';
     };
 
-    function Update_Method_Profile(){
+    function Update_Method_Profile(event){
+        event.preventDefault();
+        var isValid = true;
         const id_ = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model._user.Id));
         const mail_ = document.getElementById('portfile_mail').value;
         const phone_ = document.getElementById('portfile_phone').value;
 
         if (phone_.length < 18){
-            document.getElementById('profilePhoneError').textContent = 'Номер телефона указан не полностью!'
-            return false;
+           document.getElementById('profilePhoneError').textContent = 'Номер телефона указан не полностью!';
+            document.getElementById('portfile_phone').style.borderBottom = '2px solid red';
+
+            isValid = false;
         }
-        else document.getElementById('profilePhoneError').textContent = '';
+        else {
+             document.getElementById('profilePhoneError').textContent = '';
+             document.getElementById('portfile_phone').style.borderBottom = '2px solid black';
+        }
 
 
         const idRole_ = 1;
 
-        updateUser(id_, mail_, idRole_, phone_);
-        return true;
+        if(isValid){
+             updateUser(id_, mail_, idRole_, phone_);
+             if(data == 1) event.target.submit();
+        }
     };
 
     async function updateUser(id_, mail_, idRole_, phone_) {

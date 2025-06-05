@@ -11,7 +11,7 @@
 		<div id="overlay" class="overlay"></div>
 		<div id="sideMenu" class="side-menu">
 			<button class="myButton" onclick="profilClose()">Закрыть</button>
-			<form method="post" onsubmit="return Update_Method_Profile()">
+			<form method="post" onsubmit="return Update_Method_Profile(event)">
 				<div class="myRow">
 					<div class="form-group">
 						<label asp-for="_user.Loggin" class="control-label">E-mail</label>

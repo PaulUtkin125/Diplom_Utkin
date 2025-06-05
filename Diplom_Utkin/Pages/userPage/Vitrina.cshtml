@@ -3,13 +3,14 @@
 @{
 	ViewData["Title"] = "Витрина";
 }
-<div class="window-box kabinet-box">
+<div class="window-box kabinet-box kabinetHeight">
 	@await Html.PartialAsync("Headers/_UserHeader")
 	<section>
 		<div id="overlay" class="overlay"></div>
 		<div id="sideMenu" class="side-menu">
-			<button class="myButton" onclick="profilClose()">Закрыть</button>
-			<form id="profile" method="post">
+			
+			<form id="profile" onsubmit="return Update_Method_Profile(event)" method="post">
+				<h1>Профиль</h1>
 				<div class="myRow">
 					<div class="form-group">
 						<label asp-for="_user.Loggin" class="control-label">E-mail</label>
@@ -32,7 +33,7 @@
 					</div>
 				</div>
 				<span asp-validation-for="_user.Phone" id="profilePhoneError" class="text-danger"></span>
-				<button class="myButton" style="display:none" name="action" onclick="Update_Method_Profile()" id="portfile_save_btn" value="NoN">Сохранть</button>
+				<button class="myButton" style="display:none" name="action" id="portfile_save_btn" value="NoN">Сохранть</button>
 			</form>
 			<div id="balanceHistoriBlock" class="dataSlice balanceHistori"></div>
 		</div>
@@ -43,7 +44,7 @@
 						<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
 					</div>
 				</div>
-				<form id="myForm" method="post" onsubmit="return moneuBtn() && isValidMony()">
+				<form id="myForm" onsubmit="return moneuBtn() && isValidMony()" method="post">
 					<h1 id="popTitle">Пополнение счета</h1>
 					<div class="card">
 						<div class="card-front">
@@ -86,32 +87,27 @@
 						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType" />
 					</div>
 				</form>
-				<form id="buyForm" method="post" onsubmit="return BuyFormValidation()">
-					<h1 id="popTitleBuy"></h1>
-					<input style="visibility:hidden" id="targetId" disabled />
-					<div class="form-group myRow">
-						<div class="hd-imgBlock">
-							<img id="targetToolImg" />
+				<form id="buyForm" onsubmit="return BuyFormValidation()" method="post">
+					<div class="toolCard">
+						<h1 id="popTitleBuy"></h1>
+						<input style="visibility:hidden" id="targetId" />
+						<div class="vitrinaImg">
+							<img id="targetToolImg"/>
 						</div>
 						<label id="toolName"></label>
-					</div>
-
-					<div class="form-group myRow">
-						<input id="peiceTool" disabled />
-					</div>
-
-					<div class="myRow">
-						<div class="form-group">
-							<label asp-for="targetSumm" id="edIzm" class="control-label"></label>
-							<input asp-for="targetSumm" id="summOperation" class="form-control" type="number" required />
-							<span asp-validation-for="targetSumm" id="summOperationError" class="text-danger"></span>
+						<div class="form-group dataSlice">
+							<label id="peiceTool" class="control-label"></label>
+							<div class="form-group">
+								<label asp-for="targetSumm" id="edIzm" class="control-label"></label>
+								<input asp-for="targetSumm" id="summOperation" class="form-control" type="number" required />
+								<span asp-validation-for="targetSumm" id="summOperationError" class="text-danger"></span>
+							</div>
+							<label style="visibility:hidden" id="dostupSredstv"></label>
 						</div>
-						<div class="form-group">
-							<label id="dostupSredstv"></label>
-						</div>
+
+						<button id="buyBtn" class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
+						<button id="sellBtn" style="display:none" class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
 					</div>
-					<button id="buyBtn" class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
-					<button id="sellBtn" style="display:none" class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
 				</form>
 			</div>
 		</div>
@@ -122,9 +118,9 @@
 				<label asp-for="targetSumm" class="control-label">Тип ценной бумаги</label>
 				<select>
 					<option selected></option>
-					<option>Акция</option>
-					<option>Облигация</option>
-					<option>Фонд</option>
+					<option value="1">Акция</option>
+					<option value="2">Облигация</option>
+					<option value="3">Фонд</option>
 				</select>
 			</div>
 			<div class="form-group">
@@ -142,73 +138,39 @@
 			</div>
 			<div class="form-group">
 				<label asp-for="targetSumm" class="control-label">Цена</label>
-				<input type="number"/>
+				<input asp-for="targetSumm" type="number" />
 			</div>
 			<div>
 				<button type="submit">Найти</button>
 			</div>
 		</form>
-		<div class="tb_Box">
-			<table class="table">
-				<thead>
-					<tr>
-						<th>
-							Иконка
-						</th>
-						<th>
-							<a asp-route-sortOrderAll="@Model.sortName" onclick="openVitrina()">
-								Название
-							</a>
-						</th>
-						<th>
-							<a asp-route-sortOrderAll="@Model.sortBroker" onclick="openVitrina()">
-								Брокер
-							</a>
-						</th>
-						<th>
-							Действие
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var item in Model.AllInvestToolsList)
-					{
-						<tr>
-							<td>
-								<div class="hd-imgBlock settings">
-									<img src="data:image/png;base64, @item.ImageSource" />
-								</div>
-							</td>
-							<td>
-								@Html.DisplayFor(modelItem => item.NameInvestTool)
-							</td>
-							<td>
-								@Html.DisplayFor(modelItem => item.Brokers.NameBroker)
-							</td>
-							<td class="tbColCenter">
-								<form method="post">
-									@if (!item.isFrozen)
-									{
-										<a onclick="buyOpen(@item.Id)">Купить</a>
-									}
-									else
-									{
-										<text>
-											Заморожен
-										</text>
-									}
-								</form>
-								
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
+		<div class="tb_Box dop-overflou">
+			<div class="fonzize-reg myRow">
+
+				@foreach (var item in Model.AllInvestToolsList)
+				{
+					<div class="toolCard">
+						<h1 id="popTitleBuy"></h1>
+						<div class="vitrinaImg">
+							<img id="targetToolImg" src="data:image/png;base64, @item.ImageSource" />
+						</div>
+
+						<div class="form-group dataSlice">
+							<label class="control-label">@item.Price руб</label>
+							<label id="toolName">@item.NameInvestTool</label>
+						</div>
+
+						<a class="myButton" onclick="buyOpen(@item.Id)">Купить</a>
+					</div>
+				}
+			</div>
 		</div>
 	</div>
 </div>
 
 <script>
+	
+
 	let inputPhone = document.getElementById("portfile_phone");
 	inputPhone.addEventListener("keyup", (e) => { formatinputPhone(e.target); });
 	inputPhone.addEventListener("keypress", (e) => { formatinputPhone(e.target); });
@@ -388,17 +350,6 @@
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
 
-	async function OpenbalanceHistori() {
-		var id_ = @Model.uId;
-		var data = await loadBalanceHistory(id_);
-
-		createBalanceBlock(data);
-
-		profilOpenBase();
-
-		document.getElementById('balanceHistoriBlock').style.display = 'block';
-		document.getElementById('profile').style.display = 'none';
-	}
 
 	async function loadBalanceHistory(id_)
 	{
@@ -421,12 +372,43 @@
 
 	function createBalanceBlock(list){
 		 const userList = document.getElementById('balanceHistoriBlock');
-		 userList.childNodes.forEach(Node => {
-			 userList.removeChild(Node);
-		 });
+		 userList.innerHTML = '';
+
+		 const historyLable = document.createElement('h1');
+		 historyLable.textContent = 'История';
+		 userList.appendChild(historyLable);
+
+		 var oldDate = '';
+		 var svFirst = 1;
+
 
 		 list.forEach(Recorder => {
+			 var hrBlock = document.createElement('hr');
 			 var date = Recorder.date.split('T')[0];
+			 if(svFirst == 1){
+
+				 oldDate = Recorder.date.split('T')[0];
+				 svFirst = 0;
+
+				 var dateBlock1 = document.createElement('label');
+
+				 dateBlock1.textContent = date;
+
+				 userList.appendChild(hrBlock);
+				 userList.appendChild(dateBlock1);
+			 }
+
+			 if(oldDate != date)
+			 {
+				 userList.appendChild(hrBlock);
+				 var dateBlock = document.createElement('label');
+				 dateBlock.textContent = date;
+				 userList.appendChild(dateBlock);
+
+				 oldDate = date
+			 }
+
+
 			 var operationType = '';
 			 if(Number(Recorder.money) < 0 && Recorder.investToolsId != '0' ) operationType = 'Продажа';
 			 else if(Number(Recorder.money) > 0 && Recorder.investToolsId != '0' ) operationType = 'Покупка';
@@ -447,9 +429,8 @@
 
 			 const bDiv = document.createElement('div');
 			 bDiv.classList.add('itemBalance');
-			 bDiv.innerHTML = `<label>${date}</label>
-								<div class="myRow">
-									<div class="bTitle">${operationType} ${investToolNames}</div>
+			 bDiv.innerHTML = `<div class="myRow">
+									<div class="bTitle"><strong>${operationType}</strong> ${investToolNames}</div>
 									<div class="dataSlice">
 										<label class="bTotalPrice">${sum}</label>
 										<label class="bCounter">${quentity1}</label>
@@ -457,6 +438,18 @@
 								</div>`;
 			 userList.appendChild(bDiv);
 		 });
+	}
+
+	async function OpenbalanceHistori() {
+		var id_ = @Model.uId;
+		var data = await loadBalanceHistory(id_);
+
+		createBalanceBlock(data);
+
+		profilOpen();
+
+		document.getElementById('balanceHistoriBlock').style.display = 'block';
+		document.getElementById('profile').style.display = 'none';
 	}
 </script>
 

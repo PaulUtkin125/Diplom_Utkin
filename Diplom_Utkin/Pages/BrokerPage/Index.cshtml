@@ -10,7 +10,7 @@
 		<div id="overlay" class="overlay"></div>
 		<div id="sideMenu" class="side-menu">
 			<h1>Профиль</h1>
-			<form method="post">
+			<form method="post" onsubmit="return Update_Method_Profile(event)">
 				<div class="form-group myRow">
 					<div class="hd-imgBlock settings">
 						<img src="data:image/png;base64, @Model._user.SourseFile" />
@@ -53,7 +53,7 @@
 						<a onclick="updatePhone()"><img class="svgEdit" src="/Image/icon-edit.svg" /></a>
 					</div>
 				</div>
-				<span asp-validation-for="_user.Phone" class="text-danger"></span>
+				<span asp-validation-for="_user.Phone" id="profilePhoneError" class="text-danger"></span>
 
 				<div class="myRow">
 					<div class="form-group">
@@ -61,7 +61,7 @@
 						<input asp-for="_user.INN" class="form-control" id="portfile_INN" type="text" required disabled />
 					</div>
 				</div>
-				<button class="myButton" style="display:none" name="action" onclick="Update_Method_Profile()" id="portfile_save_btn" value="NoN">Сохранть</button>
+				<button class="myButton" style="display:none" name="action" id="portfile_save_btn" value="NoN">Сохранть</button>
 			</form>
 		</div>
 		<div id="popup" class="popup kabinetSupportBox">
@@ -94,7 +94,7 @@
 
 				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
 				
-				<form id="CreateForm" onsubmit="return validationCreateTool(event)" method="post">
+				<form id="CreateForm" method="post">
 					<h1>Добавить</h1>
 
 					<div class="dataSlice">
@@ -107,6 +107,17 @@
 							<label class="control-label">Название</label>
 							<input asp-for="investTool.NameInvestTool" class="form-control" type="text" id="ToolNameCreate" required />
 							<span asp-validation-for="investTool.NameInvestTool" id="nameToolErrorBox" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Стартовая цена (за единицу)</label>
+							<select asp-for="investTool.TypeTool" id="toolTypeSelect">
+								<option value="0">Выберите тип</option>
+								<option value="Акция">Акция</option>
+								<option value="Облигация">Облигация</option>
+								<option value="Фонд">Фонд</option>
+
+							</select>
+							<span id="toolTypeSelectError" class="text-danger"></span>
 						</div>
 						<div class="form-group">
 							<label class="control-label">Стартовая цена (за единицу)</label>
@@ -247,8 +258,6 @@
 	let inputPhone = document.getElementById("portfile_phone");
 	inputPhone.addEventListener("keyup", (e) => { formatinputPhone(e.target); });
 	inputPhone.addEventListener("keypress", (e) => { formatinputPhone(e.target); });
-
-
 	function formatinputPhone(inputPhone) {
 		var input_val = inputPhone.value;
 		if (input_val === "") { return; }
@@ -294,11 +303,25 @@
 		} else {
 			inputPhone.style.borderBottom = '2px Solid black';
 		}
-	};
+	}
 
-	async function validationCreateTool(event){
+	/////////////////////////////////////////////////////////////////
+	document.getElementById('CreateForm').addEventListener('submit', async function(event) {
 		event.preventDefault();
+
+		let isValid = await validationCreateTool();
+
+		if(isValid){
+			location.reload();
+		}
+	});
+	////////////////////////////////////////////////////////////////
+
+	async function validationCreateTool(){
+
 		let startPrice = document.getElementById('startPriceCreate');
+		let typeToolCreate = document.getElementById('toolTypeSelect');
+		let toolTypeSelectError = document.getElementById('toolTypeSelectError');
 
 		var nameToolCreateBox = document.getElementById('ToolNameCreate');
 		if(nameToolCreateBox.value == '' || nameToolCreateBox.value.length < 5 ) nameToolCreateBox.style.borderBottom = '2px solid red';
@@ -312,28 +335,44 @@
 			startPrice.style.borderBottom = '0';
 		}
 
-		var name = document.getElementById('ToolNameCreate').value;
+		console.log('typeToolCreate.value: ', typeToolCreate.value)
+
+		if(String(typeToolCreate.value) == '0')
+		{
+			typeToolCreate.borderBottom = '2px solid red';
+			toolTypeSelectError.textContent = 'Выберите тип!';
+			return false;
+		}
+		else{
+			toolTypeSelectError.textContent = '';
+			typeToolCreate.borderBottom = '0';
+		}
+
+		var name1 = document.getElementById('ToolNameCreate').value;
 		var file = document.getElementById('ToolImgCreate').files[0];
 		var price = String(document.getElementById('startPriceCreate').value);
 		var bId = String(@Model.brokerId);
 
 		console.log('file', file);
 		console.log('BrokersId', bId);
-		console.log('NameInvestTool', name);
+		console.log('NameInvestTool', name1);
 		console.log('Price', price);
 
-		var data = await createTool(file, name, price, bId );
+		var data = await createTool(file, name1, price, bId, typeToolCreate.value );
+
+		
 
 		return true;
 	}
 
-	async function createTool(file, name, price, bId ){
+	async function createTool(file, name, price, bId, typeToolCreate ){
 		try{
 			const formData = new FormData();
 			formData.append('file', file);
 			formData.append('BrokersId', bId);
 			formData.append('NameInvestTool', name);
 			formData.append('Price', price);
+			formData.append('TypeTool', typeToolCreate);
 
 
 			const baseUrl = '@Model.apiSettings.BaseUrl';
@@ -375,6 +414,7 @@
 		console.log('price', price);
 
 		var data = await editTool(file, name, price, tId );
+
 
 		return true;
 	}

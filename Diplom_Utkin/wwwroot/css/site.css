@@ -476,6 +476,18 @@ canvas {
     border-radius:15px;
 
 }
+.dop-overflou {
+    height:75vh;
+}
+.dop-overflou .fonzize-reg {
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:stretch;
+}
+
+.tb_boxDop {
+    overflow: hidden;
+}
 
 .fonzize-reg h1 {
     font-size: 20px;
@@ -536,7 +548,52 @@ canvas {
     box-shadow: none;
 }
 
+.row-wrap {
+    flex-wrap:wrap;
+    flex-direction:row;
+    overflow-y:auto;
+    overflow-x:hidden;
+}
 
+.toolCard{
+    margin:10px;
+    background-color:white;
+    border-radius:10px;
+    border:2px solid lightgray;
+
+    width:250px;
+    height:max-content;
+    padding:10px
+
+}
+.toolCard a{
+    text-decoration:none;
+}
+
+.toolCard .dataSlice {
+    margin-top: 10px;
+}
+
+.vitrinaImg {
+    width: 100%;
+    height: 100px;
+    justify-content: center;
+    display: flex;
+}
+
+.vitrinaImg img {
+    height:100%;
+}
+
+#buyForm .toolCard {
+    border:none;
+    width:100%;
+    margin:0;
+}
+#buyForm #toolName {
+    text-align:center;
+    width:100%;
+}
 /*/ ///////////////////////////////////////////////////// /*/
 .table {
     font-size: 20px;
@@ -613,6 +670,13 @@ canvas {
 .dop-canvas canvas {    
     width: 320px;
     height: 320px;
+}
+.dop-canvas-user {
+    width:50%;
+    margin-left:-20px;
+}
+.dop-canvas-user canvas {
+    margin-left: 10px;
 }
 
 .card {
@@ -880,7 +944,7 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .balanceHistori {
-    height:90vh;
+    height:95vh;
     overflow-y:auto;
     overflow-x:hidden;
 }
@@ -928,4 +992,56 @@ input[type=number]::-webkit-inner-spin-button {
     width: 100%;
     display: flex;
     justify-content: center;
+}
+
+.cab_model {
+    height:26vh;
+}
+/* //////////////////////////////////////////////////////////////////////////// */
+#notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+
+.notification {
+    background: #e74c3c;
+    color: white;
+    padding: 15px 25px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    opacity: 0;
+    transform: translateX(100%);
+    animation: slideIn 0.5s forwards;
+    cursor: pointer;
+    min-width: 250px;
+}
+
+.notification-positive {
+    background: #4caf50;
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
 }

@@ -18,7 +18,7 @@
 				</div>
 				<div class="contentVhod" id="vhodAdminBox">
 					<div class="form-block">
-						<form method="post">
+						<form method="post" >
 							<h1>Авторизация</h1>
 							<div class="form-group">
 								<label asp-for="User.Login" class="control-label">E-mail</label>
@@ -63,7 +63,7 @@
 				</div>
 				<div class="contentVhod" id="regBox">
 					<div class="form-block">
-						<form method="post" onsubmit="return validMail(event)">
+						<form id="userReg" method="post">
 							<h1>Регистрация</h1>
 							<div class="form-group">
 								<label asp-for="logoValidationReg.Email" class="control-label">E-mail</label>
@@ -74,13 +74,13 @@
 							<div class="form-group">
 								<label asp-for="logoValidationReg.Password" class="control-label">Пароль</label>
 								<input asp-for="logoValidationReg.Password" class="form-control" type="password" id="regPassword" required />
-								<span asp-validation-for="logoValidationReg.Password" class="text-danger"></span>
+								<span asp-validation-for="logoValidationReg.Password" id="regPassworderror" class="text-danger"></span>
 							</div>
 
 							<div class="form-group form-row">
 								<label asp-for="logoValidationReg.ConfirmPassword" class="control-label">Повторите пароль</label>
 								<input asp-for="logoValidationReg.ConfirmPassword" class="form-control" type="password" id="confirmPassword" required />
-								<span asp-validation-for="logoValidationReg.ConfirmPassword" class="text-danger"></span>
+								<span asp-validation-for="logoValidationReg.ConfirmPassword" id="confirmPasswordError" class="text-danger"></span>
 							</div>
 							<div class="form-group">
 								<button class="myButton" type="submit">Зарегистрироваться</button>
@@ -94,7 +94,7 @@
 				</div>
 				<div class="contentVhod" id="confirmCodeBox">
 					<div class="form-block">
-						<form method="post" onsubmit="return validationCode()">
+						<form method="post" id="confitm" onsubmit="return validConfirm()">
 							<div class="form-group">
 								<label asp-for="codeValidation.securityCode" class="control-label">Введите код подтверждения</label>
 								<input asp-for="codeValidation.securityCode" class="form-control" type="number" id="confirmCode" required />
@@ -104,17 +104,17 @@
 							<input type="hidden" asp-for="logoValidationReg.Password" id="supportPassword" />
 
 							<input type="file" style="visibility:hidden; height:1px;" id="supportFile" />
-							<input type="hidden" id="supportBrokerName" />
-							<input type="hidden" id="supportbrokerINN" />
-							<input type="hidden" id="supportbrokerKPP" />
-							<input type="hidden" id="supportBrokerOTKMO" />
-							<input type="hidden" id="supportBrokerAddress" />
-							<input type="hidden" id="supportbrokerPhone" />
-							<input type="hidden" id="supportBrokerDir" />
+							<input type="hidden" asp-for="Broker.NameBroker" id="supportBrokerName" />
+							<input type="hidden" asp-for="Broker.INN" id=" supportbrokerINN" />
+							<input type="hidden" asp-for="Broker.KPP" id="supportbrokerKPP" />
+							<input type="hidden" asp-for="Broker.OKTMO" id="supportBrokerOTKMO" />
+							<input type="hidden" asp-for="Broker.BusinessAddress" id="supportBrokerAddress" />
+							<input type="hidden" asp-for="Broker.Phone" id="supportbrokerPhone" />
+							<input type="hidden" asp-for="Broker.FullNameOfTheDirector" id="supportBrokerDir" />
 
 							<div class="form-group">
 								<button class="myButton" type="submit" name="action" id="userReg_btn" value="Registr_btn">Подтвердить</button>
-								<button class="myButton" style="display:none" type="submit" name="action" id="BrokerReg_btn" value="NoN">Подтвердитьffdg</button>
+								@* <button class="myButton" style="display:none" type="submit" name="action" id="BrokerReg_btn" value="BrokerReg_btn">Подтвердить</button> *@
 							</div>
 						</form>
 					</div>
@@ -147,14 +147,14 @@
 				</div>
 				<div class="contentVhod" id="brocerCreateForm">
 					<div class="form-block">
-						<form onsubmit="return validationCreateBroker(event)" method="post">
+						<form id="brokerReg1" method="post">
 							<h1>Регистрация</h1>
 
 							<div class="myRow">
 								<div class="dataSlice">
 									<div class="form-group">
 										<label class="control-label">Выберите иконку</label>
-										<input class="form-control" type="file" accept=".jpg, .jpeg, .png" id="BrokerImgCreate" />
+										<input class="form-control" type="file" accept=".jpg, .jpeg, .png" id="BrokerImgCreate"/>
 										<span class="text-danger"></span>
 									</div>
 									<div class="form-group">
@@ -349,23 +349,169 @@
 
 
 <script>
+	$(document).ready(function () 
+	{
+			var hasErrors = @Html.Raw(Json.Serialize(Model.errorSupport));
+			if(hasErrors == 1){
+				vhodOpen()
+				showNotification('Ошибка авторизации. Проверьте введенные данные.');
+			}
+			else if(hasErrors == 1.1){
+				vhodOpen()
+				showNotification('Ошибка сервера. Повторите попытку позже');
+			}
+			else if (hasErrors == 2) {
+				AdminOpen();
+				showNotification('Ошибка авторизации. Проверьте введенные данные.');
+			}
+			else if(hasErrors == 2.1){
+				vhodOpen()
+				showNotification('Ошибка сервера. Повторите попытку позже');
+			}
+			else if(hasErrors == 3){
+				BrokerOpen();
+				showNotification('Ошибка авторизации. Проверьте введенные данные.');
+			}
+			else if(hasErrors == 3.1){
+				vhodOpen()
+				showNotification('Ошибка сервера. Повторите попытку позже');
+			}
+	})
+
+	function showNotification(message) {
+	  const container = document.getElementById('notification-container');
+
+	  const notif = document.createElement('div');
+	  notif.classList.add('notification');
+	  notif.textContent = message;
+
+	  notif.addEventListener('click', () => hideNotification(notif));
+
+	  container.appendChild(notif);
+
+	  setTimeout(() => hideNotification(notif), 4000);
+	}
+	function showNotification_positive(message) {
+	  const container = document.getElementById('notification-container');
+
+	  const notif = document.createElement('div');
+	  notif.classList.add('notification');
+	  notif.classList.add('notification-positive');
+	  notif.textContent = message;
+
+	  notif.addEventListener('click', () => hideNotification(notif));
+
+	  container.appendChild(notif);
+
+	  setTimeout(() => hideNotification(notif), 4000);
+	}
+	function hideNotification(element) {
+	  element.style.animation = 'slideOut 0.5s forwards';
+	  element.addEventListener('animationend', () => element.remove());
+	}
+
 	const baseUrl = '@Model.apiSettings.BaseUrl';
 	const popup = document.getElementById('regBox');
 	const childElements = popup.querySelectorAll('*');
 
-	async function userValid(event){
+
+
+	// async function adminAutorusationValid(){
+
+
+	// 	try {
+	// 		const mail = document.getElementById('loginAdmin').value;
+	// 		const password = document.getElementById('passwordloginAdmin').value
+
+	// 		const response = await fetch(baseUrl+'Logo/AutorisationAdmin', {
+	// 			method:'POST',
+	// 			headers:{
+	// 				'Content-Type':'application/json'
+	// 			},
+	// 			body: JSON.stringify({ Login: mail, Password: password })
+	// 		});
+	// 		const data = await response.json();
+	// 		if (data == 0)
+	// 		{
+	// 			showNotification('Ошибка авторизации. Проверьте введенные данные.');
+	// 			return false;
+	// 		}
+	// 	}
+	// 	catch (error) {
+	// 		showNotification(error);
+	// 		console.error('There was a problem with the fetch operation:', error);
+	// 		return false;
+	// 	}
+
+		
+	// }
+
+
+
+	document.getElementById('userReg').addEventListener('submit', async function(event) {
 		event.preventDefault();
+		 if (!$(this).valid()) {
+		return false;
+	}
+
+		let regPassworderror = document.getElementById('regPassworderror').textContent;
+		let confirmPasswordError = document.getElementById('confirmPasswordError').textContent;
+
+		let isValid = await userValid();
+
+
+		if(!isValid && regPassworderror.length < 3 && confirmPasswordError.length < 3){
+			fetchData();
+			comfirmOpen();
+
+			return true;
+		}
+	});
+
+	function validConfirm(){
+		const enteredCode = document.getElementById('confirmCode').value;
+		const targetMail = document.getElementById('supportLogin').value;
+		const storedCode = localStorage.getItem(targetMail);
+
+		if (enteredCode != storedCode) {
+			document.getElementById('confirmCode').style.color = 'red';
+			document.getElementById('confirmError').textContent = 'Код подтвержения неверен!';
+			return false;
+		}
+
+		document.getElementById('confirmCode').style.color = 'black';
+		document.getElementById('confirmError').textContent = '';
+		
+		return true;
+
+	}
+
+	document.getElementById('brokerReg1').addEventListener('submit', async function(event) {
+		event.preventDefault();
+		
+
+		let isValid = await validationCreateBroker();
+
+		if (isValid){
+			showNotification_positive('Заявка зарегестрирована!');
+			setTimeout(() => hideNotification(notif), 4000);
+			event.target.submit();
+		}
+	});
+
+
+
+	async function userValid(){
 		var loginError = document.getElementById('mailRegUserError').textContent;
-		if(loginError != '') return false;
+		
+		if(loginError != '') return true;
 
 		var data = await validMail();
 		console.log('validMail.data: ', data);
-		if (!data) return false;
+		if (!data) return true;
 
-		fetchData();
-		comfirmOpen();
 
-		return true;
+		return false;
 	}
 
 	async function validMail() {
@@ -379,20 +525,20 @@
 				body: JSON.stringify({ toMail: mail })
 			});
 			if (!response.ok) {
+				showNotification('Данный E-mail уже используется! Укажите другой');
 				return false;
 				throw new Error('Network response was not ok');
 			}
 			const data = await response.json();
 			if (!data)
 			{
-				alert('Данный E-mail уже используется! укажите другой');
+				showNotification('Данный E-mail уже используется! укажите другой');
 				return false;
 			}
-			// alert('Код подтверждения отправлен');
-			
 			return true;
 		}
 		catch (error) {
+			showNotification(error);
 			console.error('There was a problem with the fetch operation:', error);
 			return false;
 		}
@@ -420,6 +566,8 @@
 
 			localStorage.setItem(mail, String(data));
 
+			showNotification_positive('Код подтверждения отправлен');
+
 			document.getElementById('supportPassword').value = document.getElementById('regPassword').value;
 			document.getElementById('supportLogin').value = mail;
 
@@ -430,6 +578,7 @@
 
 		} 
 		catch (error) {
+			showNotification(error);
 			console.error('There was a problem with the fetch operation:', error);
 			popup.style.cursor = 'auto';
 			childElements.forEach(child => {
@@ -440,7 +589,9 @@
 		}
 	}
 
-	function validationCode() {
+
+	document.getElementById('userReg').addEventListener('submit', function(event) {
+		event.preventDefault();
 
 		const enteredCode = document.getElementById('confirmCode').value;
 		const targetMail = document.getElementById('supportLogin').value;
@@ -448,21 +599,14 @@
 
 		if (enteredCode != storedCode) {
 			document.getElementById('confirmCode').style.color = 'red';
-			document.getElementById('confirmError').textContent = 'Ошибка: Код подтверждения не совпадает. Пожалуйста, проверьте введённый код.';
+			document.getElementById('confirmError').textContent = 'Код подтверждения неверен!';
 			return false;
 		}
-		else{
-			document.getElementById('confirmCode').style.color = 'black';
-			console.log('Код подтверждения верный.');
-			// alert('Пользователь успешно зарегистрирован!');
 
-			if(document.getElementById('userReg_btn').style.display == 'none'  ){
-				createBrocer_Btn();
-			}
-			return true;
-		}
-		
-	}
+		document.getElementById('confirmCode').style.color = 'black';
+		document.getElementById('confirmError').textContent = '';
+		event.target.submit();
+	});
 
 	function vhodOpen() {
 		openPopup();
@@ -479,7 +623,7 @@
 		openPopup();
 
 		document.getElementById('userReg_btn').style.display = 'block';
-		document.getElementById('BrokerReg_btn').style.display = 'none';
+		// document.getElementById('BrokerReg_btn').style.display = 'none';
 
 		document.getElementById('brocerCreateForm').style.display = 'none';
 		document.getElementById('vhodBrokerBox').style.display = 'none';
@@ -534,7 +678,7 @@
 		openPopup();
 
 		document.getElementById('userReg_btn').style.display = 'none';
-		document.getElementById('BrokerReg_btn').style.display = 'block';
+		// document.getElementById('BrokerReg_btn').style.display = 'block';
 
 		document.querySelector('.popup').style.width = 'max-content';
 		document.getElementById('brocerCreateForm').style.display = 'block';
@@ -552,7 +696,6 @@
 
 	function formatINN(input) {
 		var input_val = input.value;
-		console.log('input.value: ', input.value);
 		if (input_val === "") { return; }
 		input_val = input_val.replace(/\D/g, "");
 		input.value = input_val;
@@ -569,7 +712,6 @@
 
 	function formatOTKMO(inputOTKMO) {
 		var input_val = inputOTKMO.value;
-		console.log('input.value: ', inputOTKMO.value);
 		if (input_val === "") { return; }
 		input_val = input_val.replace(/\D/g, "");
 		inputOTKMO.value = input_val;
@@ -586,7 +728,6 @@
 
 	function formatKPP(inputKPP) {
 		var input_val = inputKPP.value;
-		console.log('input.value: ', inputKPP.value);
 		if (input_val === "") { return; }
 		input_val = input_val.replace(/\D/g, "");
 		inputKPP.value = input_val;
@@ -648,8 +789,7 @@
 		}
 	}
 
-	async function validationCreateBroker(event){
-		event.preventDefault();
+	async function validationCreateBroker(){
 
 
 		var file = document.getElementById('BrokerImgCreate').files[0];
@@ -667,7 +807,17 @@
 		var Email = bMail.value;
 		var FullNameOfTheDirector = document.getElementById('brokerDirCreate').value;
 
+		
+
 		var INNError = document.getElementById('INNError');
+
+		console.log('INNBlock.value.length: ', INN);
+
+		if(INNBlock.value.length < 10) {
+			INNBlock.style.borderBottom = '2px solid red';
+			return false;
+		}
+		else INNBlock.style.borderBottom = '0';
 
 		if(Phone.length < 18) return false;
 
@@ -681,6 +831,26 @@
 			INNError.textContent = '';
 			INNBlock.style.borderBottom = '0';
 		}
+
+		var kppBlock = document.getElementById('brokerKPPCreate');
+		console.log('kppBlock.value.length: ', kppBlock.value.length )
+
+		if(kppBlock.value.length < 9) {
+			document.getElementById('brokerKPPCreate').style.borderBottom = '2px solid red';
+			return false;
+		}
+		else document.getElementById('brokerKPPCreate').style.borderBottom = '0';
+
+		var oktmoBlock = document.getElementById('brokerOTKMOCreate');
+		console.log('oktmoBlock.value.length: ', oktmoBlock.value.length);
+
+		if(oktmoBlock.value.length < 11) {
+			document.getElementById('brokerOTKMOCreate').style.borderBottom = '2px solid red';
+			return false;
+		}
+		else document.getElementById('brokerOTKMOCreate').style.borderBottom = '0';
+
+		
 
 		if(document.getElementById('userReg_btn').style.display == 'none'  )
 		{
@@ -696,23 +866,16 @@
 				document.getElementById('mailBrokerCreateError').textContent = '';
 			}
 
-			brokerSendCode(Email);
-
 			INNBlock.style.borderBottom = '0';
 			INNError.textContent = '';
 
-			document.getElementById('supportBrokerName').value = NameBroker;
 
-			document.getElementById('supportbrokerKPP').value = KPP;
-			document.getElementById('supportBrokerOTKMO').value = OKTMO;
-			document.getElementById('supportBrokerAddress').value = BusinessAddress;
-			document.getElementById('supportbrokerPhone').value = Phone;
-			document.getElementById('supportLogin').value = Email;
-			document.getElementById('supportBrokerDir').value = FullNameOfTheDirector;
-			document.getElementById('supportbrokerINN').value = INN;
+			var data1 = await validationBrokerMail(Email);
+			if(data)  tr = await createBrocer_Btn();
 
-			return true;
+		 	return true;
 		}
+
 
 		return false;
 	}
@@ -755,9 +918,10 @@
 			const data = await response.json();
 			if (!data)
 			{
+				showNotification('Этот адрес уже используется!'); /////////////////////////////////////////////////////////////////
+				setTimeout(() => {}, 300);
 				return false;
 			}
-			// alert('Код подтверждения отправлен');
 			popup.style.cursor = 'wait';
 			childElements.forEach(child => {
 				child.style.cursor = 'wait';
@@ -785,7 +949,8 @@
 		var Email = bMail.value;
 		var FullNameOfTheDirector = document.getElementById('brokerDirCreate').value;
 
-		data = await CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector);
+		var data = await CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector);
+
 	}
 
 	async function brokerSendCode(mail) {
@@ -803,7 +968,7 @@
 			}
 			const data = await response.json();
 
-			console.log('code: ', data);
+			console.log('brokerSendCode code: ', data);
 
 			localStorage.setItem(mail, String(data));
 
@@ -814,6 +979,10 @@
 			childElements.forEach(child => {
 				child.style.cursor = 'auto';
 			});
+
+
+			showNotification_positive('Код подтверждения отправлен');
+			setTimeout(() => {}, 300);
 
 			comfirmOpenDop();
 		}
@@ -831,6 +1000,7 @@
 		document.getElementById('vhodAdminBox').style.display = 'none';
 
 		document.getElementById('confirmCodeBox').style.display = 'block';
+		document.getElementById('confirmCode').value = '';
 	}
 
 	async function CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector)

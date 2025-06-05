@@ -46,11 +46,13 @@ namespace Diplom_Utkin.Pages.userPage
         public string CurrnerSort { get; set; }
 
 
+        [BindProperty(SupportsGet = true)]
         [Required(ErrorMessage = "Поле должно быть заполнено!")]
-        public DateTime startDate { get; set; }
+        public DateTime? startDate { get; set; }
+        [BindProperty(SupportsGet = true)]
 
         [Required(ErrorMessage = "Поле должно быть заполнено!")]
-        public DateTime endDate { get; set; }
+        public DateTime? endDate { get; set; }
 
         public double targetSumm { get; set; }
         public int isVuvod { get; set; }
@@ -58,6 +60,9 @@ namespace Diplom_Utkin.Pages.userPage
         public bool? isClearTempData { get; set; }
         public async Task<ActionResult> OnGetAsync(string? sortOrder, string? action, DateTime? startDate, DateTime? endDate)
         {
+            if (startDate == null) startDate = DateTime.Now;
+            if (endDate == null) endDate = DateTime.Now;
+
 
             if (TempData["uId"] != null) 
             {
@@ -119,6 +124,8 @@ namespace Diplom_Utkin.Pages.userPage
                         break;
                     }
                     Pribl = resalt;
+                    startDate = startDate;
+                    endDate = endDate;
                     break;
             }
 

@@ -103,9 +103,10 @@ namespace Diplom_Utkin.Pages.userPage
                             Money = await _APIService.UserUpdateMoneu(moneuUpdate);
                         }
                     }
-                    break;
+                break;
             }
-                    return Page();
+            
+            return Page();
             
         }
 
@@ -113,7 +114,35 @@ namespace Diplom_Utkin.Pages.userPage
         {
             await WorkOfData();
 
-
+            switch (action)
+            {
+                case "btnBalans":
+                    if (targetSumm > 0)
+                    {
+                        if (isVuvod == 1)
+                        {
+                            MoneuUpdate moneuUpdate = new MoneuUpdate()
+                            {
+                                id = uId,
+                                sum = (double)targetSumm,
+                                vector = (int)isVuvod
+                            };
+                            Money = await _APIService.UserUpdateMoneu(moneuUpdate);
+                        }
+                        else
+                        {
+                            MoneuUpdate moneuUpdate = new MoneuUpdate()
+                            {
+                                id = uId,
+                                sum = (double)targetSumm,
+                                vector = (int)isVuvod
+                            };
+                            Money = await _APIService.UserUpdateMoneu(moneuUpdate);
+                        }
+                    }
+                    break;
+            }
+            await WorkOfData();
 
             return Page();
         }
