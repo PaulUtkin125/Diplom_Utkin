@@ -147,6 +147,20 @@ namespace Diplom_Utkin.Model.Data
             if (resalt == 0.0) return null;
             else return resalt;
         }
+        public async Task<double?> CalkulateAsync(DateTime? startDate, DateTime? endDate, int id, int toolId)
+        {
+            CalculateSupport calculateSupport = new()
+            {
+                Id = id,
+                dateFinish = endDate,
+                dateStart = startDate,
+                toolId = toolId
+            };
+            var processPositive = await _httpClient.PostAsJsonAsync("User/Calculate", calculateSupport);
+            var resalt = await processPositive.Content.ReadFromJsonAsync<double>();
+            if (resalt == 0.0) return null;
+            else return resalt;
+        }
         public async Task<List<DvizhenieSredstv>> Report1u(DateTime start, DateTime end, int mode)
         {
             Report1Reauest report1Reauest = new Report1Reauest()

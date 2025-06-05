@@ -79,7 +79,7 @@
 					<div class="myRow">
 						<div class="form-group">
 							<label asp-for="targetSumm" class="control-label">Сумма</label>
-							<input asp-for="targetSumm" id="summText" class="form-control" type="number" required />
+							<input asp-for="targetSumm" id="summText" class="form-control" maxlength="11" type="number" required />
 							<span asp-validation-for="targetSumm" id="summTextError" class="text-danger"></span>
 						</div>
 						<button class="myButton" name="action" type="submit" value="btnBalans">Выполнить</button>
@@ -88,11 +88,6 @@
 						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType" />
 					</div>
 				</form>
-
-				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
-
-
-				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
 				<form id="buyForm" onsubmit="return BuyFormValidation()" method="post">
 					<div class="toolCard">
 						<h1 id="popTitleBuy"></h1>
@@ -173,14 +168,32 @@
 							<h1>Рассчитать доходность</h1>
 							<div class="form-group">
 								<label asp-for="startDate" class="control-label">От</label>
-								<input asp-for="startDate" id="startDate" class="form-control" type="date" value="@Model.startDate" required />
+								<input asp-for="startDate" id="startDate" class="form-control" type="date" value="@Model.startDate?.ToString("yyyy-MM-dd")" required />
 								<span asp-validation-for="startDate" id="StartDateError" class="text-danger"></span>
 							</div>
 							<div class="form-group">
 								<label asp-for="endDate" class="control-label">До</label>
-								<input asp-for="endDate" id="endDate" class="form-control" type="date" value="@Model.endDate" required />
+								<input asp-for="endDate" id="endDate" class="form-control" type="date" value="@Model.endDate?.ToString("yyyy-MM-dd")" required />
 								<span asp-validation-for="endDate" id="endDateError" class="text-danger"></span>
 							</div>
+							<div class="form-group selectBlock">
+								<label>Расчет доходности для:</label>
+								<select name="modeSelecter" size="1">
+									<option value="0">Весь портфель</option>
+									@foreach (var tool in Model.InvestToolsList)
+									{
+										if (Model.modeSelecter == tool.InvestToolId)
+										{
+											<option value="@tool.InvestTool.Id" selected>@tool.InvestTool.NameInvestTool</option>
+										}
+										else {
+											<option value="@tool.InvestTool.Id">@tool.InvestTool.NameInvestTool</option>
+										}
+									}
+
+								  </select>
+							</div>
+							
 							<div class="form-group">
 								<button class="myButton" name="action" type="submit" value="raschot_Btn">Рассчитать</button>
 							</div>
@@ -215,6 +228,11 @@
 							</a>
 						</th>
 						<th>
+							<a asp-route-sortOrder="@Model.sortCount">
+								Количество
+							</a>
+						</th>
+						<th>
 							<a asp-route-sortOrder="@Model.sortSum">
 								Стоимость
 							</a>
@@ -235,6 +253,9 @@
 							</td>
 							<td>
 								@Html.DisplayFor(modelItem => item.InvestTool.NameInvestTool)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.Quentity) шт.
 							</td>
 							<td>
 								@Html.DisplayFor(modelItem => item.AllManey) ₽
@@ -260,7 +281,15 @@
 </div>
 
 <script>
-	
+	$(document).ready(function ()
+	{
+			var hasErrors = @Html.Raw(Json.Serialize(Model.errorSupport));
+			if(hasErrors == 1){
+				openVuvod();
+				showNotification('Недостаточно средств');
+			}
+			
+	})
 
 	let inputPhone = document.getElementById("portfile_phone");
 	inputPhone.addEventListener("keyup", (e) => { formatinputPhone(e.target); });
@@ -391,6 +420,8 @@
 		return true;
 
 	}
+
+
 
 	function isValidMony()
 	{

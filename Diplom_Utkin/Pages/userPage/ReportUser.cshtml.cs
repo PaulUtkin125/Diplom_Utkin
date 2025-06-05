@@ -46,6 +46,9 @@ namespace Diplom_Utkin.Pages.userPage
         [BindProperty(SupportsGet = true)]
         public DateTime enddataSave { get; set; }
 
+
+        [BindProperty]
+        public double? errorSupport { get; set; }
         public async Task<ActionResult> OnGet()
         {
             if (TempData["uId"] != null)
@@ -109,6 +112,37 @@ namespace Diplom_Utkin.Pages.userPage
                         }
                     }
 
+                    break;
+
+                case "btnBalans":
+                    if (targetSumm > 0)
+                    {
+                        if (isVuvod == 1)
+                        {
+                            if (targetSumm > _user.Maney)
+                            {
+                                errorSupport = 1;
+                                return Page();
+                            }
+                            MoneuUpdate moneuUpdate = new MoneuUpdate()
+                            {
+                                id = uId,
+                                sum = (double)targetSumm,
+                                vector = (int)isVuvod
+                            };
+                            Money = await _APIService.UserUpdateMoneu(moneuUpdate);
+                        }
+                        else
+                        {
+                            MoneuUpdate moneuUpdate = new MoneuUpdate()
+                            {
+                                id = uId,
+                                sum = (double)targetSumm,
+                                vector = (int)isVuvod
+                            };
+                            Money = await _APIService.UserUpdateMoneu(moneuUpdate);
+                        }
+                    }
                     break;
             }
             await WorkOfData();

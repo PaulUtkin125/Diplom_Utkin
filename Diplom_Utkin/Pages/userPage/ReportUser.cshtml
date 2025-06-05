@@ -312,6 +312,16 @@
 </div>
 
 <script>
+	$(document).ready(function ()
+	{
+			var hasErrors = @Html.Raw(Json.Serialize(Model.errorSupport));
+			if(hasErrors == 1){
+				openVuvod();
+				showNotification('Недостаточно средств');
+			}
+
+	})
+
 	async function OpenbalanceHistori() {
 		var id_ = @Model.uId;
 		var data = await loadBalanceHistory(id_);

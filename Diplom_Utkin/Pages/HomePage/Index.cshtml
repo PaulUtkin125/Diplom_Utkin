@@ -349,6 +349,37 @@
 
 
 <script>
+	function showNotification(message) {
+	  const container = document.getElementById('notification-container');
+
+	  var notif = document.createElement('div');
+	  notif.classList.add('notification');
+	  notif.textContent = message;
+
+	  notif.addEventListener('click', () => hideNotification(notif));
+
+	  container.appendChild(notif);
+
+	  setTimeout(() => hideNotification(notif), 4000);
+	}
+	function showNotification_positive(message) {
+	  const container = document.getElementById('notification-container');
+
+	  const notif = document.createElement('div');
+	  notif.classList.add('notification');
+	  notif.classList.add('notification-positive');
+	  notif.textContent = message;
+
+	  notif.addEventListener('click', () => hideNotification(notif));
+
+	  container.appendChild(notif1);
+
+	  setTimeout(() => hideNotification(notif), 4000);
+	}
+	function hideNotification(element) {
+	  element.style.animation = 'slideOut 0.5s forwards';
+	  element.addEventListener('animationend', () => element.remove());
+	}
 	$(document).ready(function () 
 	{
 			var hasErrors = @Html.Raw(Json.Serialize(Model.errorSupport));
@@ -378,37 +409,8 @@
 			}
 	})
 
-	function showNotification(message) {
-	  const container = document.getElementById('notification-container');
-
-	  const notif = document.createElement('div');
-	  notif.classList.add('notification');
-	  notif.textContent = message;
-
-	  notif.addEventListener('click', () => hideNotification(notif));
-
-	  container.appendChild(notif);
-
-	  setTimeout(() => hideNotification(notif), 4000);
-	}
-	function showNotification_positive(message) {
-	  const container = document.getElementById('notification-container');
-
-	  const notif = document.createElement('div');
-	  notif.classList.add('notification');
-	  notif.classList.add('notification-positive');
-	  notif.textContent = message;
-
-	  notif.addEventListener('click', () => hideNotification(notif));
-
-	  container.appendChild(notif);
-
-	  setTimeout(() => hideNotification(notif), 4000);
-	}
-	function hideNotification(element) {
-	  element.style.animation = 'slideOut 0.5s forwards';
-	  element.addEventListener('animationend', () => element.remove());
-	}
+	
+	
 
 	const baseUrl = '@Model.apiSettings.BaseUrl';
 	const popup = document.getElementById('regBox');

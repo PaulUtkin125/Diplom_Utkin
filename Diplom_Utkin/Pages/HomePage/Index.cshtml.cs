@@ -128,9 +128,6 @@ namespace Diplom_Utkin.Pages.HomePage
                     }
                    
                 ;
-                case "BrokerReg_btn":
-
-                    return Page();
 
                 default:
                     return Page();

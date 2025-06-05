@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Diplom_Utkin.Model.Data;
 using Diplom_Utkin.Model.Support;
 using Finansu.Model;
@@ -30,11 +31,21 @@ namespace Diplom_Utkin.Pages.userPage
         public CardModel _cardModel { get; set; } = default!;
         public double targetSumm { get; set; }
         public int isVuvod { get; set; }
-
+        public List<Brokers> brokersList { get; set; }
         public string sortName { get; set; }
         public string sortBroker { get; set; }
         public string CurrnerSortAll { get; set; }
-        public async Task<ActionResult> OnGetAsync(string? sortOrderAll, string? action, double? targetSumm, int? isVuvod, int? vector)
+
+        [BindProperty]
+        public double? errorSupport { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int? brokerSelecter { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string? paperType { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string? keyword { get; set; }
+        public async Task<ActionResult> OnGetAsync(string? sortOrderAll, string? action, double? targetSumm, int? isVuvod,
+            int? vector, int? brokerSelecter, string? paperType, string? keyword)
         {
             if (TempData["uId"] is null) { 
                 return Unauthorized();
@@ -52,7 +63,9 @@ namespace Diplom_Utkin.Pages.userPage
             sortName = string.IsNullOrEmpty(sortOrderAll) ? "name_desc" : "";
             sortBroker = sortOrderAll == "broker" ? "broker_desc" : "broker";
             var investToolsAllIQ = await _APIService.LoadAllToolsAsinc();
+            brokersList = investToolsAllIQ.Select(x => x.Brokers).GroupBy(x => x.NameBroker).Select(x => x.First()).ToList();
             investToolsAllIQ = investToolsAllIQ.Where(x => x.isClosed == false).ToList();
+            
 
             switch (sortOrderAll)
             {
@@ -71,6 +84,29 @@ namespace Diplom_Utkin.Pages.userPage
                 default:
                     investToolsAllIQ = investToolsAllIQ.OrderBy(x => x.NameInvestTool).ToList();
                     break;
+            }
+
+            if (paperType != "")
+            {
+                switch (paperType)
+                {
+                    case "Акция":
+                        investToolsAllIQ = investToolsAllIQ.Where(x => x.TypeTool == "Акция").ToList();
+                        break;
+                    case "Фонд":
+                        investToolsAllIQ = investToolsAllIQ.Where(x => x.TypeTool == "Фонд").ToList();
+                        break;
+                    case "Облигация":
+                        investToolsAllIQ = investToolsAllIQ.Where(x => x.TypeTool == "Облигация").ToList();
+                        break;
+                }
+            }
+            if (brokerSelecter != 0 && brokerSelecter != null) investToolsAllIQ = investToolsAllIQ.Where(x => x.BrokersId == brokerSelecter).ToList();
+
+            if (keyword != null)
+            {
+                keyword = keyword.Trim().ToLower();
+                if (keyword != "") investToolsAllIQ = investToolsAllIQ.Where(x => x.NameInvestTool.Contains((string)keyword)).ToList();
             }
 
             AllInvestToolsList = investToolsAllIQ;
@@ -105,7 +141,11 @@ namespace Diplom_Utkin.Pages.userPage
                     }
                 break;
             }
-            
+
+            brokerSelecter = brokerSelecter;
+            paperType = paperType;
+            keyword = keyword;
+
             return Page();
             
         }
@@ -121,6 +161,11 @@ namespace Diplom_Utkin.Pages.userPage
                     {
                         if (isVuvod == 1)
                         {
+                            if (targetSumm > _user.Maney)
+                            {
+                                errorSupport = 1;
+                                return Page();
+                            }
                             MoneuUpdate moneuUpdate = new MoneuUpdate()
                             {
                                 id = uId,
@@ -163,6 +208,7 @@ namespace Diplom_Utkin.Pages.userPage
                 sortBroker = sortOrderAll == "broker" ? "broker_desc" : "broker";
 
                 var investToolsAllIQ = await _APIService.LoadAllToolsAsinc();
+                brokersList = investToolsAllIQ.Select(x => x.Brokers).GroupBy(x => x.NameBroker).Select(x => x.First()).ToList();
 
 
                 switch (sortOrderAll)

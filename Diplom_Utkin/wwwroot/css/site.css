@@ -442,6 +442,9 @@ header nav li a {
     flex-direction:column;
     width:80%;
 }
+.selectBlock {
+    width: 100%;
+}
 
 .informations div h1,
 .poputContent form h1{
@@ -449,6 +452,18 @@ header nav li a {
     font-size: 20px;
 }
 
+.informations select {
+    border-radius:4px;
+    border: none;
+    padding: .375rem .75rem;
+    width:max-content;
+    width:100%;
+    max-height:150px;
+}
+
+.informations select:active {
+    border: none;
+}
 canvas {
     margin-top: -30px;
     margin-left: 15%;
@@ -469,12 +484,12 @@ canvas {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-.tb_Box {
-    margin:5px 0 5px 0;
-    height:100%;
-    overflow-y:auto;
-    border-radius:15px;
 
+.tb_Box {
+    margin: 5px 0 5px 0;
+    height: 100%;
+    overflow-y: auto;
+    border-radius: 15px;
 }
 .dop-overflou {
     height:75vh;
@@ -936,29 +951,73 @@ input[type=number]::-webkit-inner-spin-button {
     font-size:30px;
 }
 
-.scriner {
-    display:flex;
-    flex-direction:row;
+/* ////////////////////////////////////////////////////////////////// */
 
-    font-size:18px;
+.vitrina {
+    display:contents;
 }
 
-.balanceHistori {
-    height:95vh;
-    overflow-y:auto;
-    overflow-x:hidden;
-}
 
-.scriner div {
+.search-menu {
+    align-self:center;
+    background: #fff;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
     display: flex;
-    flex-direction: column;
-    width: 20%;
-    align-content: center;
+    gap: 15px;
+    align-items: center;
+    max-width: 800px;
     flex-wrap: wrap;
 }
-.scriner div button{
-   margin-top:10%;
+.search-menu select,
+.search-menu input[type="text"] {
+    padding: 10px 14px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    min-width: 150px;
+    outline-offset: 2px;
 }
+
+.search-menu select:hover,
+.search-menu input[type="text"]:hover,
+.search-menu select:focus,
+.search-menu input[type="text"]:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 8px rgba(59,130,246,0.3);
+}
+
+.search-menu input[type="text"]::placeholder { 
+    color: #aaa;
+ }
+
+.search-menu button {
+    padding: 12px 28px;
+    background: #3b82f6;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.search-menu button:hover {
+    background: #2563eb;
+}
+
+@media (max-width: 600px) {
+    .search-menu {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+
+/* ////////////////////////////////////////////////////////////////// */
 
 .itemBalance {
     font-size: 15px;

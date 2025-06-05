@@ -69,6 +69,7 @@
 	  setTimeout(() => hideNotification(notif), 4000);
 	}
 
+
 	function hideNotification(element) {
 	  element.style.animation = 'slideOut 0.5s forwards';
 	  element.addEventListener('animationend', () => element.remove());
@@ -97,7 +98,7 @@
 
 	function moneuBtn() {
 
-		var mySym = Number(document.getElementById('koshelBox_btn').textContent); //////////////
+		var mySym = Number(document.getElementById('koshelBox_btn').textContent); 
 		var sum = Number(document.getElementById('summText').value);
 		var vector = Number(document.getElementById('popOperationType').textContent);
 
@@ -150,7 +151,7 @@
 			behavior:'smooth'
 		});
 
-		var userMoney = Number(document.getElementById('koshelBox_btn').textContent.replace( ',', '.').replace(' руб.', ''));
+		var userMoney = Number(document.getElementById('koshelBox_btn').textContent.replace( ',', '.'));
 
 		console.log(userMoney);
 
@@ -163,7 +164,7 @@
 		const data = await BuyData(id);
 		document.getElementById('toolName').textContent = data.nameInvestTool;
 		document.getElementById('targetToolImg').setAttribute('src', 'data:image/png;base64,' + data.imageSource);
-		document.getElementById('peiceTool').textContent = data.price;
+		document.getElementById('peiceTool').textContent = data.price + ' ₽';
 
 		document.getElementById('dostupSredstv').textContent = 'Доступно ' + String(userMoney) + ' ₽';
 		buyOpenMain(id);
@@ -213,7 +214,7 @@
 
 	function BuyFormValidation(){
 		const toolPrice = document.getElementById('peiceTool');
-		var toolPrice_value = toolPrice.textContent.replace( ',', '.');
+		var toolPrice_value = toolPrice.textContent.replace( ',', '.').replace(' ₽', '');
 
 		var mySym = Number(document.getElementById('koshelBox_btn').textContent.replace( ',', '.'));
 		var toolId = document.getElementById('targetId').textContent;
@@ -254,7 +255,7 @@
 			if(summOperation_value < toolPrice_value )
 			{
 				summOperationBox.style.borderBottom = '2px solid red';
-				showNotification('Минимальная цана'+toolPrice_value+' ₽!');
+				showNotification('Минимальная цана '+toolPrice_value+' ₽!');
 				return false;
 			}
 			else summOperationBox.style.borderBottom = '0px';
@@ -270,16 +271,12 @@
 
 			
 
-			console.log('uId: ', uId);
-			console.log('toolId: ', toolId);
-			console.log('factQuentity: ', factQuentity);
-			console.log('toolPrice_value: ', toolPrice_value);
-
 			const data = BuyMethodAPI(uId, toolId, factQuentity, toolPrice_value );
 			return true;
 		}
 		else
 		{
+			var count =  Number(document.getElementById('dostupSredstv').textContent.replace(' шт.', '').replace('Доступно ', ''))
 
 			if(summOperation_value < 1)
 			{
@@ -290,6 +287,11 @@
 
 
 			var factQuentity = summOperation_value;
+			if(factQuentity > count) 
+			{
+				showNotification('Указано некорректное количество!');
+				return false;
+			}
 
 			toolId = Number(toolId);
 			toolPrice_value = Number(toolPrice_value);

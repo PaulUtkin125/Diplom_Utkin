@@ -23,6 +23,9 @@ namespace Diplom_Utkin.Pages.userPage
 
         private readonly IConfiguration _configuration;
         public readonly ApiSettings apiSettings;
+
+        [BindProperty]
+        public double? errorSupport { get; set; }
         public IndexModel(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -43,6 +46,7 @@ namespace Diplom_Utkin.Pages.userPage
 
         public string sortName { get; set; }
         public string sortSum { get; set; }
+        public string sortCount { get; set; }
         public string CurrnerSort { get; set; }
 
 
@@ -56,9 +60,10 @@ namespace Diplom_Utkin.Pages.userPage
 
         public double targetSumm { get; set; }
         public int isVuvod { get; set; }
-
-        public bool? isClearTempData { get; set; }
-        public async Task<ActionResult> OnGetAsync(string? sortOrder, string? action, DateTime? startDate, DateTime? endDate)
+        [BindProperty(SupportsGet = true)]
+        public int? modeSelecter { get; set; }
+        public async Task<ActionResult> OnGetAsync(string? sortOrder, string? action,
+            DateTime? startDate, DateTime? endDate, int? modeSelecter)
         {
             if (startDate == null) startDate = DateTime.Now;
             if (endDate == null) endDate = DateTime.Now;
@@ -89,6 +94,7 @@ namespace Diplom_Utkin.Pages.userPage
             TempData["sortOrder"] = sortOrder;
             sortName = string.IsNullOrEmpty(sortOrder)? "name_desc" : "";
             sortSum = sortOrder == "sum" ? "sum_desc" : "sum";
+            sortCount = sortOrder == "count" ? "count_desc" : "count";
             var investToolsIQ = await _APIService.LoadUsersToolsAsinc(uId);
 
 
@@ -97,13 +103,17 @@ namespace Diplom_Utkin.Pages.userPage
                 case "name_desc":
                     investToolsIQ = investToolsIQ.OrderByDescending(x => x.InvestTool.NameInvestTool).ToList();
                     break;
-
                 case "sum_desc":
                     investToolsIQ = investToolsIQ.OrderByDescending(x => x.AllManey).ToList();
                     break;
-
                 case "sum":
                     investToolsIQ = investToolsIQ.OrderBy(x => x.AllManey).ToList();
+                    break;
+                case "count":
+                    investToolsIQ = investToolsIQ.OrderBy(x => x.Quentity).ToList();
+                    break;
+                case "count_desc":
+                    investToolsIQ = investToolsIQ.OrderByDescending(x => x.Quentity).ToList();
                     break;
 
                 default:
@@ -117,15 +127,30 @@ namespace Diplom_Utkin.Pages.userPage
             {
                 case "raschot_Btn":
 
-                    var resalt = await _APIService.CalkulateAsync(startDate, endDate, uId);
-                    if (resalt == null)
+                    if (modeSelecter == 0)
                     {
-                        ModelState.AddModelError("Pribl", "Даные отсутствуют!");
-                        break;
+                        var resalt = await _APIService.CalkulateAsync(startDate, endDate, uId);
+                        if (resalt == null)
+                        {
+                            ModelState.AddModelError("Pribl", "Даные отсутствуют!");
+                            break;
+                        }
+                        Pribl = resalt;
                     }
-                    Pribl = resalt;
+                    else
+                    {
+                        var resalt = await _APIService.CalkulateAsync(startDate, endDate, uId, (int)modeSelecter);
+                        if (resalt == null)
+                        {
+                            ModelState.AddModelError("Pribl", "Даные отсутствуют!");
+                            break;
+                        }
+                        Pribl = resalt;
+                    }
+                    
                     startDate = startDate;
                     endDate = endDate;
+                    modeSelecter = modeSelecter;
                     break;
             }
 
@@ -143,6 +168,11 @@ namespace Diplom_Utkin.Pages.userPage
                     {
                         if (isVuvod == 1)
                         {
+                            if (targetSumm > _user.Maney)
+                            {
+                                errorSupport = 1;
+                                return Page();
+                            }
                             MoneuUpdate moneuUpdate = new MoneuUpdate()
                             {
                                 id = uId,
@@ -192,6 +222,7 @@ namespace Diplom_Utkin.Pages.userPage
                 TempData["sortOrder"] = sortOrder;
                 sortName = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
                 sortSum = sortOrder == "sum" ? "sum_desc" : "sum";
+                sortCount = sortOrder == "count" ? "count_desc" : "count";
 
                 var investToolsIQ = await _APIService.LoadUsersToolsAsinc(uId);
                 if (investToolsIQ == null) return;
@@ -201,13 +232,17 @@ namespace Diplom_Utkin.Pages.userPage
                     case "name_desc":
                         investToolsIQ = investToolsIQ.OrderByDescending(x => x.InvestTool.NameInvestTool).ToList();
                         break;
-
                     case "sum_desc":
                         investToolsIQ = investToolsIQ.OrderByDescending(x => x.AllManey).ToList();
                         break;
-
                     case "sum":
                         investToolsIQ = investToolsIQ.OrderBy(x => x.AllManey).ToList();
+                        break;
+                    case "count":
+                        investToolsIQ = investToolsIQ.OrderBy(x => x.Quentity).ToList();
+                        break;
+                    case "count_desc":
+                        investToolsIQ = investToolsIQ.OrderByDescending(x => x.Quentity).ToList();
                         break;
 
                     default:
