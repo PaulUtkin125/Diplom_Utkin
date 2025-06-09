@@ -372,7 +372,7 @@
 
 	  notif.addEventListener('click', () => hideNotification(notif));
 
-	  container.appendChild(notif1);
+	  container.appendChild(notif);
 
 	  setTimeout(() => hideNotification(notif), 4000);
 	}
@@ -602,11 +602,15 @@
 		if (enteredCode != storedCode) {
 			document.getElementById('confirmCode').style.color = 'red';
 			document.getElementById('confirmError').textContent = 'Код подтверждения неверен!';
+			showNotification('Код подтверждения неверен!');
 			return false;
 		}
 
 		document.getElementById('confirmCode').style.color = 'black';
 		document.getElementById('confirmError').textContent = '';
+
+		showNotification_positive('Пользователь зарегестрирован');
+		setTimeout(() => 4000);
 		event.target.submit();
 	});
 
@@ -791,23 +795,15 @@
 		}
 	}
 
-	async function validationCreateBroker(){
+	async function validationCreateBroker(){ ////////////////////////////////////////////////////////////////////////
 
-
-		var file = document.getElementById('BrokerImgCreate').files[0];
-		var NameBroker = document.getElementById('BrokerNameCreate').value;
-		// var UrisidikciiyId = document.getElementById('Urisdiction').value;
 
 		var INNBlock = document.getElementById('brokerINNCreate');
 		var bMail =  document.getElementById('uLoginCreate');
 
 		var INN = INNBlock.value;
-		var KPP = document.getElementById('brokerKPPCreate').value;
-		var OKTMO = document.getElementById('brokerOTKMOCreate').value;
-		var BusinessAddress = document.getElementById('brokerAddressCreate').value;
 		var Phone = document.getElementById('uPhoneCreate').value;
 		var Email = bMail.value;
-		var FullNameOfTheDirector = document.getElementById('brokerDirCreate').value;
 
 		
 
@@ -825,7 +821,8 @@
 
 		var isINN = await validationINN(INN);
 		if (isINN) {
-			INNError.textContent = 'Данный номер уже используется!';
+			INNError.textContent = 'Данный ИНН уже используется!';
+			showNotification('Данный ИНН уже используется!')
 			INNBlock.style.borderBottom = '2px solid red';
 			return false;
 		}
@@ -858,7 +855,8 @@
 		{
 			var data = await validationBrokerMail(Email);
 			if(!data){
-				document.getElementById('mailBrokerCreateError').textContent = 'Этот адрес уже используется!';
+				document.getElementById('mailBrokerCreateError').textContent = 'Этот E-mail уже используется!';
+				showNotification('Этот E-mail уже используется!');
 				bMail.style.borderBottom = '2px solid red';
 				return false;
 			}
@@ -872,10 +870,15 @@
 			INNError.textContent = '';
 
 
-			var data1 = await validationBrokerMail(Email);
-			if(data)  tr = await createBrocer_Btn();
+			if(data) {
+				tr = await createBrocer_Btn();
+				showNotification_positive('Заявка зарегестрирована');
+				setTimeout(() => 4000);
+				return true;
+			}
 
-		 	return true;
+			
+		 	return false;
 		}
 
 
@@ -891,16 +894,12 @@
 				},
 				body: JSON.stringify({ toMail: inn })
 			});
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
 			const data = await response.json();
 
-			console.log('function, validationINN: ', data)
 			return data == 1;
 		}
 		catch (error) {
-			console.error('There was a problem with the fetch operation:', error);
+			showNotification('Ошибка сервера. повторите попытку позже');
 		}
 	}
 
@@ -938,7 +937,6 @@
 	async function createBrocer_Btn(){
 		var file = document.getElementById('BrokerImgCreate').files[0];
 		var NameBroker = document.getElementById('BrokerNameCreate').value;
-		// var UrisidikciiyId = document.getElementById('Urisdiction').value;
 
 		var INNBlock = document.getElementById('brokerINNCreate');
 		var bMail =  document.getElementById('uLoginCreate');
@@ -952,46 +950,9 @@
 		var FullNameOfTheDirector = document.getElementById('brokerDirCreate').value;
 
 		var data = await CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector);
-
+		return data;
 	}
 
-	async function brokerSendCode(mail) {
-
-		try {
-			const response = await fetch(baseUrl+'Universal/SendCode', {
-				method:'POST',
-				headers:{
-					'Content-Type':'application/json'
-				},
-				body: JSON.stringify({ toMail: mail })
-			});
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
-			const data = await response.json();
-
-			console.log('brokerSendCode code: ', data);
-
-			localStorage.setItem(mail, String(data));
-
-			document.getElementById('supportPassword').value = "NoN";
-			document.getElementById('supportLogin').value = mail;
-
-			popup.style.cursor = 'auto';
-			childElements.forEach(child => {
-				child.style.cursor = 'auto';
-			});
-
-
-			showNotification_positive('Код подтверждения отправлен');
-			setTimeout(() => {}, 300);
-
-			comfirmOpenDop();
-		}
-		catch (error) {
-			console.error('There was a problem with the fetch operation:', error);
-		}
-	}
 
 	function comfirmOpenDop() {
 
@@ -1026,7 +987,6 @@
 			body: formData
 		});
 		const data = response.json();
-		console.log('code: ', data);
 		return data;
 
 	}

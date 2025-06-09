@@ -34,7 +34,7 @@ namespace Diplom_Utkin.Pages.userPage
             _APIService = new APIService(apiSettings.BaseUrl);
         }
 
-        public IList<Portfolio> InvestToolsList { get; set; } = default!;
+        public IList<InvestToolDop> InvestToolsList { get; set; } = default!;
         public List<InvestTools> AllInvestToolsList { get; set; }
         public double Money { get; set; }
 
@@ -101,23 +101,23 @@ namespace Diplom_Utkin.Pages.userPage
             switch (sortOrder)
             {
                 case "name_desc":
-                    investToolsIQ = investToolsIQ.OrderByDescending(x => x.InvestTool.NameInvestTool).ToList();
+                    investToolsIQ = investToolsIQ.OrderByDescending(x => x.portfolio.InvestTool.NameInvestTool).ToList();
                     break;
                 case "sum_desc":
-                    investToolsIQ = investToolsIQ.OrderByDescending(x => x.AllManey).ToList();
+                    investToolsIQ = investToolsIQ.OrderByDescending(x => x.portfolio.AllManey).ToList();
                     break;
                 case "sum":
-                    investToolsIQ = investToolsIQ.OrderBy(x => x.AllManey).ToList();
+                    investToolsIQ = investToolsIQ.OrderBy(x => x.portfolio.AllManey).ToList();
                     break;
                 case "count":
-                    investToolsIQ = investToolsIQ.OrderBy(x => x.Quentity).ToList();
+                    investToolsIQ = investToolsIQ.OrderBy(x => x.portfolio.Quentity).ToList();
                     break;
                 case "count_desc":
-                    investToolsIQ = investToolsIQ.OrderByDescending(x => x.Quentity).ToList();
+                    investToolsIQ = investToolsIQ.OrderByDescending(x => x.portfolio.Quentity).ToList();
                     break;
 
                 default:
-                    investToolsIQ = investToolsIQ.OrderBy(x => x.InvestTool.NameInvestTool).ToList();
+                    investToolsIQ = investToolsIQ.OrderBy(x => x.portfolio.InvestTool.NameInvestTool).ToList();
                     break;
             }
 
@@ -230,23 +230,23 @@ namespace Diplom_Utkin.Pages.userPage
                 switch (sortOrder)
                 {
                     case "name_desc":
-                        investToolsIQ = investToolsIQ.OrderByDescending(x => x.InvestTool.NameInvestTool).ToList();
+                        investToolsIQ = investToolsIQ.OrderByDescending(x => x.portfolio.InvestTool.NameInvestTool).ToList();
                         break;
                     case "sum_desc":
-                        investToolsIQ = investToolsIQ.OrderByDescending(x => x.AllManey).ToList();
+                        investToolsIQ = investToolsIQ.OrderByDescending(x => x.portfolio.AllManey).ToList();
                         break;
                     case "sum":
-                        investToolsIQ = investToolsIQ.OrderBy(x => x.AllManey).ToList();
+                        investToolsIQ = investToolsIQ.OrderBy(x => x.portfolio.AllManey).ToList();
                         break;
                     case "count":
-                        investToolsIQ = investToolsIQ.OrderBy(x => x.Quentity).ToList();
+                        investToolsIQ = investToolsIQ.OrderBy(x => x.portfolio.Quentity).ToList();
                         break;
                     case "count_desc":
-                        investToolsIQ = investToolsIQ.OrderByDescending(x => x.Quentity).ToList();
+                        investToolsIQ = investToolsIQ.OrderByDescending(x => x.portfolio.Quentity).ToList();
                         break;
 
                     default:
-                        investToolsIQ = investToolsIQ.OrderBy(x => x.InvestTool.NameInvestTool).ToList();
+                        investToolsIQ = investToolsIQ.OrderBy(x => x.portfolio.InvestTool.NameInvestTool).ToList();
                         break;
                 }
 

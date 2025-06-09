@@ -106,7 +106,7 @@ namespace Diplom_Utkin.Pages.userPage
             if (keyword != null)
             {
                 keyword = keyword.Trim().ToLower();
-                if (keyword != "") investToolsAllIQ = investToolsAllIQ.Where(x => x.NameInvestTool.Contains((string)keyword)).ToList();
+                if (keyword != "") investToolsAllIQ = investToolsAllIQ.Where(x => x.NameInvestTool.ToLower().Contains((string)keyword)).ToList();
             }
 
             AllInvestToolsList = investToolsAllIQ;

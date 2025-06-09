@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\Image\1721209876568.png" />
+    <Content Remove="wwwroot\Image\dounArrow.png" />
     <Content Remove="wwwroot\Image\icon-edit.svg" />
     <Content Remove="wwwroot\Image\krest.png" />
     <Content Remove="wwwroot\Image\leftArrow.png" />
@@ -22,6 +23,8 @@
     <Content Remove="wwwroot\Image\Profil.png" />
     <Content Remove="wwwroot\Image\rightArrow.png" />
     <Content Remove="wwwroot\Image\telNew.png" />
+    <Content Remove="wwwroot\Image\Tilde.svg" />
+    <Content Remove="wwwroot\Image\uppArrow.png" />
     <Content Remove="wwwroot\Image\vozmozhnosti\Icon1.png" />
     <Content Remove="wwwroot\Image\vozmozhnosti\Icon3.png" />
     <Content Remove="wwwroot\Image\vozmozhnosti\Icon4.png" />
@@ -37,6 +40,7 @@
 
   <ItemGroup>
     <Resource Include="wwwroot\Image\1721209876568.png" />
+    <Resource Include="wwwroot\Image\dounArrow.png" />
     <Resource Include="wwwroot\Image\icon-edit.svg" />
     <Resource Include="wwwroot\Image\krest.png" />
     <Resource Include="wwwroot\Image\leftArrow.png" />
@@ -51,6 +55,8 @@
     <Resource Include="wwwroot\Image\Profil.png" />
     <Resource Include="wwwroot\Image\rightArrow.png" />
     <Resource Include="wwwroot\Image\telNew.png" />
+    <Resource Include="wwwroot\Image\Tilde.svg" />
+    <Resource Include="wwwroot\Image\uppArrow.png" />
     <Resource Include="wwwroot\Image\vozmozhnosti\Icon1.png" />
     <Resource Include="wwwroot\Image\vozmozhnosti\Icon3.png" />
     <Resource Include="wwwroot\Image\vozmozhnosti\Icon4.png" />

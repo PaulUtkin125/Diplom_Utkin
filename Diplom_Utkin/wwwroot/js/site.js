@@ -31,6 +31,7 @@ function closePopup() {
     });
     for (let i = 0; i < inputs.length; i++) {
         inputs[i].textContent = null;
+        inputs[i].value = null;
         inputs[i].style.borderBottom = '0';
     }
 	document.body.style.overflow = 'auto';
@@ -55,20 +56,25 @@ function profilOpen() {
 function profilClose() {
 
     overlay.style.cursor = 'auto';
-     document.body.style.overflow = 'auto';
-     document.getElementById('overlay').style.display = 'none';
-     sideModal.style.visibility = 'collapse';
+    document.body.style.overflow = 'auto';
+    document.getElementById('overlay').style.display = 'none';
+    sideModal.style.visibility = 'collapse';
 
-     document.getElementById('portfile_mail').disabled = true;
-     document.getElementById('portfile_phone').disabled = true;
+    document.getElementById('portfile_mail').disabled = true;
+    document.getElementById('portfile_phone').disabled = true;
 
     document.getElementById('portfile_mail').style.borderBottom = '0';
     document.getElementById('portfile_phone').style.borderBottom = '0';
 
-     document.getElementById('portfile_save_btn').style.display = 'none';
+    document.getElementById('portfile_save_btn').style.display = 'none';
 
-     document.getElementById('portfile_mail').value = startLogin;
-     document.getElementById('portfile_phone').value = startPhone;
+    var textError = document.querySelectorAll('.side-menu .text-danger');
+    textError.forEach(child => {
+        child.textContent = '';
+    });
+
+    document.getElementById('portfile_mail').value = startLogin;
+    document.getElementById('portfile_phone').value = startPhone;
 }
 
 window.onclick = function (event) {

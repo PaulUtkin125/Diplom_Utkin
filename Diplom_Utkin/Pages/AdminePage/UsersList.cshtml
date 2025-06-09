@@ -10,7 +10,6 @@
 	<section>
 		<div id="overlay" class="overlay"></div>
 		<div id="sideMenu" class="side-menu">
-			<button class="myButton" onclick="profilClose()">Закрыть</button>
 			<form method="post" onsubmit="return Update_Method_Profile(event)">
 				<div class="myRow">
 					<div class="form-group">
@@ -61,7 +60,7 @@
 					</div>
 				</form>
 
-				<form id="editForm" method="post">
+				<form id="editForm" onsubmit="return Update_Method(event)" method="post">
 					<h1>Редактирование</h1>
 					<input style="visibility:hidden" name="TargetUserId" id="targetId_Edit" type="number" />
 					<div class="dataSlice" id="dataSlice_broker" style="display:none">
@@ -82,9 +81,9 @@
 					</div>
 
 					<div class="myRow">
-						<button class="myButton" name="action" onclick="Update_Method()" value="NoN">Сохранить</button>
+						<button class="myButton" name="action" type="submit" value="NoN">Сохранить</button>
 						<button class="myButton" name="action" style="display:none" value="create">Добавить</button>
-						<button class="myButton" name="action" type="submit" value="back_btn">Отменить</button>
+						<button class="myButton" onclick="closePopup()">Отменить</button>
 					</div>
 				</form>
 				@* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// *@
@@ -102,7 +101,8 @@
 		<div class="search-container text-center">
 			<form method="get" asp-page="./Search">
 				<div class="input-group">
-					<input type="text" name="query" class="form-control search-input" placeholder="Вводить название брокера" value="@Model.Query" />
+					<input type="text" name="query" class="form-control search-input" placeholder="Введите E-mail" value="@Model.Query" />
+					<input type="hidden" name="sortOrder" value="@Model.CurrnerSort" />
 					<div class="input-group-append">
 						<button type="submit" class="btn btn-primary search-button">Поиск</button>
 					</div>
@@ -115,12 +115,12 @@
 			<thead>
 				<tr>
 					<th>
-						<a asp-route-sortOrder="@Model.sortMail">
+						<a asp-route-sortOrder="@Model.sortMail" asp-route-Query="@Model.Query">
 							Логин
 						</a>
 					</th>
 					<th>
-						<a asp-route-sortOrder="@Model.sortPhone">
+						<a asp-route-sortOrder="@Model.sortPhone" asp-route-Query="@Model.Query">
 							Телефон
 						</a>
 					</th>

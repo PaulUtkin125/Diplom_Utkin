@@ -8,9 +8,9 @@ namespace Diplom_Utkin.Model.dopValidation
         public IFormFile file { get; set; }
         public string BrokersId { get; set; }
 
+        //[RegularExpression("^[^0-9]*$", ErrorMessage = "Недопустимый символ: цифра")]
         [Required(ErrorMessage = "Поле должно быть заполнено!")]
         [MinLength(5, ErrorMessage = "Минимальная длина: 5 симвалов")]
-        [RegularExpression("^[^0-9]*$", ErrorMessage = "Недопустимый символ: цифра")]
         public string NameInvestTool { get; set; }
         
         [Required(ErrorMessage = "Поле должно быть заполнено!")]

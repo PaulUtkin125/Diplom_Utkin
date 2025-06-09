@@ -1,4 +1,6 @@
-﻿namespace Diplom_Utkin.Model.DataBase
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Diplom_Utkin.Model.DataBase
 {
     public class News
     {

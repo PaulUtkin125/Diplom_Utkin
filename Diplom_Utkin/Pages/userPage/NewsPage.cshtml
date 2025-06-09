@@ -3,6 +3,7 @@
 @{
 	ViewData["Title"] = "Кабинет";
 }
+
 <div class="window-box kabinet-box kabinetHeight">
 	@await Html.PartialAsync("Headers/_UserHeader")
 
@@ -132,12 +133,71 @@
 			</div>
 		</div>
 	</section>
+	<div class="container">
+		<section class="primiiList dop-primiiList">
+			<h3>Наши партнёры</h3>
+			<div class="carousel-wrapper-dop">
+				@foreach(var item in Model.BrokersList){
+					<div>
+						<img src="data:image/png;base64,@item.SourseFile" alt="Alternate Text" />
+					</div>
+				}
+			</div>
 
+			<script>
+				document.addEventListener('DOMContentLoaded', () => {
+					  const carouselWrapper = document.querySelector('.carousel-wrapper-dop');
+					  const items = document.querySelectorAll('.carousel-wrapper-dop div');
+
+
+					  let itemCount = items.length;
+					  for (let i = 0; i < itemCount; i++) {
+						let clone = items[i].cloneNode(true);
+						carouselWrapper.appendChild(clone);
+					  }
+
+					  itemCount = items.length * 2;
+					  carouselWrapper.style.width = `${itemCount * 33.33}vw`;
+				});
+
+			</script>
+		</section>
+	</div>
 	
+	<div id="vitrina" class="vitrina">
+		<h1 class="newsHead">Новости</h1>
+		<div class="tb_Box new-overflou">
+			<div class="fonzize-reg myRow tbCenter">
 
+				@foreach (var item in Model.NewsList)
+				{
+					<div class="dataSlice widthMode">
+						<div class="numberBox">@item.date</div>
+						<div class="numberBox"> <strong>@item.HeadLine</strong></div>
+						<p></p>
+						<p>@item.Body</p>
+						<hr />
+					</div>
+				}
+				
+			</div>
+		</div>
+	</div>
 	
 </div>
+
 <script>
+	$(document).ready(function ()
+	{
+			var hasErrors = @Html.Raw(Json.Serialize(Model.errorSupport));
+			if(hasErrors == 1){
+				openVuvod();
+				showNotification('Недостаточно средств');
+			}
+
+	})
+
+
 	let inputPhone = document.getElementById("portfile_phone");
 	inputPhone.addEventListener("keyup", (e) => { formatinputPhone(e.target); });
 	inputPhone.addEventListener("keypress", (e) => { formatinputPhone(e.target); });

@@ -41,8 +41,42 @@
         </div>
     </nav>
 </header>
+<div id="notification-container"></div>
 
 <script>
+    function showNotification(message) {
+      const container = document.getElementById('notification-container');
+
+      const notif = document.createElement('div');
+      notif.classList.add('notification');
+      notif.textContent = message;
+
+      notif.addEventListener('click', () => hideNotification(notif));
+
+      container.appendChild(notif);
+
+      setTimeout(() => hideNotification(notif), 4000);
+    }
+    function showNotification_positive(message) {
+      const container = document.getElementById('notification-container');
+
+      const notif = document.createElement('div');
+      notif.classList.add('notification');
+      notif.classList.add('notification-positive');
+      notif.textContent = message;
+
+      notif.addEventListener('click', () => hideNotification(notif));
+
+      container.appendChild(notif);
+
+      setTimeout(() => hideNotification(notif), 4000);
+    }
+
+    function hideNotification(element) {
+      element.style.animation = 'slideOut 0.5s forwards';
+      element.addEventListener('animationend', () => element.remove());
+    }
+
 
 
     async function optionFormOpen(id){
@@ -78,17 +112,17 @@
         if(data.typeOfRequestId == 3) {
              document.getElementById('positive_btn').style.display = 'block';
              document.getElementById('negative_btn').style.display = 'none';
-         }
-         else if (data.typeOfRequestId == 2)
-         {
+        }
+        else if (data.typeOfRequestId == 2)
+        {
              document.getElementById('positive_btn').style.display = 'none';
              document.getElementById('negative_btn').style.display = 'block';
 
-         }
-         else if (data.typeOfRequestId == 1){
+        }
+        else if (data.typeOfRequestId == 1){
              document.getElementById('positive_btn').style.display = 'block';
              document.getElementById('negative_btn').style.display = 'block';
-         }
+        }
     };
 
      async function optionFormOpenDop(id){
@@ -222,14 +256,36 @@
         return data;
     };
 
-    async function Update_Method(){
+   
+
+    async function Update_Method(event){
+        event.preventDefault();
 
         const id_ = document.getElementById('targetId_Edit').value;
         const mail_ = document.getElementById('uLoginEdit').value;
-        const idRole_ = document.getElementById('uTypeEdit').value;
-        const phone_ = document.getElementById('uPhoneEdit').value;
+        // const idRole_ = document.getElementById('uTypeEdit').value;
+        var phone_ = document.getElementById('uPhoneEdit').value;
 
-        await updateUser(id_, mail_, idRole_, phone_);
+        if(mail_.trim() == '') return false;
+        if(phone_ != null){
+            if(phone_.trim().length > 2 && phone_.trim().length < 18) {
+            showNotification('Номер телефона указан не верно!');
+            }
+            if (phone_.trim().length <= 2) {
+                document.getElementById('uPhoneEdit').value = null;
+                phone_ = '';
+            }
+        }
+        else phone_ = '';
+
+
+        
+         const idRole_ = 2;
+         if(phone_ == 18 || phone_ == ''){
+             await updateUser(id_, mail_, idRole_, phone_);
+             event.target.submit();
+         }
+      
     };
 
 
@@ -250,19 +306,28 @@
         var isValid = true;
         const id_ = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model._user.Id));
         const mail_ = document.getElementById('portfile_mail').value;
-        const phone_ = document.getElementById('portfile_phone').value;
+        var phone_ = document.getElementById('portfile_phone').value;
 
-        if (phone_.length < 18){
-           document.getElementById('profilePhoneError').textContent = 'Номер телефона указан не полностью!';
-            document.getElementById('portfile_phone').style.borderBottom = '2px solid red';
 
-            isValid = false;
+        if(phone_ != null){
+            if(phone_.trim().length > 2 && phone_.trim().length < 18) {
+                document.getElementById('profilePhoneError').textContent = 'Номер телефона указан не полностью!';
+                document.getElementById('portfile_phone').style.borderBottom = '2px solid red';
+
+                isValid = false;
+            }
+            else{
+                document.getElementById('profilePhoneError').textContent = '';
+                document.getElementById('portfile_phone').style.borderBottom = '2px solid black';
+            }
+            if (phone_.trim().length <= 2) {
+                document.getElementById('portfile_phone').value = null;
+                phone_ = '';
+            }
         }
-        else {
-             document.getElementById('profilePhoneError').textContent = '';
-             document.getElementById('portfile_phone').style.borderBottom = '2px solid black';
-        }
+        else phone_ = '';
 
+        /////////////////////////////////////////////////////////////////////////////////////
 
         const idRole_ = 1;
 
@@ -293,7 +358,7 @@
     async function CreateBroker(file, NameBroker, INN, KPP, OKTMO, BusinessAddress, Phone, Email, FullNameOfTheDirector)
     {
         const formData = new FormData();
-        formData.append('file', file); // fileInput — элемент <input type="file" />
+        formData.append('file', file);
         formData.append('NameBroker', NameBroker);
         formData.append('UrisidikciiyId', 1);
         formData.append('INN', INN);
@@ -310,7 +375,6 @@
             body: formData
         });
         const data = response.json();
-        console.log('code: ', data);
         return data;
         
     }

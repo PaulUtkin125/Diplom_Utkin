@@ -1,8 +1,11 @@
-﻿using Diplom_Utkin.Model.dopValidation;
+﻿using System;
+using Diplom_Utkin.Model.DataBase;
+using Diplom_Utkin.Model.dopValidation;
 using Diplom_Utkin.Model.Report;
 using Diplom_Utkin.Model.Support;
 using Finansu.Model;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Diplom_Utkin.Model.Data
 {
@@ -107,7 +110,15 @@ namespace Diplom_Utkin.Model.Data
             }
             return null;
         }
-
+        public async Task deketeTool (int id)
+        {
+            var processPositive = await _httpClient.PostAsJsonAsync("Broker/DeleteToolfast", id);
+           
+        }
+        public async Task restoreTool(int id)
+        {
+            var processPositive = await _httpClient.PostAsJsonAsync("Broker/restoreTool", id);
+        }
 
 
         public async Task<List<string[]>?> loadChartAsynk(int id)
@@ -118,10 +129,10 @@ namespace Diplom_Utkin.Model.Data
             return resalt;
         }
 
-        public async Task<List<Portfolio>?> LoadUsersToolsAsinc(int id)
+        public async Task<List<InvestToolDop>?> LoadUsersToolsAsinc(int id)
         {
             var processPositive = await _httpClient.PostAsJsonAsync("User/UserSTools", id);
-            var resalt = await processPositive.Content.ReadFromJsonAsync<List<Portfolio>>();
+            var resalt = await processPositive.Content.ReadFromJsonAsync<List<InvestToolDop>>();
             if (resalt == null) return null;
             else return resalt;
         }
@@ -160,6 +171,13 @@ namespace Diplom_Utkin.Model.Data
             var resalt = await processPositive.Content.ReadFromJsonAsync<double>();
             if (resalt == 0.0) return null;
             else return resalt;
+        }
+
+        public async Task<List<News>> loadNews()
+        {
+            var processPositive = await _httpClient.GetAsync("User/loadNews");
+            var resalt = await processPositive.Content.ReadFromJsonAsync<List<News>>();
+            return resalt;
         }
         public async Task<List<DvizhenieSredstv>> Report1u(DateTime start, DateTime end, int mode)
         {

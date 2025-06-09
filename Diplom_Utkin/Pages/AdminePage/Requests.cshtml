@@ -158,6 +158,7 @@
 			<form method="get" asp-page="./Search">
 				<div class="input-group">
 					<input type="text" name="query" class="form-control search-input" placeholder="Вводить название брокера" value="@Model.Query" />
+					<input type="hidden" name="sortOrder" value="@Model.CurrnerSort" />
 					<div class="input-group-append">
 						<button type="submit" class="btn btn-primary search-button">Поиск</button>
 					</div>
@@ -173,17 +174,17 @@
 						Иконка
 					</th>
 					<th>
-						<a asp-route-sortOrder="@Model.sortName">
+						<a asp-route-sortOrder="@Model.sortName" asp-route-Query="@Model.Query">
 							Название
 						</a>
 					</th>
 					<th>
-						<a asp-route-sortOrder="@Model.sortDir">
+						<a asp-route-sortOrder="@Model.sortDir" asp-route-Query="@Model.Query">
 							Директор
 						</a>
 					</th>
 					<th>
-						<a asp-route-sortOrder="@Model.sortStatus">
+						<a asp-route-sortOrder="@Model.sortStatus" asp-route-Query="@Model.Query">
 							Статус
 						</a>
 					</th>
@@ -197,7 +198,7 @@
 				{
 					<tr>
 						<td>
-							<div class="">
+							<div class="hd-imgBlock">
 								<img src="data:image/png;base64, @item.SourseFile" />
 							</div>
 						</td>
@@ -327,15 +328,18 @@
 		if(data == 1) {
 			INNBlock.style.borderBottom = '2px solid red';
 			INNBlock.focus();
-			INNError.textContent = 'Данный номер уже используется!'
+			// INNError.textContent = 'Данный номер уже используется!';
+			showNotification('Данный ИНН уже используется!');
+
 			return false;
 		}
 		if(data == 0)
 		{
 			INNBlock.style.borderBottom = '0';
 			INNError.textContent = '';
-			return true;
 		}
+
+		showNotification_positive("Брокер зарегестрирован");
 		return true;
 	}
 

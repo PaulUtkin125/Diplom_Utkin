@@ -96,12 +96,16 @@
 						</div>
 						<label id="toolName"></label>
 						<div class="form-group dataSlice">
-							<label id="peiceTool" class="control-label"></label>
-							<div class="form-group">
-								<label asp-for="targetSumm" id="edIzm" class="control-label"></label>
-								<input asp-for="targetSumm" id="summOperation" class="form-control" type="number" required />
-								<span asp-validation-for="targetSumm" id="summOperationError" class="text-danger"></span>
+							<label class="control-label">Цена: <strong id="peiceTool"></strong></label>
+							<div class="myRow edit-gap">
+								<div class="form-group">
+									<label asp-for="targetSumm" id="edIzm" class="control-label"></label>
+									<input asp-for="targetSumm" id="summOperation" class="form-control" type="number" required />
+									<span asp-validation-for="targetSumm" id="summOperationError" class="text-danger"></span>
+								</div>
+								<label class="token"> ₽</label>
 							</div>
+							
 							<label style="visibility:hidden" id="dostupSredstv"></label>
 						</div>
 
@@ -151,7 +155,7 @@
 			<button type="submit">Поиск</button>
 		</form>
 		<div class="tb_Box dop-overflou">
-			<div class="fonzize-reg myRow">
+			<div class="fonzize-reg myRow tbCenter">
 
 				@foreach (var item in Model.AllInvestToolsList)
 				{
@@ -162,7 +166,7 @@
 						</div>
 
 						<div class="form-group dataSlice">
-							<label class="control-label">@item.Price руб</label>
+							<label class="control-label">Цена: @item.Price ₽</label>
 							<label id="toolName">@item.NameInvestTool</label>
 						</div>
 
@@ -175,7 +179,7 @@
 </div>
 
 <script>
-		$(document).ready(function ()
+	$(document).ready(function ()
 	{
 			var hasErrors = @Html.Raw(Json.Serialize(Model.errorSupport));
 			if(hasErrors == 1){

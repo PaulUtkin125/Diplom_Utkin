@@ -55,7 +55,7 @@
 
 
 <script>
-	  function showNotification(message) {
+	function showNotification(message) {
 	  const container = document.getElementById('notification-container');
 
 	  const notif = document.createElement('div');
@@ -350,16 +350,23 @@
 		const id_ = @Model._user.Id;
 		const mail_ = document.getElementById('portfile_mail').value;
 		const phone_ = document.getElementById('portfile_phone').value;
-		if(phone_.length < 18 ){
-			document.getElementById('profilePhoneError').textContent = 'Номер телефона указан не полностью!';
-			document.getElementById('portfile_phone').style.borderBottom = '2px solid red';
+		if(phone_ != null){
+			if(phone_.trim().length > 2 && phone_.trim().length < 18) {
+				document.getElementById('profilePhoneError').textContent = 'Номер телефона указан не полностью!';
+				document.getElementById('portfile_phone').style.borderBottom = '2px solid red';
 
-			isValid = false;
+				isValid = false;
+			}
+			else{
+				document.getElementById('profilePhoneError').textContent = '';
+				document.getElementById('portfile_phone').style.borderBottom = '2px solid black';
+			}
+			if (phone_.trim().length <= 2) {
+				document.getElementById('uPhoneEdit').value = null;
+				phone_ = '';
+			}
 		}
-		 else {
-			 document.getElementById('profilePhoneError').textContent = '';
-			 document.getElementById('portfile_phone').style.borderBottom = '2px solid black';
-		 }
+		else phone_ = '';
 
 		const idRole_ = 2;
 		if(isValid){

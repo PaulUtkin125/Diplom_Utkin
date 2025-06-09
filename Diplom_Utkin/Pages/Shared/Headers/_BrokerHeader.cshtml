@@ -1,4 +1,4 @@
-﻿<header>
+﻿@*<header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
         <div class="container">
             <div class="hd-imgBlock">
@@ -35,8 +35,42 @@
         </div>
     </nav>
 </header>
+ <div id="notification-container"></div> *@
 
 <script>
+	  function showNotification(message) {
+	  const container = document.getElementById('notification-container');
+
+	  const notif = document.createElement('div');
+	  notif.classList.add('notification');
+	  notif.textContent = message;
+
+	  notif.addEventListener('click', () => hideNotification(notif));
+
+	  container.appendChild(notif);
+
+	  setTimeout(() => hideNotification(notif), 4000);
+	}
+	function showNotification_positive(message) {
+	  const container = document.getElementById('notification-container');
+
+	  const notif = document.createElement('div');
+	  notif.classList.add('notification');
+	  notif.classList.add('notification-positive');
+	  notif.textContent = message;
+
+	  notif.addEventListener('click', () => hideNotification(notif));
+
+	  container.appendChild(notif);
+
+	  setTimeout(() => hideNotification(notif), 4000);
+	}
+
+	function hideNotification(element) {
+	  element.style.animation = 'slideOut 0.5s forwards';
+	  element.addEventListener('animationend', () => element.remove());
+	}
+
 	var startLogin1 = '';
 	var startPhone1 = '';
 
@@ -62,16 +96,23 @@
 		const phone_ = document.getElementById('portfile_phone').value;
 		const name_ = document.getElementById('portfile_Name').value;
 
-		if(phone_.length < 18 ){
-			document.getElementById('profilePhoneError').textContent = 'Номер телефона указан не полностью!';
-			document.getElementById('portfile_phone').style.borderBottom = '2px solid red';
+		if(phone_ != null){
+			if(phone_.trim().length > 2 && phone_.trim().length < 18) {
+				document.getElementById('profilePhoneError').textContent = 'Номер телефона указан не полностью!';
+				document.getElementById('portfile_phone').style.borderBottom = '2px solid red';
 
-			isValid = false;
+				isValid = false;
+			}
+			else{
+				document.getElementById('profilePhoneError').textContent = '';
+				document.getElementById('portfile_phone').style.borderBottom = '2px solid black';
+			}
+			if (phone_.trim().length <= 2) {
+				document.getElementById('uPhoneEdit').value = null;
+				phone_ = '';
+			}
 		}
-		else {
-			 document.getElementById('profilePhoneError').textContent = '';
-			 document.getElementById('portfile_phone').style.borderBottom = '2px solid black';
-		}
+		else phone_ = '';
 
 		 if(isValid){
 			var data = await updateUser(id_, mail_, phone_, name_);
@@ -119,8 +160,14 @@
 		document.getElementById('optionForm').style.display = 'block';
 		document.getElementById('targetId').value = id;
 
-
-		
+		if(data.isClosed){
+			document.getElementById('deleteBtn').style.display = 'none';
+			document.getElementById('restoreBtn').style.display = 'block';
+		}
+		else{
+			document.getElementById('restoreBtn').style.display = 'none';
+			document.getElementById('deleteBtn').style.display = 'block';
+		}
 	};
 
 	async function ToolData(id_){

@@ -125,38 +125,38 @@
 					var ctx = document.getElementById('myPieChart').getContext('2d');
 
 					var myPieChart = new Chart(ctx, {
-						type: 'pie',
-						data: {
-							labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.chartName)),
-							datasets: [{
-								data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.chartData)),
+					type: 'pie',
+					data: {
+					labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.chartName)),
+					datasets: [{
+					data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.chartData)),
 
-							}]
-						},
-						options: {
-							animation: {
-								duration: 0
-							},
-							responsive: true,
-							plugins: {
-								legend: {
-									position: 'right',
-									labels: {
-										font:{
-											size:18
-										}
-									}
-								},
-								tooltip: {
-									callbacks: {
-										  label: function(context) {
-											return context.parsed + ' ₽';
+					}]
+					},
+					options: {
+					animation: {
+					duration: 0
+					},
+					responsive: true,
+					plugins: {
+					legend: {
+					position: 'right',
+					labels: {
+					font:{
+					size:18
+					}
+					}
+					},
+					tooltip: {
+					callbacks: {
+					label: function(context) {
+					return context.parsed + ' ₽';
 
-										  }
-									}
-								}
-							}
-						}
+					}
+					}
+					}
+					}
+					}
 					});
 				</script>
 			</div>
@@ -182,18 +182,18 @@
 									<option value="0">Весь портфель</option>
 									@foreach (var tool in Model.InvestToolsList)
 									{
-										if (Model.modeSelecter == tool.InvestToolId)
+										if (Model.modeSelecter == tool.portfolio.InvestToolId)
 										{
-											<option value="@tool.InvestTool.Id" selected>@tool.InvestTool.NameInvestTool</option>
+											<option value="@tool.portfolio.InvestTool.Id" selected>@tool.portfolio.InvestTool.NameInvestTool</option>
 										}
 										else {
-											<option value="@tool.InvestTool.Id">@tool.InvestTool.NameInvestTool</option>
+											<option value="@tool.portfolio.InvestTool.Id">@tool.portfolio.InvestTool.NameInvestTool</option>
 										}
 									}
 
-								  </select>
+								</select>
 							</div>
-							
+
 							<div class="form-group">
 								<button class="myButton" name="action" type="submit" value="raschot_Btn">Рассчитать</button>
 							</div>
@@ -211,70 +211,105 @@
 			</div>
 		</div>
 
-		
+
 		<div class="myRow tb_header space-between">
 			<h1>Инструменты</h1>
 		</div>
-		<div class="tb_Box cab_model">
-			<table class="table">
-				<thead>
-					<tr>
-						<th>
-							Иконка
-						</th>
-						<th>
-							<a asp-route-sortOrder="@Model.sortName">
-								Название
-							</a>
-						</th>
-						<th>
-							<a asp-route-sortOrder="@Model.sortCount">
-								Количество
-							</a>
-						</th>
-						<th>
-							<a asp-route-sortOrder="@Model.sortSum">
-								Стоимость
-							</a>
-						</th>
-						<th>
-							Действие
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var item in Model.InvestToolsList)
-					{
+		<div class="tb_Box cab_model notToolProtfile">
+			@if (Model.InvestToolsList.Count() == 0)
+			{
+				<div class="dataSlice">
+					<label>Портфель пуст</label>
+					<label>Для покупки перейдите на <a href="/userPage/Vitrina">ветрину</a> <a></a></label>
+				</div>
+			}
+			else{
+				<table class="table">
+					<thead>
 						<tr>
-							<td>
-								<div class="hd-imgBlock settings">
-									<img src="data:image/png;base64, @item.InvestTool.ImageSource" />
-								</div>
-							</td>
-							<td>
-								@Html.DisplayFor(modelItem => item.InvestTool.NameInvestTool)
-							</td>
-							<td>
-								@Html.DisplayFor(modelItem => item.Quentity) шт.
-							</td>
-							<td>
-								@Html.DisplayFor(modelItem => item.AllManey) ₽
-							</td>
-							<td class="tbColCenter">
-								@if (!item.InvestTool.isFrozen)
-								{
-									<a onclick="buyOpen(@item.InvestTool.Id)">Докупить</a>
-									<span> | </span>
-									<a onclick="sellOpen(@item.InvestTool.Id, @item.Quentity)"> Продать </a>
-								}
-
-							</td>
-
-
+							<th>
+								Иконка
+							</th>
+							<th>
+								<a asp-route-sortOrder="@Model.sortName">
+									Название
+								</a>
+							</th>
+							<th>
+								<a asp-route-sortOrder="@Model.sortCount">
+									Количество
+								</a>
+							</th>
+							<th>
+								<a asp-route-sortOrder="@Model.sortSum">
+									Стоимость
+								</a>
+							</th>
+							<th>
+								Дата последней покупки
+							</th>
+							<th class="tb-priblVector">
+								Динамика стоимости
+							</th>
+							<th>
+								Действие
+							</th>
 						</tr>
-					}
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						@foreach (var item in Model.InvestToolsList)
+						{
+							<tr>
+								<td>
+									<div class="hd-imgBlock settings">
+										<img src="data:image/png;base64, @item.portfolio.InvestTool.ImageSource" />
+									</div>
+								</td>
+								<td>
+									@Html.DisplayFor(modelItem => item.portfolio.InvestTool.NameInvestTool)
+								</td>
+								<td>
+									@Html.DisplayFor(modelItem => item.portfolio.Quentity) шт.
+								</td>
+								<td>
+									@Html.DisplayFor(modelItem => item.portfolio.AllManey) ₽
+								</td>
+								<td>
+									@Html.DisplayFor(modelItem => item.DateTime)
+								</td>
+								<td>
+									<div class="hd-imgBlock settings tb-priblVector">
+										@if (item.Pribl > 0)
+										{
+											<img src="~/Image/uppArrow.png" />
+										}
+										else if (item.Pribl < 0)
+										{
+											<img src="~/Image/dounArrow.png" />
+										}
+										else if (item.Pribl == 0)
+										{
+											<img src="~/Image/Tilde.svg" />
+										}
+									</div>
+								</td>
+								<td class="activityBlock">
+									@if (!item.portfolio.InvestTool.isFrozen)
+									{
+										<a onclick="buyOpen(@item.portfolio.InvestTool.Id)">Докупить</a>
+										<span> | </span>
+										<a onclick="sellOpen(@item.portfolio.InvestTool.Id, @item.portfolio.Quentity)"> Продать </a>
+									}
+
+								</td>
+
+
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
+			
 		</div>
 	</div>
 	

@@ -361,11 +361,12 @@ header nav li a {
     display: flex;
     width: calc(100% + 33.33%);
     animation: move 20s linear infinite;
+    height:contain;
 }
-
 .carousel-wrapper div {
     display: block;
     width: 35%;
+    height:100%;
     padding: 15px;
    
 }
@@ -373,6 +374,7 @@ header nav li a {
 
 .carousel-wrapper div img{
     width:100%;
+    height:100%;
     filter: brightness(87%);
 }
 
@@ -484,6 +486,9 @@ canvas {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+.table .settings {
+    display: contents;
+}
 
 .tb_Box {
     margin: 5px 0 5px 0;
@@ -494,14 +499,86 @@ canvas {
 .dop-overflou {
     height:75vh;
 }
-.dop-overflou .fonzize-reg {
+
+.new-overflou {
+    height: 65vh;
+}
+
+.dop-overflou .tbCenter {
     flex-wrap:wrap;
     justify-content:center;
     align-items:stretch;
 }
 
+.dop-primiiList {
+    margin:0;
+}
+.dop-primiiList .carousel-wrapper{
+    padding: 0;
+    height: min-content;
+}
+.dop-primiiList h1{
+    margin-bottom:0;
+}
+
+
+.dop-primiiList .carousel-wrapper-dop div img {
+    width: 15%;
+    height: none;
+    filter: brightness(80%);
+}
+
+.carousel-wrapper-dop {
+    display: flex;
+    width: calc(100% + 33.33%);
+    animation: moveDop 60s linear infinite;
+    height: contain;
+    align-items: center;
+}
+@keyframes moveDop {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+
+.widthMode {
+    width:80%;
+}
+.newsHead {
+    align-self:center;
+}
+
+.carousel-wrapper-dop div {
+    display: block;
+    width: 40%;
+    height: 100%;
+    padding: 0px;
+}
+
+.new-overflou .tbCenter {
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.news-overflou .tbCenter {
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+}
+
+
 .tb_boxDop {
     overflow: hidden;
+}
+
+.news-block {
+    height:100%;
 }
 
 .fonzize-reg h1 {
@@ -584,6 +661,24 @@ canvas {
 .toolCard a{
     text-decoration:none;
 }
+.token{
+    align-self:end;
+}
+.edit-gap {
+    gap:7px;
+}
+
+.notToolProtfile {
+    display:flex;
+    justify-content:center;
+}
+.notToolProtfile label {
+    text-align:center;
+}
+
+.toolCard strong{
+    font-weight:normal;
+}
 
 .toolCard .dataSlice {
     margin-top: 10px;
@@ -609,7 +704,14 @@ canvas {
     text-align:center;
     width:100%;
 }
-/*/ ///////////////////////////////////////////////////// /*/
+
+.newsBlc {
+    padding-top:0;
+}
+.newsBlc .primiiList {
+    padding-top: 0;
+}
+
 .table {
     font-size: 20px;
     color: black;
@@ -662,11 +764,12 @@ canvas {
     width:120px;
 }
 
-.tbColCenter {
-    display: flex;
-    justify-content: center;
-    height: 100%;
-    align-items: center;
+.activityBlock{
+    width:220px;
+}
+
+.tb-priblVector{
+    width:100px;
 }
 
 .tbColCenter form {

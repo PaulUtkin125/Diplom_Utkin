@@ -1,4 +1,5 @@
 using Diplom_Utkin.Model.Data;
+using Diplom_Utkin.Model.DataBase;
 using Diplom_Utkin.Model.Support;
 using Finansu.Model;
 using Microsoft.AspNetCore.Mvc;
@@ -34,11 +35,10 @@ namespace Diplom_Utkin.Pages.userPage
         [BindProperty]
         public CardModel _cardModel { get; set; } = default!;
 
-        public double? Pribl { get; set; } = 0;
-
-        public string sortName { get; set; }
-        public string sortSum { get; set; }
-        public string CurrnerSort { get; set; }
+        public List<Brokers> BrokersList { get; set; } = default!;
+        public List<News> NewsList { get; set; } = default!;
+        [BindProperty]
+        public double? errorSupport { get; set; }
         public async Task<ActionResult> OnGet()
         {
             if (TempData["uId"] != null)
@@ -49,6 +49,52 @@ namespace Diplom_Utkin.Pages.userPage
                 Money = _user.Maney;
 
             }
+            else return Unauthorized();
+
+            NewsList = await _APIService.loadNews();
+            BrokersList = await _APIService.NotNewBrokersList();
+            return Page();
+        }
+
+        public async Task<ActionResult> OnPost(string? action, double? targetSumm, int? isVuvod)
+        {
+            await WorkOfData();
+
+            switch (action)
+            {
+                case "btnBalans":
+                    if (targetSumm > 0)
+                    {
+                        if (isVuvod == 1)
+                        {
+                            if (targetSumm > _user.Maney)
+                            {
+                                errorSupport = 1;
+                                return Page();
+                            }
+                            MoneuUpdate moneuUpdate = new MoneuUpdate()
+                            {
+                                id = uId,
+                                sum = (double)targetSumm,
+                                vector = (int)isVuvod
+                            };
+                            Money = await _APIService.UserUpdateMoneu(moneuUpdate);
+                        }
+                        else
+                        {
+                            MoneuUpdate moneuUpdate = new MoneuUpdate()
+                            {
+                                id = uId,
+                                sum = (double)targetSumm,
+                                vector = (int)isVuvod
+                            };
+                            Money = await _APIService.UserUpdateMoneu(moneuUpdate);
+                        }
+                    }
+                    break;
+            }
+            await WorkOfData();
+
             return Page();
         }
         private async Task WorkOfData()
@@ -59,7 +105,8 @@ namespace Diplom_Utkin.Pages.userPage
                 TempData["uId"] = uId;
                 _user = await _APIService.moneyLoadAsync(uId);
                 Money = _user.Maney;
-               
+                NewsList = await _APIService.loadNews();
+                BrokersList = await _APIService.NotNewBrokersList();
             }
         }
 
