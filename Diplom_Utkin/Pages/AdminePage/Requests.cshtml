@@ -296,6 +296,7 @@
 	async function validationCreateBroker(event){
 		event.preventDefault();
 
+
 		var file = document.getElementById('BrokerImgCreate').files[0];
 		var NameBroker = document.getElementById('BrokerNameCreate').value;
 		// var UrisidikciiyId = document.getElementById('Urisdiction').value;
@@ -315,7 +316,7 @@
 		var INNError = document.getElementById('INNError');
 		var isINN = await validationINN(INN);
 		console.log('isINN: ', isINN);
-		if (isINN == false ) {
+		if (isINN != false ) {
 			INNError.textContent = 'Данный номер уже используется!';
 			INNBlock.style.borderBottom = '2px solid red';
 			return false;
@@ -340,6 +341,7 @@
 		}
 
 		showNotification_positive("Брокер зарегестрирован");
+		setTimeout(() => event.target.submit(), 4000);
 		return true;
 	}
 
