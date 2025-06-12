@@ -122,7 +122,9 @@
 			<div class="poputContent">
 				<div class="top_">
 					<div>
-						<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
+						<form method="post">
+							<button name="NoN"><img src="/Image/krest.png" alt="Alternate Text" /></button>
+						</form>
 					</div>
 				</div>
 
@@ -391,6 +393,7 @@
 
 		profilOpen();
 
+		document.getElementById('sideMenu').style.overflow = 'auto';
 		document.getElementById('balanceHistoriBlock').style.display = 'block';
 		document.getElementById('profile').style.display = 'none';
 	}

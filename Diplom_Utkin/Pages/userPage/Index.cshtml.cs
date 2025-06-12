@@ -58,6 +58,7 @@ namespace Diplom_Utkin.Pages.userPage
         [Required(ErrorMessage = "Поле должно быть заполнено!")]
         public DateTime? endDate { get; set; }
 
+        [Required(ErrorMessage = "Заполните поле")]
         public double targetSumm { get; set; }
         public int isVuvod { get; set; }
         [BindProperty(SupportsGet = true)]
@@ -193,7 +194,11 @@ namespace Diplom_Utkin.Pages.userPage
                         }
                     }
                     break;
+                case "btnBuy":
+                    errorSupport = 2;
+                    break;
             }
+
             await WorkOfData();
             return Page();
         }

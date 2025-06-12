@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.ConstrainedExecution;
 using Diplom_Utkin.Model.Data;
 using Diplom_Utkin.Model.dopValidation;
 using Diplom_Utkin.Model.Support;
@@ -25,7 +26,7 @@ namespace Diplom_Utkin.Pages.HomePage
         public int idU { get; set; }
 
         [BindProperty]
-        public StartUserData User { get; set; }
+        public StartUserData user { get; set; }
 
         [BindProperty]
         public logoValidationReg logoValidationReg { get; set; }
@@ -34,7 +35,7 @@ namespace Diplom_Utkin.Pages.HomePage
         public ConfirmCodeValidation codeValidation { get; set; } = default!;
        
         [BindProperty]
-        public Brokers Broker { get; set; } = default!;
+        public Brokers Broker { get; set; }
 
         [BindProperty]
         public double? errorSupport { get; set; }
@@ -43,10 +44,10 @@ namespace Diplom_Utkin.Pages.HomePage
             switch (action)
             {
                 case "vhod_btn":
-                    User.RoleId = 2;
+                    user.RoleId = 2;
                     try
                     {
-                        var data = await _APIService.AutorizationAsynk(User);
+                        var data = await _APIService.AutorizationAsynk(user);
                         if (data != null)
                         {
                             TempData["uId"] = data;
@@ -54,7 +55,6 @@ namespace Diplom_Utkin.Pages.HomePage
                         }
                         else
                         {
-                            ModelState.AddModelError("User.Login", "Неправильный логин или пароль");
                             errorSupport = 1;
                             return Page();
                         }
@@ -64,25 +64,25 @@ namespace Diplom_Utkin.Pages.HomePage
                         errorSupport = 1.1;
                         return Page();
                     }
-                    
-                ;
 
 
                 case "Registr_btn":
                     
-                    User.Login = logoValidationReg.Email;
-                    User.Password = logoValidationReg.Password;
-                    User.RoleId = 2;
+                    user.Login = logoValidationReg.Email;
+                    user.Password = logoValidationReg.Password;
+                    user.RoleId = 2;
 
-                    await _APIService.RegistrationAsync(User);
+                    await _APIService.RegistrationAsync(user);
+                    errorSupport = 4.1;
                     return Page();
 
+
                 case "vhodAdmin_btn":
-                    User.RoleId = 1;
+                    user.RoleId = 1;
 
                     try
                     {
-                        var data1 = await _APIService.AdminAutorizationAsynk(User);
+                        var data1 = await _APIService.AdminAutorizationAsynk(user);
                         if (data1 != null)
                         {
                             TempData["adminId"] = data1;
@@ -90,7 +90,6 @@ namespace Diplom_Utkin.Pages.HomePage
                         }
                         else
                         {
-                            ModelState.AddModelError("User.Login", "Неправильный логин или пароль");
                             errorSupport = 2;
                             return Page();
                         }
@@ -104,11 +103,11 @@ namespace Diplom_Utkin.Pages.HomePage
                 ;
 
                 case "vhodBroker_btn":
-                    User.RoleId = 3;
+                    user.RoleId = 3;
 
                     try
                     {
-                        var data2 = await _APIService.BrokerAutorizationAsynk(User);
+                        var data2 = await _APIService.BrokerAutorizationAsynk(user);
                         if (data2 != null)
                         {
                             TempData["brokerId"] = data2;
@@ -116,7 +115,6 @@ namespace Diplom_Utkin.Pages.HomePage
                         }
                         else
                         {
-                            ModelState.AddModelError("User.Login", "Неправильный логин или пароль");
                             errorSupport = 3;
                             return Page();
                         }
@@ -135,9 +133,11 @@ namespace Diplom_Utkin.Pages.HomePage
             }
         }
 
+
         public void OnGet()
         {
             TempData.Clear();
+            ModelState.Clear();
         }
     }
 }

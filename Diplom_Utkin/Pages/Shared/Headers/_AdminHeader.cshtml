@@ -263,7 +263,7 @@
 
         const id_ = document.getElementById('targetId_Edit').value;
         const mail_ = document.getElementById('uLoginEdit').value;
-        // const idRole_ = document.getElementById('uTypeEdit').value;
+        //const idRole_ = document.getElementById('uTypeEdit').value;
         var phone_ = document.getElementById('uPhoneEdit').value;
 
         if(mail_.trim() == '') return false;
@@ -281,7 +281,7 @@
 
         
          const idRole_ = 2;
-         if(phone_ == 18 || phone_ == ''){
+         if(phone_.trim().length == 18 || phone_ == ''){
              await updateUser(id_, mail_, idRole_, phone_);
              event.target.submit();
          }

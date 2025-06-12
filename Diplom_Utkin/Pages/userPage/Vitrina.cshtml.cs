@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Diplom_Utkin.Model.Data;
 using Diplom_Utkin.Model.Support;
@@ -29,6 +30,7 @@ namespace Diplom_Utkin.Pages.userPage
         }
         [BindProperty]
         public CardModel _cardModel { get; set; } = default!;
+        [Required(ErrorMessage = "Заполните поле")]
         public double targetSumm { get; set; }
         public int isVuvod { get; set; }
         public List<Brokers> brokersList { get; set; }
@@ -186,6 +188,9 @@ namespace Diplom_Utkin.Pages.userPage
                         }
                     }
                     break;
+                case "btnBuy":
+                    errorSupport = 2;
+                    break;
             }
             await WorkOfData();
 
@@ -228,6 +233,30 @@ namespace Diplom_Utkin.Pages.userPage
                     default:
                         investToolsAllIQ = investToolsAllIQ.OrderBy(x => x.NameInvestTool).ToList();
                         break;
+                }
+
+
+                if (paperType != "")
+                {
+                    switch (paperType)
+                    {
+                        case "Акция":
+                            investToolsAllIQ = investToolsAllIQ.Where(x => x.TypeTool == "Акция").ToList();
+                            break;
+                        case "Фонд":
+                            investToolsAllIQ = investToolsAllIQ.Where(x => x.TypeTool == "Фонд").ToList();
+                            break;
+                        case "Облигация":
+                            investToolsAllIQ = investToolsAllIQ.Where(x => x.TypeTool == "Облигация").ToList();
+                            break;
+                    }
+                }
+                if (brokerSelecter != 0 && brokerSelecter != null) investToolsAllIQ = investToolsAllIQ.Where(x => x.BrokersId == brokerSelecter).ToList();
+
+                if (keyword != null)
+                {
+                    keyword = keyword.Trim().ToLower();
+                    if (keyword != "") investToolsAllIQ = investToolsAllIQ.Where(x => x.NameInvestTool.ToLower().Contains((string)keyword)).ToList();
                 }
 
                 AllInvestToolsList = investToolsAllIQ;

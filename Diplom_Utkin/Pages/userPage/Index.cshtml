@@ -42,7 +42,9 @@
 			<div class="poputContent">
 				<div class="top_">
 					<div>
-						<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
+						<form method="post">
+							<button name="NoN"><img src="/Image/krest.png" alt="Alternate Text" /></button>
+						</form>
 					</div>
 				</div>
 				<form id="myForm" onsubmit="return moneuBtn() && isValidMony()" method="post">
@@ -88,7 +90,7 @@
 						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType" />
 					</div>
 				</form>
-				<form id="buyForm" onsubmit="return BuyFormValidation()" method="post">
+				<form id="buyForm" onsubmit="return BuyFormValidation(event)" method="post">
 					<div class="toolCard">
 						<h1 id="popTitleBuy"></h1>
 						<input style="visibility:hidden" id="targetId" disabled />
@@ -97,15 +99,18 @@
 						</div>
 						<label id="toolName"></label>
 						<div class="form-group dataSlice">
-							<label id="peiceTool" class="control-label" hidden></label>
-							<label id="dostupSredstv"></label>
-							<div class="form-group">
-								<label asp-for="targetSumm" id="edIzm" class="control-label"></label>
-								<input asp-for="targetSumm" id="summOperation" class="form-control" type="number" required />
-								<span asp-validation-for="targetSumm" id="summOperationError" class="text-danger"></span>
+							<label id="peiceTool" class="control-label"></label>
+							<div class="myRow edit-gap">
+								<div class="form-group">
+									<label asp-for="targetSumm" id="edIzm" class="control-label"></label>
+									<input asp-for="targetSumm" id="summOperation" class="form-control" type="number" required />
+									<span asp-validation-for="targetSumm" id="summOperationError" class="text-danger"></span>
+								</div>
+								<label id="token" class="token"></label>
 							</div>
-							<label style="visibility:hidden" id="dostupSredstv"></label>
+							<label id="dostupSredstv"></label>
 						</div>
+
 
 						<button id="buyBtn" class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
 						<button id="sellBtn" style="display:none" class="myButton" name="action" type="submit" value="btnBuy">Выполнить</button>
@@ -220,7 +225,7 @@
 			{
 				<div class="dataSlice">
 					<label>Портфель пуст</label>
-					<label>Для покупки перейдите на <a href="/userPage/Vitrina">ветрину</a> <a></a></label>
+					<label>Для покупки перейдите на <a href="/userPage/Vitrina">витрину</a> <a></a></label>
 				</div>
 			}
 			else{
@@ -322,6 +327,9 @@
 			if(hasErrors == 1){
 				openVuvod();
 				showNotification('Недостаточно средств');
+			}
+			else if(hasErrors == 2){
+				showNotification_positive('Операцйия проведена');
 			}
 			
 	})
@@ -521,6 +529,7 @@
 
 		profilOpen();
 
+		document.getElementById('sideMenu').style.overflow = 'auto';
 		document.getElementById('balanceHistoriBlock').style.display = 'block';
 		document.getElementById('profile').style.display = 'none';
 	}

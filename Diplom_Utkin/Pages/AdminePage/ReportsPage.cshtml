@@ -42,7 +42,9 @@
 			<div class="poputContent">
 				<div class="top_">
 					<div>
-						<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
+						<form method="post">
+							<button name="NoN"><img src="/Image/krest.png" alt="Alternate Text" /></button>
+						</form>
 					</div>
 				</div>
 
@@ -363,18 +365,20 @@
 		const currentDate = new Date();
 
 		currentDate.setHours(0, 0, 0, 0);
+		selectedDate.setHours(0, 0, 0, 0);
 
 
-		if(selectedDate > currentDate){
+		if(selectedDate <= currentDate){
+			endDateError.textContent = ''
+
+			report_btn.style.alignSelf = 'end';
+
+		}
+		else {
 			endDateError.textContent = 'Указана некоректнаяя дата!'
 
 			report_btn.style.alignSelf = 'center';
 			return false;
-		}
-		else {
-			endDateError.textContent = ''
-
-			report_btn.style.alignSelf = 'end';
 		}
 
 		if(startData.value > dateEnd.value ){

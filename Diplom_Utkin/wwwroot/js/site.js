@@ -30,8 +30,8 @@ function closePopup() {
         child.textContent = '';
     });
     for (let i = 0; i < inputs.length; i++) {
-        inputs[i].textContent = null;
-        inputs[i].value = null;
+        inputs[i].textContent = '';
+        inputs[i].value = '';
         inputs[i].style.borderBottom = '0';
     }
 	document.body.style.overflow = 'auto';

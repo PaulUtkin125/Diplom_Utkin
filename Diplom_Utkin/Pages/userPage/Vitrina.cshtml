@@ -41,7 +41,9 @@
 			<div class="poputContent">
 				<div class="top_">
 					<div>
-						<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
+						<form method="post">
+							<button name="NoN"><img src="/Image/krest.png" alt="Alternate Text" /></button>
+						</form>
 					</div>
 				</div>
 				<form id="myForm" onsubmit="return moneuBtn() && isValidMony()" method="post">
@@ -87,7 +89,7 @@
 						<input asp-for="isVuvod" class="form-control" type="number" id="popOperationType" />
 					</div>
 				</form>
-				<form id="buyForm" onsubmit="return BuyFormValidation()" method="post">
+				<form id="buyForm" onsubmit="return BuyFormValidation(event)" method="post">
 					<div class="toolCard">
 						<h1 id="popTitleBuy"></h1>
 						<input style="visibility:hidden" id="targetId" />
@@ -103,7 +105,7 @@
 									<input asp-for="targetSumm" id="summOperation" class="form-control" type="number" required />
 									<span asp-validation-for="targetSumm" id="summOperationError" class="text-danger"></span>
 								</div>
-								<label class="token"> ₽</label>
+								<label id="token" class="token"> ₽</label>
 							</div>
 							
 							<label style="visibility:hidden" id="dostupSredstv"></label>
@@ -185,6 +187,9 @@
 			if(hasErrors == 1){
 				openVuvod();
 				showNotification('Недостаточно средств');
+			}
+			else if (hasErrors == 2){
+				showNotification_positive('Операцйия проведена');
 			}
 
 	})
@@ -466,6 +471,7 @@
 
 		profilOpen();
 
+		document.getElementById('sideMenu').style.overflow = 'auto';
 		document.getElementById('balanceHistoriBlock').style.display = 'block';
 		document.getElementById('profile').style.display = 'none';
 	}

@@ -69,6 +69,20 @@
 	  setTimeout(() => hideNotification(notif), 4000);
 	}
 
+	function showNotification_positive(message) {
+	  const container = document.getElementById('notification-container');
+
+	  const notif = document.createElement('div');
+	  notif.classList.add('notification');
+	  notif.classList.add('notification-positive');
+	  notif.textContent = message;
+
+	  notif.addEventListener('click', () => hideNotification(notif));
+
+	  container.appendChild(notif);
+
+	  setTimeout(() => hideNotification(notif), 4000);
+	}
 
 	function hideNotification(element) {
 	  element.style.animation = 'slideOut 0.5s forwards';
@@ -164,9 +178,11 @@
 		const data = await BuyData(id);
 		document.getElementById('toolName').textContent = data.nameInvestTool;
 		document.getElementById('targetToolImg').setAttribute('src', 'data:image/png;base64,' + data.imageSource);
-		document.getElementById('peiceTool').textContent = data.price + ' ₽';
+		document.getElementById('peiceTool').textContent = 'Цена: ' + data.price + ' ₽';
 
 		document.getElementById('dostupSredstv').textContent = 'Доступно ' + String(userMoney) + ' ₽';
+		document.getElementById('token').textContent = '₽';
+
 		buyOpenMain(id);
 	}
 
@@ -187,8 +203,8 @@
 		const data = await BuyData(id);
 		document.getElementById('toolName').textContent = data.nameInvestTool;
 		document.getElementById('targetToolImg').setAttribute('src', 'data:image/png;base64,' + data.imageSource);
-		document.getElementById('peiceTool').textContent = data.price;
-		document.getElementById('peiceTool').style.visibility = 'colapsed';
+		document.getElementById('peiceTool').textContent = 'Цена: ' + data.price + ' ₽';
+		document.getElementById('token').textContent = 'шт.';
 
 		buyOpenMain(id)
 	}
@@ -212,9 +228,10 @@
 	}
 
 
-	function BuyFormValidation(){
+	async function BuyFormValidation(event){
+		event.preventDefault();
 		const toolPrice = document.getElementById('peiceTool');
-		var toolPrice_value = toolPrice.textContent.replace( ',', '.').replace(' ₽', '');
+		var toolPrice_value = toolPrice.textContent.replace( ',', '.').replace(' ₽', '').replace('Цена: ', '');
 
 		var mySym = Number(document.getElementById('koshelBox_btn').textContent.replace( ',', '.'));
 		var toolId = document.getElementById('targetId').textContent;
@@ -247,7 +264,7 @@
 			if(summOperation_value < 1)
 			{
 				summOperationBox.style.borderBottom = '2px solid red';
-				return false;
+				event.target.submit();
 			}
 			else summOperationBox.style.borderBottom = '0px';
 
@@ -271,8 +288,8 @@
 
 			
 
-			const data = BuyMethodAPI(uId, toolId, factQuentity, toolPrice_value );
-			return true;
+			const data = await BuyMethodAPI(uId, toolId, factQuentity, toolPrice_value );
+			event.target.submit();
 		}
 		else
 		{
@@ -298,12 +315,12 @@
 			factQuentity = Number(factQuentity);
 
 
-			const data = BuyMethodAPI(uId, toolId,  factQuentity, -toolPrice_value);
-			return true;
+			const data = await BuyMethodAPI(uId, toolId,  factQuentity, -toolPrice_value);
+			event.target.submit();
 
 		}
 
-		return true;
+		event.target.submit();
 	}
 
 	async function BuyMethodAPI(userId, ToolId, quentity, price){
@@ -345,8 +362,8 @@
 	}
 
 	async function Update_Method_Profile(event){
-		 event.preventDefault();
-		 var isValid = true;
+		event.preventDefault();
+		var isValid = true;
 		const id_ = @Model._user.Id;
 		const mail_ = document.getElementById('portfile_mail').value;
 		const phone_ = document.getElementById('portfile_phone').value;

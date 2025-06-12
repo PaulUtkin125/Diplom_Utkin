@@ -32,6 +32,11 @@ html {
     height:max-content;
 }
 
+.navbar a:hover,
+.navbar label:hover {
+    cursor: pointer;
+}
+
 .myA {
     color: #0d6efd;
     text-decoration: underline;
@@ -676,6 +681,10 @@ canvas {
     text-align:center;
 }
 
+.height-rep {
+    height:100%;
+}
+
 .toolCard strong{
     font-weight:normal;
 }
@@ -985,8 +994,16 @@ input[type=number]::-webkit-inner-spin-button {
     height:80%;
 }
 
-.top_ div img {
+.top_ div form,
+.top_ div img,
+.top_ button{
     height:100%;
+    display: flex;
+}
+
+.top_ button{
+    background: transparent;
+    border: transparent;
 }
 
 .top_ div img:hover {

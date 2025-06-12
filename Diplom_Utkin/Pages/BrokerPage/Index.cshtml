@@ -479,20 +479,27 @@
 		else{
 			startPrice.style.borderBottom = '0';
 		}
+		
 
 		var name = document.getElementById('ToolNameEdit').value;
 		var file = document.getElementById('ToolImgEdit').files[0];
 		var price = Number(document.getElementById('ToolPriceEdit').value);
 		var tId = document.getElementById('targetIdEdit').value;
-
 		console.log('file', file);
 		console.log('id', tId);
 		console.log('name', name);
 		console.log('price', price);
+		
+
+		if(file == null) file = null;
+		console.log('file', file);
+
 
 		var errorBox = document.getElementById('toolNameEdit').textContent;
+		console.log(`errorBox != '' `, errorBox != '');
+		console.log('errorBox != null: ', errorBox != null);
 
-		if(errorBox != ''|| errorBox != null) return;
+		if(errorBox !== '') return false;
 
 		var data = await editTool(file, name, price, tId );
 
@@ -508,6 +515,7 @@
 			formData.append('name', name);
 			formData.append('price', price);
 
+			console.log('updateTest');
 
 			const baseUrl = '@Model.apiSettings.BaseUrl';
 			const response = await fetch(baseUrl + 'Broker/UpdateTool', {

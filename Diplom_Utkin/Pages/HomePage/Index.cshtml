@@ -12,7 +12,10 @@
 			<div class="poputContent">
 				<div class="top_">
 					<div>
-						<img onclick="closePopup()" src="/Image/krest.png" alt="Alternate Text" />
+						<form method="post" asp-action="NoN">
+							<button name="NoN"><img src="/Image/krest.png" alt="Alternate Text" /></button>
+						</form>
+						
 					</div>
 
 				</div>
@@ -21,15 +24,15 @@
 						<form method="post" >
 							<h1>Авторизация</h1>
 							<div class="form-group">
-								<label asp-for="User.Login" class="control-label">E-mail</label>
-								<input asp-for="User.Login" class="form-control" type="email" id="loginAdmin" required/>
-								<span asp-validation-for="User.Login" class="text-danger"></span>
+								<label asp-for="user.Login" class="control-label">E-mail</label>
+								<input asp-for="user.Login" class="form-control" type="email" id="loginAdmin" required />
+								<span asp-validation-for="user.Login" class="text-danger"></span>
 							</div>
 
 							<div class="form-group">
-								<label asp-for="User.Password" class="control-label">Пароль</label>
-								<input asp-for="User.Password" class="form-control" type="password" id="passwordloginAdmin" required/>
-								<span asp-validation-for="User.Password" class="text-danger"></span>
+								<label asp-for="user.Password" class="control-label">Пароль</label>
+								<input asp-for="user.Password" class="form-control" type="password" id="passwordloginAdmin" required />
+								<span asp-validation-for="user.Password" class="text-danger"></span>
 							</div>
 							<div class="form-group">
 								<button class="myButton" name="action" type="submit" value="vhodAdmin_btn">Войти</button>
@@ -42,15 +45,15 @@
 						<form method="post">
 							<h1>Авторизация</h1>
 							<div class="form-group">
-								<label asp-for="User.Login" class="control-label">E-mail</label>
-								<input asp-for="User.Login" class="form-control" type="email" id="login" required/>
-								<span asp-validation-for="User.Login" class="text-danger"></span>
+								<label asp-for="user.Login" class="control-label">E-mail</label>
+								<input asp-for="user.Login" class="form-control" type="email" id="login" required />
+								<span asp-validation-for="user.Login" class="text-danger"></span>
 							</div>
 
 							<div class="form-group">
-								<label asp-for="User.Password" class="control-label">Пароль</label>
-								<input asp-for="User.Password" class="form-control" type="password" id="password" required/>
-								<span asp-validation-for="User.Password" class="text-danger"></span>
+								<label asp-for="user.Password" class="control-label">Пароль</label>
+								<input asp-for="user.Password" class="form-control" type="password" id="password" required />
+								<span asp-validation-for="user.Password" class="text-danger"></span>
 							</div>
 							<div class="form-group">
 								<button class="myButton" name="action" type="submit" value="vhod_btn">Войти</button>
@@ -83,7 +86,7 @@
 								<span asp-validation-for="logoValidationReg.ConfirmPassword" id="confirmPasswordError" class="text-danger"></span>
 							</div>
 							<div class="form-group">
-								<button class="myButton" type="submit">Зарегистрироваться</button>
+								<button class="myButton" type="submit" >Зарегистрироваться</button>
 							</div>
 
 						</form>
@@ -114,7 +117,6 @@
 
 							<div class="form-group">
 								<button class="myButton" type="submit" name="action" id="userReg_btn" value="Registr_btn">Подтвердить</button>
-								@* <button class="myButton" style="display:none" type="submit" name="action" id="BrokerReg_btn" value="BrokerReg_btn">Подтвердить</button> *@
 							</div>
 						</form>
 					</div>
@@ -126,15 +128,15 @@
 						<form method="post">
 							<h1>Авторизация</h1>
 							<div class="form-group">
-								<label asp-for="User.Login" class="control-label">E-mail</label>
-								<input asp-for="User.Login" class="form-control" type="email" id="loginBroker" />
-								<span asp-validation-for="User.Login" class="text-danger"></span>
+								<label asp-for="user.Login" class="control-label">E-mail</label>
+								<input asp-for="user.Login" class="form-control" type="email" id="loginBroker" />
+								<span asp-validation-for="user.Login" class="text-danger"></span>
 							</div>
 
 							<div class="form-group">
-								<label asp-for="User.Password" class="control-label">Пароль</label>
-								<input asp-for="User.Password" class="form-control" type="password" id="passwordloginBroker" />
-								<span asp-validation-for="User.Password" class="text-danger"></span>
+								<label asp-for="user.Password" class="control-label">Пароль</label>
+								<input asp-for="user.Password" class="form-control" type="password" id="passwordloginBroker" />
+								<span asp-validation-for="user.Password" class="text-danger"></span>
 							</div>
 							<div class="form-group">
 								<button class="myButton" name="action" type="submit" value="vhodBroker_btn">Войти</button>
@@ -147,7 +149,7 @@
 				</div>
 				<div class="contentVhod" id="brocerCreateForm">
 					<div class="form-block">
-						<form id="brokerReg1" method="post">
+						<form id="brokerReg1" asp-action="regBroker_Btn" onsubmit="return validationCreateBroker(event)" method="post">
 							<h1>Регистрация</h1>
 
 							<div class="myRow">
@@ -206,10 +208,11 @@
 
 
 							<div class="myRow">
-								<button class="myButton" type="submit">Зарегестрироваться</button>
-								<button class="myButton" onclick="BrokerOpen()">У Вас есть аккаунта? Авторизуйтесь</button>
+								<button class="myButton" name="action" type="submit">Зарегестрироваться</button>
+								
 							</div>
 						</form>
+						<button class="myButton" onclick="BrokerOpen()">У Вас есть аккаунта? Авторизуйтесь</button>
 					</div>
 				</div>
 			</div>
@@ -385,18 +388,22 @@
 			var hasErrors = @Html.Raw(Json.Serialize(Model.errorSupport));
 			if(hasErrors == 1){
 				vhodOpen()
+				document.getElementById('login').value = '';
 				showNotification('Ошибка авторизации. Проверьте введенные данные.');
 			}
 			else if(hasErrors == 1.1){
 				vhodOpen()
+				document.getElementById('login').value = '';
 				showNotification('Ошибка сервера. Повторите попытку позже');
 			}
 			else if (hasErrors == 2) {
 				AdminOpen();
+				document.getElementById('loginAdmin').value = '';
 				showNotification('Ошибка авторизации. Проверьте введенные данные.');
 			}
 			else if(hasErrors == 2.1){
-				vhodOpen()
+				AdminOpen()
+				document.getElementById('loginAdmin').value = '';
 				showNotification('Ошибка сервера. Повторите попытку позже');
 			}
 			else if(hasErrors == 3){
@@ -406,6 +413,12 @@
 			else if(hasErrors == 3.1){
 				vhodOpen()
 				showNotification('Ошибка сервера. Повторите попытку позже');
+			}
+			else if (hasErrors == 4.1){
+				showNotification_positive('Пользователь зарегистрирован');
+			}
+			else if (hasErrors == 4.2){
+				showNotification_positive('Заявка отпралена на модерацию');
 			}
 	})
 
@@ -418,49 +431,17 @@
 
 
 
-	// async function adminAutorusationValid(){
-
-
-	// 	try {
-	// 		const mail = document.getElementById('loginAdmin').value;
-	// 		const password = document.getElementById('passwordloginAdmin').value
-
-	// 		const response = await fetch(baseUrl+'Logo/AutorisationAdmin', {
-	// 			method:'POST',
-	// 			headers:{
-	// 				'Content-Type':'application/json'
-	// 			},
-	// 			body: JSON.stringify({ Login: mail, Password: password })
-	// 		});
-	// 		const data = await response.json();
-	// 		if (data == 0)
-	// 		{
-	// 			showNotification('Ошибка авторизации. Проверьте введенные данные.');
-	// 			return false;
-	// 		}
-	// 	}
-	// 	catch (error) {
-	// 		showNotification(error);
-	// 		console.error('There was a problem with the fetch operation:', error);
-	// 		return false;
-	// 	}
-
-		
-	// }
-
-
 
 	document.getElementById('userReg').addEventListener('submit', async function(event) {
 		event.preventDefault();
 		 if (!$(this).valid()) {
-		return false;
-	}
+			return false;
+		}
 
 		let regPassworderror = document.getElementById('regPassworderror').textContent;
 		let confirmPasswordError = document.getElementById('confirmPasswordError').textContent;
 
 		let isValid = await userValid();
-
 
 		if(!isValid && regPassworderror.length < 3 && confirmPasswordError.length < 3){
 			fetchData();
@@ -477,7 +458,8 @@
 
 		if (enteredCode != storedCode) {
 			document.getElementById('confirmCode').style.color = 'red';
-			document.getElementById('confirmError').textContent = 'Код подтвержения неверен!';
+			document.getElementById('confirmError').textContent = 'Код подтверждения неверен!';
+			showNotification('Код подтверждения неверен!');
 			return false;
 		}
 
@@ -488,18 +470,6 @@
 
 	}
 
-	document.getElementById('brokerReg1').addEventListener('submit', async function(event) {
-		event.preventDefault();
-		
-
-		let isValid = await validationCreateBroker();
-
-		if (isValid){
-			showNotification_positive('Заявка зарегестрирована!');
-			setTimeout(() => hideNotification(notif), 4000);
-			event.target.submit();
-		}
-	});
 
 
 
@@ -509,7 +479,6 @@
 		if(loginError != '') return true;
 
 		var data = await validMail();
-		console.log('validMail.data: ', data);
 		if (!data) return true;
 
 
@@ -600,9 +569,7 @@
 		const storedCode = localStorage.getItem(targetMail);
 
 		if (enteredCode != storedCode) {
-			document.getElementById('confirmCode').style.color = 'red';
-			document.getElementById('confirmError').textContent = 'Код подтверждения неверен!';
-			showNotification('Код подтверждения неверен!');
+
 			return false;
 		}
 
@@ -629,7 +596,6 @@
 		openPopup();
 
 		document.getElementById('userReg_btn').style.display = 'block';
-		// document.getElementById('BrokerReg_btn').style.display = 'none';
 
 		document.getElementById('brocerCreateForm').style.display = 'none';
 		document.getElementById('vhodBrokerBox').style.display = 'none';
@@ -684,7 +650,6 @@
 		openPopup();
 
 		document.getElementById('userReg_btn').style.display = 'none';
-		// document.getElementById('BrokerReg_btn').style.display = 'block';
 
 		document.querySelector('.popup').style.width = 'max-content';
 		document.getElementById('brocerCreateForm').style.display = 'block';
@@ -795,8 +760,8 @@
 		}
 	}
 
-	async function validationCreateBroker(){ ////////////////////////////////////////////////////////////////////////
-
+	async function validationCreateBroker(event){ ////////////////////////////////////////////////////////////////////////
+		event.preventDefault();
 
 		var INNBlock = document.getElementById('brokerINNCreate');
 		var bMail =  document.getElementById('uLoginCreate');
@@ -870,19 +835,15 @@
 			INNError.textContent = '';
 
 
-			if(data) {
-				tr = await createBrocer_Btn();
-				showNotification_positive('Заявка зарегестрирована');
-				setTimeout(() => 4000);
-				return true;
-			}
-
+			tr = await createBrocer_Btn();
+			showNotification_positive('Заявка зарегестрирована');
+			setTimeout(() => event.target.submit(), 4000);
 			
-		 	return false;
+			return true;
 		}
 
 
-		return false;
+		event.target.submit();
 	}
 
 	async function validationINN(inn){
@@ -919,8 +880,6 @@
 			const data = await response.json();
 			if (!data)
 			{
-				showNotification('Этот адрес уже используется!'); /////////////////////////////////////////////////////////////////
-				setTimeout(() => {}, 300);
 				return false;
 			}
 			popup.style.cursor = 'wait';

@@ -96,18 +96,19 @@ namespace Diplom_Utkin.Pages.userPage
                             }
                             
                         }
-                        reportTite = $"о сделках Отчетный период: {dateStart} - {dateEnd}" ;
+                        reportTite = $"о сделках Отчетный период: {dateStart.ToString().Split()[0]} - {dateEnd.ToString().Split()[0]}" ;
                     }
                     else if (TypeReport == 2)
                     {
                         porfolioList = await _APIService.Report2u(uId);
-                        reportTite = "о структуре портфеля";
+                        reportTite = $"о структуре портфеля На: {DateTime.Now.ToString().Split()[0]}";
 
                         price = new double[porfolioList.Count];
                         name = new string[porfolioList.Count];
+                        double totalSum = porfolioList.Sum(x => x.AllManey);
                         for (int i = 0; i < porfolioList.Count; i++)
                         {
-                            price[i] = porfolioList[i].AllManey;
+                            price[i] = Math.Round((porfolioList[i].AllManey*100)/ totalSum, 2);
                             name[i] = porfolioList[i].InvestTool.NameInvestTool;
                         }
                     }

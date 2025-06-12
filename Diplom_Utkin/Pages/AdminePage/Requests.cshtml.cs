@@ -50,15 +50,19 @@ namespace Diplom_Utkin.Pages.AdminePage
 
             CurrnerSort = sortOrder;
             TempData["sortOrder"] = sortOrder;
-            sortName = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            sortStatus = string.IsNullOrEmpty(sortOrder) ? "status_desc" : "";
+            sortName = sortOrder == "name" ? "name_desc" : "name";
             sortDir = sortOrder == "dir" ? "dir_desc" : "dir";
-            sortStatus = sortOrder == "status" ? "status_desc" : "status";
+            
 
             var brokersIQ = await _APIService.NotNewBrokersList();
             switch (sortOrder)
             {
                 case "name_desc":
                     brokersIQ = brokersIQ.OrderByDescending(x => x.NameBroker).ToList();
+                    break;
+                case "name":
+                    brokersIQ = brokersIQ.OrderBy(x => x.NameBroker).ToList();
                     break;
                 case "dir_desc":
                     brokersIQ = brokersIQ.OrderByDescending(x => x.FullNameOfTheDirector).ToList();
@@ -67,14 +71,11 @@ namespace Diplom_Utkin.Pages.AdminePage
                     brokersIQ = brokersIQ.OrderBy(x => x.FullNameOfTheDirector).ToList();
                     break;
 
-                case "status":
-                    brokersIQ = brokersIQ.OrderBy(x => x.TypeOfRequestId).ToList();
-                    break;
                 case "status_desc":
                     brokersIQ = brokersIQ.OrderByDescending(x => x.TypeOfRequestId).ToList();
                     break;
                 default:
-                    brokersIQ = brokersIQ.OrderBy(x => x.NameBroker).ToList();
+                    brokersIQ = brokersIQ.OrderBy(x => x.TypeOfRequestId).ToList();
                     break;
             }
 

@@ -91,6 +91,7 @@ namespace Diplom_Utkin.Pages.AdminePage
                     await _APIService.deleteUser((int)userId);
                     break;
             }
+            Query = Query;
             await WorkOfData();
             return Page();
         }
