@@ -126,8 +126,8 @@
 				<label>Тип отчета:</label>
 				<select id="reportType" name="TypeReport">
 					<option value="0">Выберите тип отчета</option>
-					<option value="1">Отчет о сделках</option>  @* по диапазону дат *@
-					<option value="2">Отчет о структуре портфеля</option> @* на текущую дату *@
+					<option value="1">Отчет о сделках</option>
+					<option value="2">Отчет о структуре портфеля</option>
 				</select>
 				<span id="typeError" class="text-danger"></span>
 			</div>
@@ -627,9 +627,6 @@
 		return true;
 	}
 
-	///////////////////////////////////////////////////////////////////////////////////////////////
-
-
 	async function loadBalanceHistory(id_)
 	{
 		const baseUrl = '@Model.apiSettings.BaseUrl';
@@ -662,60 +659,62 @@
 
 
 		 list.forEach(Recorder => {
-			 var hrBlock = document.createElement('hr');
-			 var date = Recorder.date.split('T')[0];
-			 if(svFirst == 1){
+			  if(Number(Recorder.money).toFixed(2) !== '0.00') {
+				  var hrBlock = document.createElement('hr');
+				 var date = Recorder.date.split('T')[0];
+				 if(svFirst == 1){
 
-				 oldDate = Recorder.date.split('T')[0];
-				 svFirst = 0;
+					 oldDate = Recorder.date.split('T')[0];
+					 svFirst = 0;
 
-				 var dateBlock1 = document.createElement('label');
+					 var dateBlock1 = document.createElement('label');
 
-				 dateBlock1.textContent = date;
+					 dateBlock1.textContent = date;
 
-				 userList.appendChild(hrBlock);
-				 userList.appendChild(dateBlock1);
-			 }
+					 userList.appendChild(hrBlock);
+					 userList.appendChild(dateBlock1);
+				 }
 
-			 if(oldDate != date)
-			 {
-				 userList.appendChild(hrBlock);
-				 var dateBlock = document.createElement('label');
-				 dateBlock.textContent = date;
-				 userList.appendChild(dateBlock);
+				 if(oldDate != date)
+				 {
+					 userList.appendChild(hrBlock);
+					 var dateBlock = document.createElement('label');
+					 dateBlock.textContent = date;
+					 userList.appendChild(dateBlock);
 
-				 oldDate = date
-			 }
+					 oldDate = date
+				 }
 
 
-			 var operationType = '';
-			 if(Number(Recorder.money) < 0 && Recorder.investToolsId != '0' ) operationType = 'Продажа';
-			 else if(Number(Recorder.money) > 0 && Recorder.investToolsId != '0' ) operationType = 'Покупка';
-			 else if(Number(Recorder.money) < 0 && Recorder.investToolsId == '0') operationType = 'Вывод средст';
-			 else if(Number(Recorder.money) > 0 && Recorder.investToolsId == '0') operationType = 'Пополнение счета';
+				 var operationType = '';
+				 if(Number(Recorder.money) < 0 && Recorder.investToolsId != '0' ) operationType = 'Продажа';
+				 else if(Number(Recorder.money) > 0 && Recorder.investToolsId != '0' ) operationType = 'Покупка';
+				 else if(Number(Recorder.money) < 0 && Recorder.investToolsId == '0') operationType = 'Вывод средст';
+				 else if(Number(Recorder.money) > 0 && Recorder.investToolsId == '0') operationType = 'Пополнение счета';
 
-			 var sum = '';
-			 var quentity1 = '';
-			 if(Recorder.investToolsId != '0') {
-				 sum = String((Number(Recorder.quentity) * Number(Recorder.money)).toFixed(2))+'₽';
-				 quentity1 = Recorder.quentity + 'шт.';
-			 }
-			 else sum =  String(Number(Recorder.money).toFixed(2))+'₽';
+				 var sum = '';
+				 var quentity1 = '';
+				 if(Recorder.investToolsId != '0') {
+					 sum = String((Number(Recorder.quentity) * Number(Recorder.money)).toFixed(2))+'₽';
+					 quentity1 = Recorder.quentity + 'шт.';
+				 }
+				 else sum =  String(Number(Recorder.money).toFixed(2))+'₽';
 
-			 const investToolNames = Recorder.investToolsId != '0'
-										? Recorder.investTools.nameInvestTool
-										: '';
+				 const investToolNames = Recorder.investToolsId != '0'
+											? Recorder.investTools.nameInvestTool
+											: '';
 
-			 const bDiv = document.createElement('div');
-			 bDiv.classList.add('itemBalance');
-			 bDiv.innerHTML = `<div class="myRow">
-									<div class="bTitle"><strong>${operationType}</strong> ${investToolNames}</div>
-									<div class="dataSlice">
-										<label class="bTotalPrice">${sum}</label>
-										<label class="bCounter">${quentity1}</label>
-									</div>
-								</div>`;
-			 userList.appendChild(bDiv);
+				 const bDiv = document.createElement('div');
+				 bDiv.classList.add('itemBalance');
+				 bDiv.innerHTML = `<div class="myRow">
+										<div class="bTitle"><strong>${operationType}</strong> ${investToolNames}</div>
+										<div class="dataSlice">
+											<label class="bTotalPrice">${sum}</label>
+											<label class="bCounter">${quentity1}</label>
+										</div>
+									</div>`;
+				 userList.appendChild(bDiv);
+			 };
 		 });
 	}
 </script>

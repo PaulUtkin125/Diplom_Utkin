@@ -566,60 +566,62 @@
 
 
 		 list.forEach(Recorder => {
-			 var hrBlock = document.createElement('hr');
-			 var date = Recorder.date.split('T')[0];
-			 if(svFirst == 1){
+			 if(Number(Recorder.money).toFixed(2) !== '0.00') {
+				  var hrBlock = document.createElement('hr');
+				 var date = Recorder.date.split('T')[0];
+				 if(svFirst == 1){
 
-				 oldDate = Recorder.date.split('T')[0];
-				 svFirst = 0;
+					 oldDate = Recorder.date.split('T')[0];
+					 svFirst = 0;
 
-				 var dateBlock1 = document.createElement('label');
+					 var dateBlock1 = document.createElement('label');
 
-				 dateBlock1.textContent = date;
+					 dateBlock1.textContent = date;
 
-				 userList.appendChild(hrBlock);
-				 userList.appendChild(dateBlock1);
-			 }
+					 userList.appendChild(hrBlock);
+					 userList.appendChild(dateBlock1);
+				 }
 
-			 if(oldDate != date)
-			 {
-				 userList.appendChild(hrBlock);
-				 var dateBlock = document.createElement('label');
-				 dateBlock.textContent = date;
-				 userList.appendChild(dateBlock);
+				 if(oldDate != date)
+				 {
+					 userList.appendChild(hrBlock);
+					 var dateBlock = document.createElement('label');
+					 dateBlock.textContent = date;
+					 userList.appendChild(dateBlock);
 
-				 oldDate = date
-			 }
+					 oldDate = date
+				 }
 
-			 
-			 var operationType = '';
-			 if(Number(Recorder.money) < 0 && Recorder.investToolsId != '0' ) operationType = 'Продажа';
-			 else if(Number(Recorder.money) > 0 && Recorder.investToolsId != '0' ) operationType = 'Покупка';
-			 else if(Number(Recorder.money) < 0 && Recorder.investToolsId == '0') operationType = 'Вывод средст';
-			 else if(Number(Recorder.money) > 0 && Recorder.investToolsId == '0') operationType = 'Пополнение счета';
-			 
-			 var sum = '';
-			 var quentity1 = '';
-			 if(Recorder.investToolsId != '0') {
-				 sum = String((Number(Recorder.quentity) * Number(Recorder.money)).toFixed(2))+'₽';
-				 quentity1 = Recorder.quentity + 'шт.';
-			 }
-			 else sum =  String(Number(Recorder.money).toFixed(2))+'₽';
 
-			 const investToolNames = Recorder.investToolsId != '0'
-										? Recorder.investTools.nameInvestTool
-										: '';
+				 var operationType = '';
+				 if(Number(Recorder.money) < 0 && Recorder.investToolsId != '0' ) operationType = 'Продажа';
+				 else if(Number(Recorder.money) > 0 && Recorder.investToolsId != '0' ) operationType = 'Покупка';
+				 else if(Number(Recorder.money) < 0 && Recorder.investToolsId == '0') operationType = 'Вывод средст';
+				 else if(Number(Recorder.money) > 0 && Recorder.investToolsId == '0') operationType = 'Пополнение счета';
 
-			 const bDiv = document.createElement('div');
-			 bDiv.classList.add('itemBalance');
-			 bDiv.innerHTML = `<div class="myRow">
-									<div class="bTitle"><strong>${operationType}</strong> ${investToolNames}</div>
-									<div class="dataSlice">
-										<label class="bTotalPrice">${sum}</label>
-										<label class="bCounter">${quentity1}</label>
-									</div>
-								</div>`;
-			 userList.appendChild(bDiv);
+				 var sum = '';
+				 var quentity1 = '';
+				 if(Recorder.investToolsId != '0') {
+					 sum = String((Number(Recorder.quentity) * Number(Recorder.money)).toFixed(2))+'₽';
+					 quentity1 = Recorder.quentity + 'шт.';
+				 }
+				 else sum =  String(Number(Recorder.money).toFixed(2))+'₽';
+
+				 const investToolNames = Recorder.investToolsId != '0'
+											? Recorder.investTools.nameInvestTool
+											: '';
+
+				 const bDiv = document.createElement('div');
+				 bDiv.classList.add('itemBalance');
+				 bDiv.innerHTML = `<div class="myRow">
+										<div class="bTitle"><strong>${operationType}</strong> ${investToolNames}</div>
+										<div class="dataSlice">
+											<label class="bTotalPrice">${sum}</label>
+											<label class="bCounter">${quentity1}</label>
+										</div>
+									</div>`;
+				 userList.appendChild(bDiv);
+			 };
 		 });
 	}
 

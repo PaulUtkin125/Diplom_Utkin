@@ -134,7 +134,7 @@
 
          document.getElementById('targetId').value = id;
 
-         // document.getElementById('targetBrokerImg').setAttribute('src', 'data:image/png;base64,' + data.sourseFile);
+ 
          document.getElementById('BrokerName').textContent = data.nameBroker;
          document.getElementById('brokerINN').textContent = 'ИНН: ' + data.inn;
          document.getElementById('brokerKPP').textContent = 'КПП: ' + data.kpp;
@@ -263,7 +263,6 @@
 
         const id_ = document.getElementById('targetId_Edit').value;
         const mail_ = document.getElementById('uLoginEdit').value;
-        //const idRole_ = document.getElementById('uTypeEdit').value;
         var phone_ = document.getElementById('uPhoneEdit').value;
 
         if(mail_.trim() == '') return false;
@@ -301,7 +300,7 @@
         document.getElementById('portfile_save_btn').style.display = 'block';
     };
 
-    function Update_Method_Profile(event){
+    async function Update_Method_Profile(event){
         event.preventDefault();
         var isValid = true;
         const id_ = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model._user.Id));
@@ -332,7 +331,7 @@
         const idRole_ = 1;
 
         if(isValid){
-             updateUser(id_, mail_, idRole_, phone_);
+             var data = await updateUser(id_, mail_, idRole_, phone_);
              if(data == 1) event.target.submit();
         }
     };
@@ -351,6 +350,7 @@
         }
         const data = response.json();
         console.log('User updated successfully:', data);
+        return data;
     };
 
    
